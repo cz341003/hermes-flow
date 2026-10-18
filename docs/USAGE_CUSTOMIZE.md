@@ -80,10 +80,13 @@ POST /api/plugins/hermes_flow/skills
 3. 填写新 **id**（如 `my-vue3-flow`）、**名称**、描述 → **创建工作流**。
 4. 新工作流会出现在左侧列表；点击后：
    - **拖拽节点**调整布局，位置写入 `node.meta.x/y`；
-   - **添加节点** / **删除选中**；
-   - **编辑 JSON（DAG DSL）** 修改 agent/skill/batch 参数/边；
+   - **添加节点** / **删除选中**（新节点自动放在可见网格位置）；
+   - **节点与连线（表单编辑，无需 JSON）**：改名称/phase/agent/skill、增删节点、下拉选择起点/终点增删连线；
+   - **编辑 JSON（DAG DSL）** 修改 `type`、`batch`、`timeout_s` 等高级参数；
    - **保存工作流** 持久化。
 5. 到 **运行 / 批次** Tab，选择新工作流 → 填 project_root/files → 创建 Run。
+
+![表单化工作流编辑](assets/workflow-form-editor.png)
 
 ![新建工作流](assets/forms-workflows.png)
 
@@ -131,4 +134,5 @@ POST /api/plugins/hermes_flow/skills
 - 专家 role、技能正文、工作流 DAG 都有校验；保存失败时页面顶部显示错误。
 - 技能 id 由名称 slug 生成；同名会覆盖/冲突，建议唯一命名。
 - 当前 WebUI 支持新增与编辑，技能/工作流删除仍需删文件或调用注册表；专家可删除。
-- 拖拽只改布局；连线/节点类型/批量参数通过 JSON 编辑。
+- 常用节点字段（名称/phase/agent/skill、增删节点、增删连线）已可用表单编辑；`type`/`batch`/`timeout_s` 等高级字段仍用 JSON。
+- 工作流模板卡会显示青色选中态；模板列表中的 `vue3-1` 等用户新建模板来自 `plugin-data/hermes_flow/workflows/`。

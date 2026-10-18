@@ -131,6 +131,8 @@
     var skillMsgState = useState(""), skillMsg = skillMsgState[0], setSkillMsg = skillMsgState[1];
     var wfNewState = useState({ id: "", name: "", description: "" });
     var wfNew = wfNewState[0], setWfNew = wfNewState[1];
+    var edgeDraftState = useState({ source: "", target: "" });
+    var edgeDraft = edgeDraftState[0], setEdgeDraft = edgeDraftState[1];
     var runFormState = useState({ workflow_id: "vue3-migrate-6phase", title: "迁移 Run", project_root: "", files: '[{"path":"src/App.vue","size":800}]' });
     var runForm = runFormState[0], setRunForm = runFormState[1];
 
@@ -216,30 +218,78 @@
     }
     function updateWfDef(mutator) {
       var def;
-      try { def = JSON.parse(wfJson); } catch (e) { setWfMsg("JSON 无效: " + e.message); return; }
+      try {
+        def = wfJson ? JSON.parse(wfJson) : null;
+      } catch (e) {
+        setWfMsg("JSON 无效: " + e.message); return null;
+      }
+      if (!def) {
+        if (!(wfDetail && wfDetail.definition)) { setWfMsg("先选择一个工作流模板"); return null; }
+        def = JSON.parse(JSON.stringify(wfDetail.definition));
+      }
       mutator(def);
       setWfJson(JSON.stringify(def, null, 2));
       setWfPos(layoutPositions(def));
+      return def;
     }
     function addWfNode() {
+      var created = null;
       updateWfDef(function (def) {
         def.nodes = def.nodes || [];
         var i = 1, ids = {};
         (def.nodes || []).forEach(function (n) { ids[n.id] = 1; });
         while (ids["node-" + i]) i++;
-        def.nodes.push({ id: "node-" + i, name: "新节点 " + i, phase: "transform",
-                         agent: "code-transformer", meta: { x: 20, y: 20 + def.nodes.length * 70 } });
+        var idx = def.nodes.length;
+        created = {
+          id: "node-" + i, name: "新节点 " + i, phase: "transform",
+          agent: "code-transformer", meta: {
+            x: 16 + (idx % 4) * 190,
+            y: 14 + Math.floor(idx / 4) * 86
+          }
+        };
+        def.nodes.push(created);
       });
-      setWfMsg("已添加节点（记得保存）");
+      if (created) { setWfSel(created.id); setWfMsg("已添加节点 " + created.id + "（记得保存）"); }
+    }
+    function removeWfNodeById(id) {
+      updateWfDef(function (def) {
+        def.nodes = (def.nodes || []).filter(function (n) { return n.id !== id; });
+        def.edges = (def.edges || []).filter(function (e) { return e.source !== id && e.target !== id; });
+      });
+      if (wfSel === id) setWfSel(null);
+      setWfMsg("已删除节点 " + id + "（记得保存）");
     }
     function deleteWfNode() {
-      if (!wfSel) return;
+      if (wfSel) removeWfNodeById(wfSel);
+    }
+    function updateWfNode(id, field, value) {
       updateWfDef(function (def) {
-        def.nodes = (def.nodes || []).filter(function (n) { return n.id !== wfSel; });
-        def.edges = (def.edges || []).filter(function (e) { return e.source !== wfSel && e.target !== wfSel; });
+        (def.nodes || []).forEach(function (n) { if (n.id === id) n[field] = value; });
       });
-      setWfSel(null);
-      setWfMsg("已删除节点（记得保存）");
+    }
+    function addWfEdge() {
+      if (!edgeDraft.source || !edgeDraft.target || edgeDraft.source === edgeDraft.target) {
+        setWfMsg("请选择不同的起点和终点"); return;
+      }
+      updateWfDef(function (def) {
+        def.edges = def.edges || [];
+        if (!def.edges.some(function (e) { return e.source === edgeDraft.source && e.target === edgeDraft.target; })) {
+          def.edges.push({ source: edgeDraft.source, target: edgeDraft.target });
+        }
+      });
+      setEdgeDraft({ source: "", target: "" });
+      setWfMsg("已添加连线（记得保存）");
+    }
+    function updateWfEdge(idx, field, value) {
+      updateWfDef(function (def) {
+        if (def.edges && def.edges[idx]) def.edges[idx][field] = value;
+      });
+    }
+    function removeWfEdge(idx) {
+      updateWfDef(function (def) {
+        if (def.edges) def.edges.splice(idx, 1);
+      });
+      setWfMsg("已删除连线（记得保存）");
     }
     function dropWfNode(e) {
       e.preventDefault();
@@ -387,6 +437,10 @@
     var qRoutes = (qualityResult && qualityResult.browser && qualityResult.browser.routes) || [];
     var wfDef = null;
     try { wfDef = wfJson ? JSON.parse(wfJson) : null; } catch (e) { wfDef = null; }
+    var wfNodes = (wfDef && wfDef.nodes) || [];
+    var wfEdges = (wfDef && wfDef.edges) || [];
+    var dagMaxY = wfNodes.reduce(function (m, n) { var p = wfPos[n.id]; return Math.max(m, p ? p.y : 0); }, 0);
+    var dagHeight = Math.max(340, dagMaxY + 96);
 
     return h("div", { className: css("root") },
       h("header", { className: css("head") },
@@ -486,8 +540,9 @@
             h("div", { className: css("dag-toolbar") },
               h("span", { className: css("muted") }, "拖拽节点调整布局；图保存在节点 meta.x/y"),
               h("button", { className: css("btn") + " " + css("btn-sm"), onClick: addWfNode }, "添加节点"),
-              h("button", { className: css("btn") + " " + css("btn-sm") + " " + css("danger"), onClick: deleteWfNode, disabled: !wfSel }, "删除选中")),
-            h("div", { className: css("dag-canvas"), onDragOver: function (e) { e.preventDefault(); }, onDrop: dropWfNode },
+              h("button", { className: css("btn") + " " + css("btn-sm") + " " + css("danger"), onClick: deleteWfNode, disabled: !wfSel }, "删除选中"),
+              wfMsg ? h("span", { className: css("muted") }, wfMsg) : null),
+            h("div", { className: css("dag-canvas"), style: { height: dagHeight + "px" }, onDragOver: function (e) { e.preventDefault(); }, onDrop: dropWfNode },
               h("svg", { className: css("dag-lines"), width: "100%", height: "100%" },
                 ((wfDef && wfDef.edges) || []).map(function (e) {
                   var a = wfPos[e.source] || { x: 16, y: 14 }, b = wfPos[e.target] || { x: 16, y: 14 };
@@ -503,6 +558,40 @@
                   onClick: function () { setWfSel(n.id); }
                 }, h("b", null, n.name || n.id), h("span", null, n.phase || n.type || ""), h("em", null, n.agent || ""));
               })),
+            h("details", { className: css("editor") },
+              h("summary", null, "节点与连线（表单编辑，无需 JSON）"),
+              h("div", { className: css("form-hint") },
+                "直接修改名称/阶段/agent/skill；高级参数（batch、timeout、type）仍可用下方 JSON。"),
+              h("div", { className: css("mini-title") }, "节点（" + wfNodes.length + "）"),
+              wfNodes.map(function (n) {
+                return h("div", { className: css("form-row"), key: n.id },
+                  h("input", { value: n.id, disabled: true, title: "node id（只读）" }),
+                  h("input", { value: n.name || "", placeholder: "name", onChange: function (e) { updateWfNode(n.id, "name", e.target.value); } }),
+                  h("input", { value: n.phase || "", placeholder: "phase", onChange: function (e) { updateWfNode(n.id, "phase", e.target.value); } }),
+                  h("input", { value: n.agent || "", placeholder: "agent", onChange: function (e) { updateWfNode(n.id, "agent", e.target.value); } }),
+                  h("input", { value: n.skill || "", placeholder: "skill", onChange: function (e) { updateWfNode(n.id, "skill", e.target.value); } }),
+                  h("button", { className: css("btn") + " " + css("btn-sm") + " " + css("danger"), onClick: function () { removeWfNodeById(n.id); } }, "删除"));
+              }),
+              h("div", { className: css("btn-row") }, h("button", { className: css("btn") + " " + css("btn-sm"), onClick: addWfNode }, "添加节点")),
+              h("div", { className: css("mini-title") }, "连线（" + wfEdges.length + "）"),
+              wfEdges.map(function (e, idx) {
+                return h("div", { className: css("edge-row"), key: "e" + idx },
+                  h("select", { value: e.source, onChange: function (ev) { updateWfEdge(idx, "source", ev.target.value); } },
+                    wfNodes.map(function (n) { return h("option", { value: n.id, key: n.id }, n.id); })),
+                  h("span", { className: css("muted") }, "→"),
+                  h("select", { value: e.target, onChange: function (ev) { updateWfEdge(idx, "target", ev.target.value); } },
+                    wfNodes.map(function (n) { return h("option", { value: n.id, key: n.id }, n.id); })),
+                  h("button", { className: css("btn") + " " + css("btn-sm") + " " + css("danger"), onClick: function () { removeWfEdge(idx); } }, "删除"));
+              }),
+              h("div", { className: css("edge-row") },
+                h("select", { value: edgeDraft.source, onChange: function (e) { setEdgeDraft(Object.assign({}, edgeDraft, { source: e.target.value })); } },
+                  h("option", { value: "" }, "起点"),
+                  wfNodes.map(function (n) { return h("option", { value: n.id, key: n.id }, n.id); })),
+                h("span", { className: css("muted") }, "→"),
+                h("select", { value: edgeDraft.target, onChange: function (e) { setEdgeDraft(Object.assign({}, edgeDraft, { target: e.target.value })); } },
+                  h("option", { value: "" }, "终点"),
+                  wfNodes.map(function (n) { return h("option", { value: n.id, key: n.id }, n.id); })),
+                h("button", { className: css("btn") + " " + css("btn-sm"), onClick: addWfEdge }, "添加连线"))),
             h("div", { className: css("edges") }, h("b", null, "Edges: "),
               ((wfDef && wfDef.edges) || []).map(function (e) { return h("span", { key: e.source + e.target }, e.source + " → " + e.target + "  "); })),
             h("details", { className: css("editor") },
