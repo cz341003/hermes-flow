@@ -83,7 +83,10 @@ import {
     var rows = active.map(function (x) {
       return h("div", { key: x.group_id }, h("b", null, x.node_id), " · " + x.done + "/" + x.total + " 批 · " + x.status);
     });
-    return h("article", { className: css("agent") },
+    return h("article", {
+      className: css("agent") + (props.selected ? " " + css("selected") : ""),
+      onClick: props.onClick
+    },
       h("div", { className: css("agent-hd") },
         h("div", { className: css("avatar") }, (a.name || "?").slice(0, 1)),
         h("div", null,
@@ -264,6 +267,7 @@ import {
     var agentFormState = useState({ name: "", role: "", description: "", skills: "", model: "" });
     var agentForm = agentFormState[0], setAgentForm = agentFormState[1];
     var agentMsgState = useState(""), agentMsg = agentMsgState[0], setAgentMsg = agentMsgState[1];
+    var agentSelState = useState(null), agentSel = agentSelState[0], setAgentSel = agentSelState[1];
     var skillFormState = useState({ name: "", description: "", phases: "transform", tags: "", body: "## Procedure\n1. \n\n## Pitfalls\n- \n\n## Verification\n- " });
     var skillForm = skillFormState[0], setSkillForm = skillFormState[1];
     var skillMsgState = useState(""), skillMsg = skillMsgState[0], setSkillMsg = skillMsgState[1];
@@ -555,6 +559,8 @@ import {
     var counts = { agents: data.agents.length, skills: data.skills.length, workflows: data.workflows.length, runs: data.runs.length };
     var activeRun = run || data.runs.filter(function (r) { return ["running", "paused", "gated"].indexOf(r.status) >= 0; })[0];
     var activeStats = data.agentStatus.filter(function (a) { return a.active && a.active.length; });
+    var selectedAgent = data.agents.filter(function (a) { return a.id === agentSel; })[0] || data.agents[0] || null;
+    var selectedAgentActive = selectedAgent ? ((data.agentStatus.filter(function (x) { return x.id === selectedAgent.id; })[0] || {}).active || []) : [];
     useEffect(function () {
       if (!qJob) return undefined;
       var active = true;
@@ -621,17 +627,48 @@ import {
                   agentMsg ? h("span", { className: css("muted") }, agentMsg) : null))),
             data.agents.length ? h("div", { className: css("cards") }, data.agents.map(function (a) {
               var active = (data.agentStatus.filter(function (x) { return x.id === a.id; })[0] || {}).active || [];
-              return h(AgentCard, { key: a.id, agent: a, active: active });
+              return h(AgentCard, {
+                key: a.id, agent: a, active: active,
+                selected: !!(selectedAgent && selectedAgent.id === a.id),
+                onClick: function () { setAgentSel(a.id); }
+              });
             })) : h(Empty))),
-        h(Panel, { title: "驱动与审计", sub: "driver 锁 / 最近写入边界违规" },
-          h("h4", { className: css("mini-title") }, "活跃 driver"),
-          data.drivers.length ? data.drivers.map(function (d) {
-            return h("div", { className: css("row") }, h("code", null, d.group_id), h("span", null, "PID " + (d.pid || "-") + " · " + d.age + "s"));
-          }) : h(Empty, null, "无活跃 driver"),
-          h("h4", { className: css("mini-title") }, "最近越界违规"),
-          data.audit.length ? data.audit.slice(0, 5).map(function (a) {
-            return h("div", { className: css("row"), key: a.name }, h("code", null, a.name), h("span", null, (a.violations || []).length + " 项 · 已回滚 " + (a.restored || []).length));
-          }) : h(Empty, null, "无越界记录"))) :
+        h("div", { className: css("stack") },
+          h(Panel, { title: "专家详情", sub: selectedAgent ? selectedAgent.id : "点击左侧专家卡" },
+            selectedAgent ? h("div", null,
+              h("div", { className: css("agent-hd") },
+                h("div", { className: css("avatar") }, (selectedAgent.name || "?").slice(0, 1)),
+                h("div", null,
+                  h("div", { className: css("agent-name") }, selectedAgent.name),
+                  h("div", { className: css("muted") }, selectedAgent.id + " · " + (selectedAgent.builtin ? "内置" : "用户"))),
+                selectedAgentActive.length ? h(Badge, { tone: "ok" }, "活跃") : h(Badge, { tone: "idle" }, "空闲")),
+              h("div", { className: css("kv") },
+                h("span", null, "model " + (selectedAgent.model || "-")),
+                h("span", null, "max_turns " + (selectedAgent.max_turns || "-")),
+                h("span", null, "toolsets " + ((selectedAgent.toolsets || []).join(", ") || "-"))),
+              h("h4", { className: css("mini-title") }, "Role"),
+              h("pre", { className: css("pre") }, selectedAgent.role || "-"),
+              selectedAgent.description ? h("div", { className: css("form-hint") }, selectedAgent.description) : null,
+              h("h4", { className: css("mini-title") }, "绑定技能"),
+              h("div", { className: css("chips") }, (selectedAgent.skills || []).map(function (sk) {
+                return h("span", { key: sk, className: css("chip") }, sk);
+              })),
+              h("h4", { className: css("mini-title") }, "loop_policy"),
+              h("pre", { className: css("pre") }, jsonText(selectedAgent.loop_policy || {})),
+              h("h4", { className: css("mini-title") }, "活跃批次"),
+              selectedAgentActive.length ? selectedAgentActive.map(function (x) {
+                return h("div", { className: css("row"), key: x.group_id }, h("code", null, x.group_id), h("span", null, x.node_id + " · " + x.done + "/" + x.total + " 批 · " + x.status));
+              }) : h(Empty, null, "当前无活跃批次")
+            ) : h(Empty, null, "点击左侧专家卡查看详情")),
+          h(Panel, { title: "驱动与审计", sub: "driver 锁 / 最近写入边界违规" },
+            h("h4", { className: css("mini-title") }, "活跃 driver"),
+            data.drivers.length ? data.drivers.map(function (d) {
+              return h("div", { className: css("row") }, h("code", null, d.group_id), h("span", null, "PID " + (d.pid || "-") + " · " + d.age + "s"));
+            }) : h(Empty, null, "无活跃 driver"),
+            h("h4", { className: css("mini-title") }, "最近越界违规"),
+            data.audit.length ? data.audit.slice(0, 5).map(function (a) {
+              return h("div", { className: css("row"), key: a.name }, h("code", null, a.name), h("span", null, (a.violations || []).length + " 项 · 已回滚 " + (a.restored || []).length));
+            }) : h(Empty, null, "无越界记录")))) :
 
       tab === "skills" ? h("div", { className: css("grid2") },
         h(Panel, { title: "技能库", sub: "SKILL.md 唯一事实源；点击查看正文" },

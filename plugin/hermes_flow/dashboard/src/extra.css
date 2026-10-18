@@ -35,7 +35,9 @@
 .hf2-panel-bd{padding:13px 15px}
 .hf2-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
 .hf2-card,.hf2-agent{min-width:0;padding:12px;border:1px solid var(--f-line);border-radius:10px;background:#0c1217;cursor:pointer;transition:border-color .15s,background .15s}
-.hf2-agent{cursor:default}
+.hf2-agent{cursor:pointer}
+.hf2-agent.hf2-selected{border-color:rgba(53,207,193,.55);background:rgba(53,207,193,.06)}
+.hf2-stack{display:flex;flex-direction:column;gap:12px;min-width:0}
 .hf2-card:hover,.hf2-agent:hover{border-color:#2e3c49;background:#0f161d}
 .hf2-card.selected,.hf2-list-item.selected,
 .hf2-card.hf2-selected,.hf2-list-item.hf2-selected{border-color:rgba(53,207,193,.55);background:rgba(53,207,193,.06)}
