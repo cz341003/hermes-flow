@@ -12,8 +12,8 @@ VERSION = re.search(r"^version:\s*(\S+)", (ROOT / "plugin.yaml").read_text(encod
                     re.M).group(1)
 OUT = ROOT / "dist" / f"hermes_flow-{VERSION}.zip"
 INCLUDE = ["plugin.yaml", "__init__.py", "cli.py", "tools.py", "runtime.py", "README.md",
-           "CHANGELOG.md", "install.ps1", "install.sh", "flow_core", "agents", "skills",
-           "workflows", "dashboard", "tests", "scripts"]
+           "USER_GUIDE.md", "CHANGELOG.md", "install.ps1", "install.sh", "flow_core",
+           "agents", "skills", "workflows", "dashboard", "tests", "scripts"]
 IGNORE = ("__pycache__", ".pyc", ".tmp", ".pytest_cache", "node_modules")
 
 
