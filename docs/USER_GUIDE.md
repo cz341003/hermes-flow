@@ -420,7 +420,135 @@ flow_batch_auto(group_id="<group>", max_batches=3, max_seconds=180,
 
 ---
 
-## 12. 相关文档
+## 12. 从零迁移一个 Vue2 项目
+
+> 重要：Dashboard 的「创建 Run」只创建记录；**真正的批次转换要在 Hermes 对话里调用 `flow_batch_auto`**。
+> 当前真实自动执行聚焦 `transform` 批次节点；结构/依赖分析、人工验收由对话 agent 或人工完成。
+
+### 12.1 迁移前准备
+
+```powershell
+cd E:\projects\my-vue2
+git checkout -b migration/vue3
+npm ci
+npm run build        # 先确认基线可构建；失败先修基线
+```
+
+建议：先备份/提交当前代码，迁移过程用独立分支。
+
+### 12.2 生成文件清单
+
+```powershell
+$root = "E:\projects\my-vue2"
+$exts = @(".vue",".js",".ts",".jsx",".tsx",".less",".scss",".css",".json")
+$files = Get-ChildItem -LiteralPath $root -Recurse -File |
+  Where-Object {
+    $exts -contains $_.Extension.ToLower() -and
+    $_.FullName -notmatch '\\(node_modules|dist|coverage|\.git)\\'
+  } |
+  ForEach-Object {
+    [pscustomobject]@{
+      path = $_.FullName.Substring($root.Length + 1).Replace('\','/')
+      size = $_.Length
+    }
+  }
+$files | ConvertTo-Json -Depth 5 | Set-Content "$root\..\flow-files.json" -Encoding utf8
+"$($files.Count) files -> flow-files.json"
+```
+
+先做小样本：从清单里取 5–10 个文件（含 1 个 `.vue`）跑一轮，再全量。
+
+### 12.3 在 Hermes 对话中执行
+
+把下面模板发给 Hermes（替换项目路径）：
+
+```text
+使用 hermes_flow 插件把 E:\projects\my-vue2 从 Vue2 迁移到
+Vue3 + Pinia + Vue Router 4 + Vite。请按顺序执行，不要跳步：
+
+1. 读取 E:\projects\my-vue2\..\flow-files.json，确认已排除
+   node_modules/dist/coverage/.git。
+2. 调用 flow_run_start(
+     workflow_id="vue3-migrate-6phase",
+     project_root="E:\\projects\\my-vue2",
+     files=<flow-files.json 的数组>,
+     title="my-vue2 -> Vue3")
+   记录返回的 run_id。
+3. 调用 flow_batch_plan(
+     run_id=<run_id>, node_id="transform",
+     policy={"max_files_per_batch": 5, "max_concurrent_batches": 1})
+   记录返回的 group_id。
+4. 循环调用：
+   flow_batch_auto(group_id=<group_id>, max_batches=2,
+                   max_seconds=180, apply=true, audit=true,
+                   concurrency=1, quality=false)
+   直到 done=true，或出现 rate_limited/失败/gated。
+   每轮报告 batches_done/batches_total 和失败批次。
+5. 全部 done 后调用：
+   flow_quality_gate(project_root="E:\\projects\\my-vue2",
+                     batch_scores=<已完成批次分数>,
+                     coverage=1.0, browser=true)
+   报告 build/typecheck/browser 结果。
+6. 任何 gated/越界：停止，报告 audit 证据，不要跳过审计。
+```
+
+### 12.4 建议参数（首轮）
+
+| 参数 | 首轮建议 | 说明 |
+|---|---|---|
+| `max_files_per_batch` | 3–5 | 小批更稳，失败易定位 |
+| `max_batches` | 1–2 | 每次工具调用别太久 |
+| `max_seconds` | 180 | driver 硬上限 360，工具硬超时 420 |
+| `apply` | `true` | 写入工作区；先确保 git 干净 |
+| `audit` | `true` | 越界自动回滚 |
+| `concurrency` | 1 | 先串行；稳定后再 2/3 |
+| `quality` | `false` | 全部完成后再单独跑质量门 |
+
+### 12.5 监控与失败处理
+
+Dashboard → **运行 / 批次**：
+
+- 批次表：done/running/failed/split；
+- 文件明细：staged/applied/hash；
+- 事件流：`batch_claimed → batch_ingest → batch_complete`；
+- 失败：`flow_batch_auto` 自动重试/拆批/修复；仍失败会出现在 failed；
+- 越界：Run `gated`，Dashboard「批准/驳回」或恢复 git/备份。
+
+### 12.6 质量与验收
+
+```text
+flow_quality_gate(project_root="E:\\projects\\my-vue2",
+                  batch_scores=[...], coverage=1.0, browser=true)
+```
+
+通过后人工验收：
+
+```powershell
+npm run build
+npm run test        # 若有
+npm run dev         # 手工点关键路由
+git diff --stat
+```
+
+### 12.7 断点/恢复
+
+- 关闭 Hermes 后重新打开：Run/批次状态在 SQLite；
+- 重新调用 `flow_batch_auto(group_id=...)` 会继续；
+- 崩溃后租约过期，下一个 driver 可重认领；
+- 暂停：Dashboard「暂停」或 `flow_run_pause`；
+- 取消：`flow_run_cancel`；
+- 回滚：`git checkout -- .` 或从 `plugin-data/hermes_flow/backups/` 恢复。
+
+### 12.8 当前边界
+
+- 真实自动执行是 `transform` 批次；`analyze/deps/quality/verify/fix` 节点目前偏编排/记录，需对话 agent 或人工执行；
+- 目标项目需能 `npm run build`；Chrome 质量门需要本机 Chrome/Edge；
+- 1000 文件成本高，先小样本再全量；
+- 迁移不是“一键完美”：样式/路由/antdv 语义仍需人工复核，质量门只能发现构建/渲染/路由错误。
+
+---
+
+## 13. 相关文档
 
 - [README](../README.md)：能力、架构、测试
 - [USAGE_CUSTOMIZE.md](USAGE_CUSTOMIZE.md)：专家/技能/工作流自定义
