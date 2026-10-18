@@ -123,6 +123,14 @@
     var memQueryState = useState(""), memQuery = memQueryState[0], setMemQuery = memQueryState[1];
     var memFormState = useState({ category: "antdv", trigger: "", solution: "", phase: "transform" });
     var memForm = memFormState[0], setMemForm = memFormState[1];
+    var agentFormState = useState({ name: "", role: "", description: "", skills: "", model: "" });
+    var agentForm = agentFormState[0], setAgentForm = agentFormState[1];
+    var agentMsgState = useState(""), agentMsg = agentMsgState[0], setAgentMsg = agentMsgState[1];
+    var skillFormState = useState({ name: "", description: "", phases: "transform", tags: "", body: "## Procedure\n1. \n\n## Pitfalls\n- \n\n## Verification\n- " });
+    var skillForm = skillFormState[0], setSkillForm = skillFormState[1];
+    var skillMsgState = useState(""), skillMsg = skillMsgState[0], setSkillMsg = skillMsgState[1];
+    var wfNewState = useState({ id: "", name: "", description: "" });
+    var wfNew = wfNewState[0], setWfNew = wfNewState[1];
     var runFormState = useState({ workflow_id: "vue3-migrate-6phase", title: "迁移 Run", project_root: "", files: '[{"path":"src/App.vue","size":800}]' });
     var runForm = runFormState[0], setRunForm = runFormState[1];
 
@@ -304,6 +312,55 @@
           .then(function () { setMemForm({ category: memForm.category, trigger: "", solution: "", phase: memForm.phase }); searchMemory(); });
       });
     }
+    function createExpert() {
+      if (!agentForm.name.trim() || !agentForm.role.trim()) { setError("专家名称与 role 必填"); return; }
+      act("expert-create", function () {
+        return api("/agents", { method: "POST", body: JSON.stringify({
+          name: agentForm.name.trim(), role: agentForm.role.trim(),
+          description: agentForm.description.trim(),
+          skills: agentForm.skills.split(",").map(function (s) { return s.trim(); }).filter(Boolean),
+          model: agentForm.model.trim(), toolsets: [], loop_policy: {}
+        }) }).then(function (a) {
+          setAgentForm({ name: "", role: "", description: "", skills: "", model: "" });
+          setAgentMsg("已新增专家 " + (a && a.id ? a.id : ""));
+        });
+      });
+    }
+    function createSkill() {
+      if (!skillForm.name.trim() || !skillForm.description.trim()) { setError("技能名称与 description 必填"); return; }
+      act("skill-create", function () {
+        return api("/skills", { method: "POST", body: JSON.stringify({
+          name: skillForm.name.trim(), description: skillForm.description.trim(),
+          body: skillForm.body,
+          phases: skillForm.phases.split(",").map(function (s) { return s.trim(); }).filter(Boolean),
+          tags: skillForm.tags.split(",").map(function (s) { return s.trim(); }).filter(Boolean)
+        }) }).then(function (sk) {
+          setSkillForm({ name: "", description: "", phases: "transform", tags: "", body: "## Procedure\n1. \n\n## Pitfalls\n- \n\n## Verification\n- " });
+          setSkillMsg("已新增技能 " + (sk && sk.id ? sk.id : ""));
+          if (sk && sk.id) loadSkill(sk.id);
+        });
+      });
+    }
+    function createWorkflowFromCurrent() {
+      var base;
+      try { base = wfJson ? JSON.parse(wfJson) : (wfDetail && wfDetail.definition); }
+      catch (e) { setWfMsg("当前 JSON 无效，无法复制"); return; }
+      if (!base) { setWfMsg("先选择一个模板作为基础"); return; }
+      var id = (wfNew.id || "").trim();
+      var name = (wfNew.name || "").trim();
+      if (!id || !name) { setWfMsg("新工作流 id 与名称必填"); return; }
+      var copy = JSON.parse(JSON.stringify(base));
+      copy.id = id; copy.name = name; copy.version = "1.0.0";
+      if ((wfNew.description || "").trim()) copy.description = wfNew.description.trim();
+      act("wf-create", function () {
+        return api("/workflows", { method: "POST", body: JSON.stringify({ definition: copy }) })
+          .then(function (w) {
+            setWfNew({ id: "", name: "", description: "" });
+            loadWorkflow(w.id);
+            setWfMsg("已创建工作流 " + w.id + "（可继续拖拽/JSON 编辑）");
+          });
+      });
+    }
 
     var tabs = [["experts", "专家"], ["skills", "技能"], ["workflows", "工作流"], ["runs", "运行 / 批次"], ["quality", "质量"], ["memory", "记忆"], ["settings", "设置"]];
     var s = data.status || {};
@@ -358,10 +415,22 @@
 
       tab === "experts" ? h("div", { className: css("grid2") },
         h(Panel, { title: "专家注册表", sub: "角色 / 技能 / 批次循环策略，运行态来自 agent-status" },
-          data.agents.length ? h("div", { className: css("cards") }, data.agents.map(function (a) {
-            var active = (data.agentStatus.filter(function (x) { return x.id === a.id; })[0] || {}).active || [];
-            return h(AgentCard, { key: a.id, agent: a, active: active });
-          })) : h(Empty)),
+          h("div", null,
+            h("details", { className: css("editor") },
+              h("summary", null, "＋ 新增专家（写入 plugin-data/hermes_flow/agents/）"),
+              h("div", { className: css("form") },
+                h("input", { value: agentForm.name, placeholder: "专家名称（如：样式迁移专家）", onChange: function (e) { setAgentForm(Object.assign({}, agentForm, { name: e.target.value })); } }),
+                h("textarea", { rows: 3, value: agentForm.role, placeholder: "role：职责 / 输入 / 输出 / 禁止事项（≥20 字）", onChange: function (e) { setAgentForm(Object.assign({}, agentForm, { role: e.target.value })); } }),
+                h("input", { value: agentForm.description, placeholder: "description（可选）", onChange: function (e) { setAgentForm(Object.assign({}, agentForm, { description: e.target.value })); } }),
+                h("input", { value: agentForm.skills, placeholder: "技能 id，逗号分隔（如 vue3-transform,antdv）", onChange: function (e) { setAgentForm(Object.assign({}, agentForm, { skills: e.target.value })); } }),
+                h("input", { value: agentForm.model, placeholder: "model（可选，留空继承默认）", onChange: function (e) { setAgentForm(Object.assign({}, agentForm, { model: e.target.value })); } }),
+                h("div", { className: css("btn-row") },
+                  h("button", { className: css("btn") + " " + css("primary"), onClick: createExpert, disabled: !!busy }, busy === "expert-create" ? "保存中…" : "保存专家"),
+                  agentMsg ? h("span", { className: css("muted") }, agentMsg) : null))),
+            data.agents.length ? h("div", { className: css("cards") }, data.agents.map(function (a) {
+              var active = (data.agentStatus.filter(function (x) { return x.id === a.id; })[0] || {}).active || [];
+              return h(AgentCard, { key: a.id, agent: a, active: active });
+            })) : h(Empty))),
         h(Panel, { title: "驱动与审计", sub: "driver 锁 / 最近写入边界违规" },
           h("h4", { className: css("mini-title") }, "活跃 driver"),
           data.drivers.length ? data.drivers.map(function (d) {
@@ -374,21 +443,43 @@
 
       tab === "skills" ? h("div", { className: css("grid2") },
         h(Panel, { title: "技能库", sub: "SKILL.md 唯一事实源；点击查看正文" },
-          h("div", { className: css("list") }, data.skills.map(function (sk) {
-            return h("button", { key: sk.id, className: css("list-item") + (skill && skill.id === sk.id ? " " + css("selected") : ""), onClick: function () { loadSkill(sk.id); } },
-              h("div", null, h("b", null, sk.name), h("div", { className: css("muted") }, sk.id + " · " + (sk.phases || []).join(", "))),
-              h("span", { className: css("chip") }, (sk.tags || []).slice(0, 2).join(" ")));
-          }))),
+          h("div", null,
+            h("details", { className: css("editor") },
+              h("summary", null, "＋ 新增技能（写入 plugin-data/hermes_flow/skills/<id>/SKILL.md）"),
+              h("div", { className: css("form") },
+                h("input", { value: skillForm.name, placeholder: "技能名称（如：Vue3 语法升级）", onChange: function (e) { setSkillForm(Object.assign({}, skillForm, { name: e.target.value })); } }),
+                h("input", { value: skillForm.description, placeholder: "description（≤120 字）", onChange: function (e) { setSkillForm(Object.assign({}, skillForm, { description: e.target.value })); } }),
+                h("input", { value: skillForm.phases, placeholder: "phases，逗号分隔（如 transform,quality）", onChange: function (e) { setSkillForm(Object.assign({}, skillForm, { phases: e.target.value })); } }),
+                h("input", { value: skillForm.tags, placeholder: "tags，逗号分隔（如 vue3,antdv）", onChange: function (e) { setSkillForm(Object.assign({}, skillForm, { tags: e.target.value })); } }),
+                h("textarea", { rows: 7, value: skillForm.body, placeholder: "正文必须含 Procedure / Pitfalls / Verification", onChange: function (e) { setSkillForm(Object.assign({}, skillForm, { body: e.target.value })); } }),
+                h("div", { className: css("btn-row") },
+                  h("button", { className: css("btn") + " " + css("primary"), onClick: createSkill, disabled: !!busy }, busy === "skill-create" ? "保存中…" : "保存技能"),
+                  skillMsg ? h("span", { className: css("muted") }, skillMsg) : null))),
+            h("div", { className: css("list") }, data.skills.map(function (sk) {
+              return h("button", { key: sk.id, className: css("list-item") + (skill && skill.id === sk.id ? " " + css("selected") : ""), onClick: function () { loadSkill(sk.id); } },
+                h("div", null, h("b", null, sk.name), h("div", { className: css("muted") }, sk.id + " · " + (sk.phases || []).join(", "))),
+                h("span", { className: css("chip") }, (sk.tags || []).slice(0, 2).join(" ")));
+            })))),
         h(Panel, { title: skill ? skill.name || skill.id : "技能详情", sub: skill ? skill.id : "选择左侧技能" },
           skill && skill.content ? h("pre", { className: css("pre") }, skill.content) : h(Empty, null, skill && skill.loading ? "加载中…" : "选择左侧技能查看 SKILL.md"))) :
 
       tab === "workflows" ? h("div", { className: css("grid2") },
         h(Panel, { title: "工作流模板", sub: "DAG DSL；点击查看节点" },
-          h("div", { className: css("cards") }, data.workflows.map(function (w) {
-            return h("article", { key: w.id, className: css("card") + (wfDetail && wfDetail.id === w.id ? " " + css("selected") : ""), onClick: function () { loadWorkflow(w.id); } },
-              h("b", null, w.name), h("div", { className: css("muted") }, w.id + " · v" + (w.version || "-")),
-              h("p", null, w.description || ""));
-          }))),
+          h("div", null,
+            h("details", { className: css("editor") },
+              h("summary", null, "＋ 新建工作流（复制当前模板为起点）"),
+              h("div", { className: css("form") },
+                h("input", { value: wfNew.id, placeholder: "新工作流 id（如 my-vue3-flow）", onChange: function (e) { setWfNew(Object.assign({}, wfNew, { id: e.target.value })); } }),
+                h("input", { value: wfNew.name, placeholder: "名称（如：自定义迁移流程）", onChange: function (e) { setWfNew(Object.assign({}, wfNew, { name: e.target.value })); } }),
+                h("input", { value: wfNew.description, placeholder: "description（可选）", onChange: function (e) { setWfNew(Object.assign({}, wfNew, { description: e.target.value })); } }),
+                h("div", { className: css("btn-row") },
+                  h("button", { className: css("btn") + " " + css("primary"), onClick: createWorkflowFromCurrent, disabled: !!busy }, busy === "wf-create" ? "创建中…" : "创建工作流"),
+                  wfMsg ? h("span", { className: css("muted") }, wfMsg) : null))),
+            h("div", { className: css("cards") }, data.workflows.map(function (w) {
+              return h("article", { key: w.id, className: css("card") + (wfDetail && wfDetail.id === w.id ? " " + css("selected") : ""), onClick: function () { loadWorkflow(w.id); } },
+                h("b", null, w.name), h("div", { className: css("muted") }, w.id + " · v" + (w.version || "-")),
+                h("p", null, w.description || ""));
+            })))),
         h(Panel, { title: wfDetail ? wfDetail.name : "工作流详情", sub: "拖拽 DAG / 编辑 / 创建 Run",
           right: h("button", { className: css("btn"), onClick: function () { setTab("runs"); } }, "去运行页") },
           wfDetail && wfDetail.definition ? h("div", null,

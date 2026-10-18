@@ -1,5 +1,13 @@
 # HERMES Flow 变更日志
 
+## Unreleased
+
+### WebUI 自定义入口
+- 专家 Tab：新增专家表单（name/role/description/skills/model）。
+- 技能 Tab：新增技能表单（name/description/phases/tags/正文），保存后直接打开 SKILL.md。
+- 工作流 Tab：复制当前模板创建新工作流，再拖拽/增删节点/JSON 编辑/保存。
+- 文档：`docs/USAGE_CUSTOMIZE.md`。
+
 ## 0.3.0（2026-10-18）
 
 ### R9 LoopX 后端

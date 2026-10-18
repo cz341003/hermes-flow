@@ -492,3 +492,13 @@ hermes flow backend --set sqlite
 - Dashboard 工作流页支持节点拖拽布局、添加/删除节点，位置保存在 `node.meta.x/y`；边仍用 JSON 编辑。
 - 质量采集默认异步：`POST /quality/collect` 返回 `job_id`，`GET /quality/jobs/{id}` 轮询；`background=false` 保持同步。
 
+---
+
+## 17. WebUI 自定义入口
+
+- **专家** Tab → 「＋ 新增专家」：名称、role（≥20字）、description、skills（逗号分隔）、model。
+- **技能** Tab → 「＋ 新增技能」：名称、description、phases、tags、正文；正文必须含 `Procedure` / `Pitfalls` / `Verification`。
+- **工作流** Tab：先选模板 → 「＋ 新建工作流（复制当前模板）」→ 拖拽/增删节点/JSON 编辑 → 保存。
+- 文件位置：`agents/<id>.json`、`skills/<id>/SKILL.md`、`workflows/<id>.json`（`plugin-data/hermes_flow/`）。
+- 完整步骤与 DSL 示例见仓库 `docs/USAGE_CUSTOMIZE.md`。
+
