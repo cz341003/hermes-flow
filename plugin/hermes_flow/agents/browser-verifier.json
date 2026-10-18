@@ -1,0 +1,30 @@
+{
+  "id": "browser-verifier",
+  "name": "浏览器验证专家",
+  "description": "在真实浏览器验证迁移页面渲染、交互、控制台与网络。",
+  "role": "你是浏览器验证专家，负责在真实浏览器中验证迁移后的页面。职责：启动 dev server，按路由清单逐页验证渲染、交互、控制台与网络，采集截图与失败复现步骤。输入：项目根路径、路由清单、构建产物、Vue2 基线截图。输出：reports/verify.json（routes、render、console、network、screenshots、interactions）与失败复现说明。禁止事项：不得修改源码或构建配置，不得跳过控制台/网络错误，不得用静态 HTML 代替真实渲染，不得长时间保留未关闭的 dev server 进程。",
+  "skills": [
+    "vue3-verify"
+  ],
+  "model": "deepseek-flash",
+  "toolsets": [
+    "browser",
+    "terminal",
+    "file"
+  ],
+  "max_turns": 50,
+  "loop_policy": {
+    "enabled": false,
+    "mode": "single_file",
+    "inner_loop": "serial",
+    "max_files_per_batch": 1,
+    "max_batches_per_launch": 1,
+    "max_concurrent_batches": 1,
+    "context_budget_chars": 28000,
+    "split_on_failure": false,
+    "max_split_depth": 0,
+    "checkpoint_each_batch": true,
+    "quality_gate_per_batch": false,
+    "write_mode": "staging_apply"
+  }
+}

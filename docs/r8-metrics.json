@@ -1,0 +1,18 @@
+{
+  "plan_1000": {
+    "files": 1000,
+    "batches": 150,
+    "waves": 50,
+    "covered": 1000
+  },
+  "stress": {
+    "batches": 100,
+    "done": 100,
+    "failed": 0,
+    "launches": 110,
+    "injected": 10,
+    "elapsed_seconds": 3.951,
+    "done_flag": true
+  },
+  "timestamp": 1792314118.7184823
+}

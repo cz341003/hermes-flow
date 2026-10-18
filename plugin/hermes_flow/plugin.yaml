@@ -1,0 +1,47 @@
+name: hermes_flow
+version: 0.2.0
+description: "Vue2→Vue3 migration control plane: agent/skill registry, DAG workflows, batch loop (FR-10), quality gates, recovery, experience base and Dashboard."
+author: HERMES Flow
+kind: standalone
+platforms:
+  - windows
+  - linux
+  - macos
+requires_hermes: ">=0.22"
+provides_tools:
+  - flow_agent_create
+  - flow_agent_list
+  - flow_agent_get
+  - flow_agent_update
+  - flow_agent_delete
+  - flow_skill_create
+  - flow_skill_list
+  - flow_workflow_create
+  - flow_workflow_list
+  - flow_workflow_get
+  - flow_workflow_validate
+  - flow_run_start
+  - flow_run_status
+  - flow_run_pause
+  - flow_run_resume
+  - flow_run_cancel
+  - flow_batch_plan
+  - flow_batch_next
+  - flow_batch_auto
+  - flow_batch_status
+  - flow_batch_items
+  - flow_batch_ingest
+  - flow_batch_complete
+  - flow_batch_fail
+  - flow_batch_split
+  - flow_batch_repair
+  - flow_gate_score
+  - flow_gate_aggregate
+  - flow_quality_collect
+  - flow_quality_gate
+  - flow_recovery_classify
+  - flow_experience_add
+  - flow_experience_search
+  - flow_board_render
+provides_hooks:
+  - pre_llm_call

@@ -1,0 +1,162 @@
+{
+  "schema": "hermes-flow/workflow@1",
+  "id": "single-file-demo",
+  "name": "单文件试点（快速验证）",
+  "description": "只迁移一个 Vue 文件：转化 → 质量门控 → 浏览器验证 → 人工确认。用于首次接入时验证工具链、插件注册与门控链路，不消耗大批次预算。",
+  "version": "1.0.0",
+  "vars": {
+    "project_root": "",
+    "target_file": "src/views/UserList.vue",
+    "package_manager": "pnpm",
+    "pass_score": 85,
+    "warn_score": 70
+  },
+  "nodes": [
+    {
+      "id": "transform",
+      "type": "batch",
+      "name": "单文件转化",
+      "phase": "transform",
+      "agent": "code-transformer",
+      "agent_name": "代码转化专家",
+      "skill": "vue3-transform",
+      "skills": [
+        "vue3-transform",
+        "vuex-to-pinia"
+      ],
+      "input": {
+        "target_file": "${target_file}",
+        "files": "[]",
+        "order": "topo"
+      },
+      "output": {
+        "file": "reports/demo-transform.json",
+        "staging_root": "staging/single-file-demo"
+      },
+      "batch": {
+        "source": "inline",
+        "order": "topo",
+        "size": 1,
+        "adaptive": false,
+        "context_budget_chars": 28000,
+        "inner_loop": "serial",
+        "concurrency": 1,
+        "max_split_depth": 0,
+        "split_on_failure": false,
+        "quality_gate_per_batch": true,
+        "write_mode": "staging_apply",
+        "files": []
+      },
+      "timeout_s": 900,
+      "max_attempts": 2,
+      "parallel": false
+    },
+    {
+      "id": "quality",
+      "type": "quality_gate",
+      "name": "质量评分",
+      "phase": "quality",
+      "agent": "quality-analyst",
+      "agent_name": "质量分析专家",
+      "skill": "vue3-quality",
+      "skills": [
+        "vue3-quality"
+      ],
+      "input": {
+        "diff": "staging/single-file-demo",
+        "transform_report": "reports/demo-transform.json"
+      },
+      "output": {
+        "file": "reports/demo-quality.json"
+      },
+      "gate": {
+        "signals": [
+          "ast",
+          "build",
+          "types",
+          "browser",
+          "behavior"
+        ],
+        "weights": [
+          20,
+          25,
+          15,
+          25,
+          15
+        ],
+        "pass": 85,
+        "warn": 70,
+        "max_rework": 1
+      },
+      "timeout_s": 900,
+      "max_attempts": 1,
+      "parallel": false
+    },
+    {
+      "id": "verify",
+      "type": "agent_task",
+      "name": "浏览器验证",
+      "phase": "verify",
+      "agent": "browser-verifier",
+      "agent_name": "浏览器验证专家",
+      "skill": "vue3-verify",
+      "skills": [
+        "vue3-verify"
+      ],
+      "input": {
+        "project_root": "${project_root}",
+        "route": "/",
+        "target_file": "${target_file}"
+      },
+      "output": {
+        "file": "reports/demo-verify.json",
+        "screenshots": "evidence/demo"
+      },
+      "timeout_s": 900,
+      "max_attempts": 2,
+      "parallel": false
+    },
+    {
+      "id": "review",
+      "type": "human_gate",
+      "name": "试点确认",
+      "phase": "fix",
+      "agent": "",
+      "agent_name": "迁移负责人",
+      "skill": null,
+      "skills": [],
+      "input": {
+        "evidence": [
+          "reports/demo-quality.json",
+          "reports/demo-verify.json"
+        ]
+      },
+      "output": {
+        "file": "reports/demo-acceptance.json"
+      },
+      "question": "单文件试点结果是否通过，可放量到全量批次？",
+      "options": [
+        "approve",
+        "reject"
+      ],
+      "timeout_s": 86400,
+      "max_attempts": 1,
+      "parallel": false
+    }
+  ],
+  "edges": [
+    {
+      "source": "transform",
+      "target": "quality"
+    },
+    {
+      "source": "quality",
+      "target": "verify",
+      "condition": "verdict != 'rework'"
+    },
+    {
+      "source": "verify",
+      "target": "review"
+    }
+  ]
+}

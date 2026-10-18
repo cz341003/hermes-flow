@@ -1,0 +1,37 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>HERMES Flow · UI 设计稿总览</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#07090B;color:#E6EDF3;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;padding:28px 32px}
+  h1{font-size:20px;font-weight:700;letter-spacing:.3px}
+  h1 span{color:#35CFC1}
+  .sub{color:#8B97A4;font-size:12px;margin-top:6px;margin-bottom:22px}
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+  .card{background:#0F1419;border:1px solid #1E262F;border-radius:12px;overflow:hidden}
+  .card img{width:100%;display:block;aspect-ratio:16/10;object-fit:cover;object-position:top left}
+  .cap{display:flex;align-items:center;gap:8px;padding:9px 11px;font-size:12px;color:#A9B5C1}
+  .cap b{color:#E6EDF3;font-weight:600}
+  .dot{width:6px;height:6px;border-radius:50%;background:#35CFC1;flex:none}
+  .meta{margin-top:18px;display:flex;gap:22px;font-size:11px;color:#5D6976}
+</style>
+</head>
+<body>
+  <h1>HERMES Flow <span>·</span> 迁移控制面 UI 设计稿总览</h1>
+  <div class="sub">Vue2 → Vue3 + Pinia + Vite 多智能体工程控制台 · 8 屏高保真原型 · 1600×1000</div>
+  <div class="grid">
+    <div class="card"><img src="screenshots/01-workbench.png" alt="工作台"><div class="cap"><span class="dot"></span><b>01 工作台</b> Goal 总览 / 进度 / 异常</div></div>
+    <div class="card"><img src="screenshots/02-monitor.png" alt="运行监控"><div class="cap"><span class="dot"></span><b>02 运行监控</b> DAG 实时态 / 专家状态 / 证据</div></div>
+    <div class="card"><img src="screenshots/03-agents.png" alt="专家"><div class="cap"><span class="dot"></span><b>03 专家</b> 注册 / 技能绑定 / 抽屉</div></div>
+    <div class="card"><img src="screenshots/04-skills.png" alt="技能"><div class="cap"><span class="dot"></span><b>04 技能</b> 技能库 / 校验 / 统计</div></div>
+    <div class="card"><img src="screenshots/05-flow.png" alt="编排"><div class="cap"><span class="dot"></span><b>05 编排</b> DAG 画布 / 属性 / 模板</div></div>
+    <div class="card"><img src="screenshots/06-memory.png" alt="记忆"><div class="cap"><span class="dot"></span><b>06 记忆</b> 经验库 / 偏好 / 召回</div></div>
+    <div class="card"><img src="screenshots/07-quality.png" alt="质量"><div class="cap"><span class="dot"></span><b>07 质量</b> 五信号评分 / 回环 / 校准</div></div>
+    <div class="card"><img src="screenshots/08-settings.png" alt="设置"><div class="cap"><span class="dot"></span><b>08 设置</b> 内核 / 配额 / 阈值 / 诊断</div></div>
+  </div>
+  <div class="meta"><span>交互原型：ui-design/index.html（离线打开，hash 路由切换 8 屏）</span><span>设计规范：ui-design/design-spec.md</span><span>还原提示词：ui-design/PROMPTS.md</span></div>
+</body>
+</html>
+

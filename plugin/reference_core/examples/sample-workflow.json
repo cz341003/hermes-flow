@@ -1,0 +1,19 @@
+{
+  "id": "sample-migration",
+  "name": "样例迁移流程（菱形依赖）",
+  "nodes": [
+    {"id": "analyze-a", "name": "结构分析 A", "phase": "analyze", "agent": "结构分析专家", "skill": "vue3-analyze"},
+    {"id": "analyze-b", "name": "结构分析 B", "phase": "analyze", "agent": "结构分析专家", "skill": "vue3-analyze"},
+    {"id": "transform", "name": "代码转化", "phase": "transform", "agent": "代码转化专家", "skill": "vue3-transform"},
+    {"id": "quality", "name": "质量分析", "phase": "quality", "agent": "质量分析专家", "skill": "vue3-quality"},
+    {"id": "verify", "name": "浏览器验证", "phase": "verify", "agent": "浏览器验证专家", "skill": "vue3-verify", "parallel": true},
+    {"id": "verify-2", "name": "浏览器验证(补充)", "phase": "verify", "agent": "浏览器验证专家", "skill": "vue3-verify", "parallel": true}
+  ],
+  "edges": [
+    {"source": "analyze-a", "target": "transform"},
+    {"source": "analyze-b", "target": "transform"},
+    {"source": "transform", "target": "quality"},
+    {"source": "quality", "target": "verify"},
+    {"source": "quality", "target": "verify-2"}
+  ]
+}

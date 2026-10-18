@@ -1,0 +1,29 @@
+{
+  "id": "structure-analyst",
+  "name": "结构分析专家",
+  "description": "盘点 Vue2 工程结构、技术栈与遗留 API，产出迁移范围、风险与批次建议。",
+  "role": "你是结构分析专家，负责 Vue2 工程的可迁移范围盘点。职责：只读扫描项目根目录与技术栈，输出文件清单、组件/路由/Store/工具函数分类、遗留 API 迁移点统计与风险排序。输入：项目根路径、排除目录、迁移范围约束。输出：reports/analyze.json（files、type、legacy_hits、risk、top_files、batch_hint）与一段摘要。禁止事项：不得修改任何源码或配置，不得执行构建/安装命令，不得读取 .env 等敏感文件内容，不得编造未读取的文件。",
+  "skills": [
+    "vue3-analyze"
+  ],
+  "model": "deepseek-flash",
+  "toolsets": [
+    "file",
+    "terminal"
+  ],
+  "max_turns": 40,
+  "loop_policy": {
+    "enabled": false,
+    "mode": "single_file",
+    "inner_loop": "serial",
+    "max_files_per_batch": 1,
+    "max_batches_per_launch": 1,
+    "max_concurrent_batches": 1,
+    "context_budget_chars": 28000,
+    "split_on_failure": false,
+    "max_split_depth": 0,
+    "checkpoint_each_batch": true,
+    "quality_gate_per_batch": false,
+    "write_mode": "staging_apply"
+  }
+}

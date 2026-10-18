@@ -1,0 +1,564 @@
+      <!-- ============================================================
+           05 运行监控
+      ============================================================ -->
+      <section class="page" id="page-monitor" aria-label="运行监控">
+        <div class="page-head">
+          <div>
+            <div class="eyebrow">Run · 05 <span class="dim">/ live board</span></div>
+            <h1 class="page-title">运行监控 <small>run-2026-1018-43</small></h1>
+            <p class="page-desc">实时查看阶段推进、Agent 状态、节点耗时与评分。异常自动退避，支持断点续跑与人工接管。</p>
+          </div>
+          <div class="head-actions">
+            <div class="head-meta"><span class="live"><span class="dot live"></span>LIVE</span> · 事件流连接正常</div>
+            <button class="btn" data-action="resume-run"><svg><use href="#i-corner"/></svg>断点续跑</button>
+            <button class="btn" data-action="pause-run" id="monitorPauseBtn"><svg><use href="#i-pause"/></svg><span>暂停</span></button>
+            <button class="btn danger" data-action="toast-warn" data-toast="中止需二次确认：将写入检查点"><svg><use href="#i-stop"/></svg>中止</button>
+          </div>
+        </div>
+
+        <div class="panel run-strip">
+          <div class="rs-top">
+            <div>
+              <div class="rs-title"><span class="st run"><span class="dt"></span>执行中</span> Admin 平台 Vue2→Vue3 · 批次 18 / 43</div>
+              <div class="rs-sub">goal 2026-1018 · 批次 18/43（42%）· 文件 126/287（44%）· 并发 3 · run-id 7f3c9a</div>
+            </div>
+            <div class="rs-actions">
+              <span class="mono" style="font-size:9.5px;color:var(--ink-4)">自动刷新 1.0s</span>
+              <button class="btn sm icon" title="刷新" aria-label="刷新" data-action="toast-info" data-toast="已同步最新运行状态"><svg><use href="#i-refresh"/></svg></button>
+              <button class="btn sm icon" title="更多" aria-label="更多"><svg><use href="#i-more"/></svg></button>
+            </div>
+          </div>
+          <div class="rs-progress">
+            <span class="mono" style="font-size:9px;color:var(--ink-4)">PROGRESS</span>
+            <div class="bar hi"><i id="monBar" style="width:61.4%"></i></div>
+            <span class="rs-elapsed" id="monPct">61.4<small>%</small></span>
+            <span class="mono" style="font-size:10.5px;color:var(--ink-3)">已用 <span id="monElapsed">01:12:48</span></span>
+            <span class="mono" style="font-size:10.5px;color:var(--ink-4)">ETA 00:41:20</span>
+          </div>
+          <div class="stepper-rail">
+            <div class="sr-item done"><div class="sr-bar"><i></i></div><div class="sr-txt"><span class="n">01</span>结构分析<span class="sr-dur">2.1s</span></div></div>
+            <div class="sr-item done"><div class="sr-bar"><i></i></div><div class="sr-txt"><span class="n">02</span>依赖分析<span class="sr-dur">8.4s</span></div></div>
+            <div class="sr-item done"><div class="sr-bar"><i></i></div><div class="sr-txt"><span class="n">03</span>代码转化<span class="sr-dur">42.6s</span></div></div>
+            <div class="sr-item now"><div class="sr-bar"><i></i></div><div class="sr-txt"><span class="n">04</span>质量门控<span class="sr-dur">进行中</span></div></div>
+            <div class="sr-item"><div class="sr-bar"><i></i></div><div class="sr-txt"><span class="n">05</span>浏览器验证<span class="sr-dur">—</span></div></div>
+            <div class="sr-item"><div class="sr-bar"><i></i></div><div class="sr-txt"><span class="n">06</span>修复回环<span class="sr-dur">1 次</span></div></div>
+          </div>
+        </div>
+
+        <div class="grid mon-grid" style="margin-top:var(--gap)">
+          <!-- left: batch queue + exceptions -->
+          <div class="sp3 stack">
+            <div class="panel batch-panel">
+              <div class="panel-hd">
+                <svg class="ph-icon"><use href="#i-layers"/></svg>
+                <span class="panel-title">批次队列</span>
+                <span class="count">18 / 43</span>
+                <span class="spacer"></span>
+                <span class="st run"><span class="dt"></span>running</span>
+              </div>
+              <div class="panel-bd">
+                <div class="wave-group now"><span class="wg-bar"></span>WAVE 3 · VIEWS<span class="wg-n">4 / 8 批</span></div>
+                <div class="batch-row" data-batch-row>
+                  <span class="batch-id">#19</span>
+                  <span class="batch-meta"><b>7 文件</b> · planned</span>
+                  <span class="batch-score muted">—</span>
+                  <span class="st idle"><span class="dt"></span>待调度</span>
+                  <svg class="bi-chev"><use href="#i-chev-right"/></svg>
+                </div>
+                <div class="batch-files">
+                  <div class="batch-file pending"><span class="bfi"></span>src/views/Dashboard.vue<span class="bf-p">pending</span></div>
+                  <div class="batch-file pending"><span class="bfi"></span>src/views/ReportList.vue<span class="bf-p">pending</span></div>
+                  <div class="batch-file pending"><span class="bfi"></span>src/views/UserDetail.vue<span class="bf-p">pending</span></div>
+                </div>
+                <div class="batch-row" data-batch-row>
+                  <span class="batch-id">#18</span>
+                  <span class="batch-meta"><b>7 文件</b> · running · 第 1 轮</span>
+                  <span class="batch-score">—</span>
+                  <span class="st run"><span class="dt"></span>运行中</span>
+                  <svg class="bi-chev"><use href="#i-chev-right"/></svg>
+                </div>
+                <div class="batch-files">
+                  <div class="batch-file done"><span class="bfi"></span>src/views/UserList.vue<span class="bf-p">done</span></div>
+                  <div class="batch-file done"><span class="bfi"></span>src/views/UserTable.vue<span class="bf-p">done</span></div>
+                  <div class="batch-file failed"><span class="bfi"></span>src/components/TreeSelect.vue<span class="bf-p">failed</span></div>
+                  <div class="batch-file done"><span class="bfi"></span>src/views/OrderDetail.vue<span class="bf-p">done</span></div>
+                  <div class="batch-file pending"><span class="bfi"></span>src/components/RichEditor.vue<span class="bf-p">pending</span></div>
+                  <div class="batch-file done"><span class="bfi"></span>src/components/BaseTable.vue<span class="bf-p">done</span></div>
+                  <div class="batch-file done"><span class="bfi"></span>src/composables/useTable.ts<span class="bf-p">done</span></div>
+                </div>
+                <div class="batch-row" data-batch-row>
+                  <span class="batch-id">#17</span>
+                  <span class="batch-meta"><b>7 文件</b> · gated · 第 1 轮</span>
+                  <span class="batch-score">88</span>
+                  <span class="st warn"><span class="dt"></span>门控中</span>
+                  <svg class="bi-chev"><use href="#i-chev-right"/></svg>
+                </div>
+                <div class="batch-files">
+                  <div class="batch-file done"><span class="bfi"></span>src/views/UserTable.vue<span class="bf-p">done</span></div>
+                  <div class="batch-file done"><span class="bfi"></span>src/components/BaseTable.vue<span class="bf-p">done</span></div>
+                </div>
+                <div class="batch-row" data-batch-row>
+                  <span class="batch-id">#16</span>
+                  <span class="batch-meta"><b>7 文件</b> · done · 第 1 轮</span>
+                  <span class="batch-score">92</span>
+                  <span class="st ok"><span class="dt"></span>完成</span>
+                  <svg class="bi-chev"><use href="#i-chev-right"/></svg>
+                </div>
+                <div class="batch-files">
+                  <div class="batch-file done"><span class="bfi"></span>src/views/OrderDetail.vue<span class="bf-p">done</span></div>
+                  <div class="batch-file done"><span class="bfi"></span>src/utils/request.js<span class="bf-p">done</span></div>
+                </div>
+                <div class="wave-group"><span class="wg-bar"></span>WAVE 2 · COMPONENTS<span class="wg-n">6 / 14 批</span></div>
+                <div class="batch-row" data-batch-row>
+                  <span class="batch-id">#15</span>
+                  <span class="batch-meta"><b>7 → 3 + 4</b> · split · 第 2 轮</span>
+                  <span class="batch-score">64</span>
+                  <span class="st warn"><span class="dt"></span>已拆分</span>
+                  <svg class="bi-chev"><use href="#i-chev-right"/></svg>
+                </div>
+                <div class="batch-files">
+                  <div class="batch-file failed"><span class="bfi"></span>src/components/RichEditor.vue<span class="bf-p">failed</span></div>
+                  <div class="batch-file done"><span class="bfi"></span>src/components/TreeSelect.vue<span class="bf-p">done</span></div>
+                  <div class="batch-file pending"><span class="bfi"></span>src/components/Uploader.vue<span class="bf-p">pending</span></div>
+                </div>
+                <div class="batch-row" data-batch-row>
+                  <span class="batch-id">#14</span>
+                  <span class="batch-meta"><b>6 文件</b> · done · 第 1 轮</span>
+                  <span class="batch-score">90</span>
+                  <span class="st ok"><span class="dt"></span>完成</span>
+                  <svg class="bi-chev"><use href="#i-chev-right"/></svg>
+                </div>
+                <div class="batch-files">
+                  <div class="batch-file done"><span class="bfi"></span>src/components/Uploader.vue<span class="bf-p">done</span></div>
+                  <div class="batch-file done"><span class="bfi"></span>src/components/BaseTable.vue<span class="bf-p">done</span></div>
+                </div>
+              </div>
+              <div class="batch-hint">
+                <span><b>tick</b> 10 批</span><span><b>并发</b> 1 / 1</span><span><b>预算</b> 28k chars</span><span><b>拆分</b> ≤2 层</span>
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-hd">
+                <svg class="ph-icon"><use href="#i-zap"/></svg>
+                <span class="panel-title">异常与自愈</span>
+                <span class="count">1 待处理</span>
+                <span class="spacer"></span>
+                <span class="st warn"><span class="dt"></span>自愈开启</span>
+              </div>
+              <div class="exc-list">
+                <div class="exc" id="excRateLimit">
+                  <div class="exc-ico warn"><svg><use href="#i-zap"/></svg></div>
+                  <div class="exc-main">
+                    <div class="exc-title">429 限流 <span class="mono">model-router</span></div>
+                    <div class="exc-desc">QPS 超限，指数退避后重试 · <code>attempt 2/5</code></div>
+                  </div>
+                  <div class="exc-side">
+                    <div class="countdown"><span id="excCountdown">8s</span><span class="cbar"><i id="excCbar" style="width:100%"></i></span></div>
+                    <button class="btn sm" data-action="recover">立即恢复</button>
+                  </div>
+                </div>
+                <div class="exc">
+                  <div class="exc-ico ok"><svg><use href="#i-check"/></svg></div>
+                  <div class="exc-main">
+                    <div class="exc-title">上下文截断 <span class="mono">UserList.vue</span></div>
+                    <div class="exc-desc">812 行超出窗口，已按 AST 切片为 3 段并合并</div>
+                  </div>
+                  <div class="exc-side"><span class="st ok" style="height:17px;font-size:9px"><span class="dt"></span>已自愈</span><span class="mono" style="font-size:9px;color:var(--ink-4)">+6.2s</span></div>
+                </div>
+                <div class="exc" id="excTimeout">
+                  <div class="exc-ico err"><svg><use href="#i-clock"/></svg></div>
+                  <div class="exc-main">
+                    <div class="exc-title">任务超时 <span class="mono">TreeSelect.vue</span></div>
+                    <div class="exc-desc">浏览器验证 180s 超时 · 已重试 1 次，仍失败</div>
+                  </div>
+                  <div class="exc-side"><button class="btn sm" data-action="recover">重试</button><span class="mono" style="font-size:9px;color:var(--ink-4)">17:19:12</span></div>
+                </div>
+              </div>
+              <div class="panel-ft" style="justify-content:space-between">
+                <span class="row" style="gap:7px"><span style="font-size:10.5px;color:var(--ink-3)">自动恢复</span><span class="switch" role="switch" aria-checked="true" tabindex="0" data-switch></span></span>
+                <button class="btn sm ghost" data-action="resume-run">从检查点续跑<svg><use href="#i-chev-right"/></svg></button>
+              </div>
+            </div>
+          </div>
+
+          <!-- middle: timeline + log -->
+          <div class="sp5 stack">
+            <div class="panel">
+              <div class="panel-hd">
+                <svg class="ph-icon"><use href="#i-clock"/></svg>
+                <span class="panel-title">执行时间轴</span>
+                <span class="count">batch events</span>
+                <span class="spacer"></span>
+                <span class="ph-link" data-action="toast-info" data-toast="已定位到最早未完成步骤">定位</span>
+              </div>
+              <div class="timeline">
+                <div class="tl-row run">
+                  <div class="tl-time">17:22</div><div class="tl-dot"></div>
+                  <div class="tl-body"><div class="tl-title">批次 #18 门控评分 <span class="mono">88</span></div><div class="tl-meta"><span class="mono">batch.gate</span><span class="sep"></span><span>7/7 文件</span></div></div>
+                </div>
+                <div class="tl-row ok">
+                  <div class="tl-time">17:21</div><div class="tl-dot"></div>
+                  <div class="tl-body"><div class="tl-title">批次 #18 写回完成</div><div class="tl-meta"><span class="mono">batch.ingest</span><span class="sep"></span><span>覆盖率 100%</span></div></div>
+                </div>
+                <div class="tl-row warn">
+                  <div class="tl-time">17:20</div><div class="tl-dot"></div>
+                  <div class="tl-body"><div class="tl-title">批次 #15 拆分重跑 <span class="mono">64 分</span></div><div class="tl-meta"><span class="mono">batch.split</span><span class="sep"></span><span>depth 1 → #15a / #15b</span></div></div>
+                </div>
+                <div class="tl-row warn">
+                  <div class="tl-time">17:19</div><div class="tl-dot"></div>
+                  <div class="tl-body"><div class="tl-title">批次 #14 429 退避</div><div class="tl-meta"><span class="mono">batch.retry</span><span class="sep"></span><span>attempt 2/3 · 8s</span></div></div>
+                </div>
+                <div class="tl-row ok">
+                  <div class="tl-time">17:18</div><div class="tl-dot"></div>
+                  <div class="tl-body"><div class="tl-title">批次 #17 门控通过 <span class="mono">88</span></div><div class="tl-meta"><span class="mono">batch.gate</span><span class="sep"></span><span>7/7 文件</span></div></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel log-panel" style="display:flex;flex-direction:column">
+              <div class="panel-hd">
+                <svg class="ph-icon"><use href="#i-terminal"/></svg>
+                <span class="panel-title">调度日志</span>
+                <span class="count">streaming</span>
+                <span class="spacer"></span>
+                <span class="row" style="gap:6px"><span style="font-size:10px;color:var(--ink-4)">自动滚动</span><span class="switch" role="switch" aria-checked="true" tabindex="0" data-switch style="transform:scale(.88)"></span></span>
+                <button class="btn sm icon" title="暂停日志" aria-label="暂停日志" data-action="toggle-log"><svg><use href="#i-pause"/></svg></button>
+              </div>
+              <div class="term" id="logTerm" style="flex:1;min-height:0">
+                <div class="tl"><span class="ts">17:22:41</span><span class="lv batch">batch.gate</span><span class="msg">批次 <b>#18</b> 门控评分 <b>88</b> · 7/7 文件通过</span></div>
+                <div class="tl"><span class="ts">17:22:38</span><span class="lv batch">batch.ingest</span><span class="msg">批次 <b>#18</b> 写回 7 文件 · 覆盖率 100% · +148/−96</span></div>
+                <div class="tl"><span class="ts">17:22:11</span><span class="lv turn">diff</span><span class="msg">批次 #18 生成 patch.diff · 保留中文注释 37 处 · 无删除业务逻辑</span></div>
+                <div class="tl"><span class="ts">17:21:56</span><span class="lv verify">build</span><span class="msg">批次 #18 增量构建 3.2s · <b>0 error</b> / 2 warning</span></div>
+                <div class="tl"><span class="ts">17:20:52</span><span class="lv split">batch.split</span><span class="msg">批次 #15 输出截断 → 拆分 #15a / #15b（depth 1 / 2）</span></div>
+                <div class="tl"><span class="ts">17:20:30</span><span class="lv turn">turn</span><span class="msg"><b>修复专家</b> 认领 TreeSelect.vue · 最小修复面 2 文件</span></div>
+                <div class="tl"><span class="ts">17:19:30</span><span class="lv batch">batch.retry</span><span class="msg">批次 #14 429 退避 · attempt 2/3 · 8s 后重新 launch</span></div>
+                <div class="tl"><span class="ts">17:19:22</span><span class="lv ckpt">model</span><span class="msg">切换备用通道 · qps 12/20 · latency 42ms</span></div>
+                <div class="tl"><span class="ts">17:18:47</span><span class="lv verify">verify</span><span class="msg">Playwright 12 shots · DOM 一致 · 0 console error</span></div>
+                <div class="tl"><span class="ts">17:18:02</span><span class="lv batch">batch.claim</span><span class="msg">批次 <b>#18</b> 认领 · lease 1800s · 7 文件 · correlation 7f3c9a</span></div>
+                <div class="tl"><span class="ts">17:17:40</span><span class="lv gate">gate</span><span class="msg">UserTable.vue score 92 ≥ 85 · passed · 写回记忆命中</span></div>
+                <div class="tl"><span class="ts">17:16:58</span><span class="lv ckpt">mem</span><span class="msg">命中经验「Webpack alias → Vite」×1 · 相似度 0.91</span></div>
+                <div class="tl"><span class="ts">17:16:40</span><span class="lv turn">turn</span><span class="msg"><b>依赖分析专家</b> 完成 18 个 package 的版本矩阵校验</span></div>
+                <div class="tl"><span class="ts">17:16:12</span><span class="lv batch">batch.gate</span><span class="msg">批次 #17 完成 · 7/7 文件通过 · 已进入 #18</span></div>
+                <div class="tl"><span class="ts">17:15:58</span><span class="lv verify">verify</span><span class="msg">UserList.vue 通过 type-check · vue-tsc 0 error</span></div>
+                <div class="tl"><span class="ts">17:15:22</span><span class="lv turn">turn</span><span class="msg"><b>结构分析专家</b> 输出风险清单 · 2 高风险 / 11 中风险</span></div>
+                <div class="tl"><span class="ts">17:15:01</span><span class="lv gate">gate</span><span class="msg">工作流校验通过 · 8 节点 / 8 连线 · 无环冲突</span></div>
+                <div class="tl"><span class="ts">17:14:48</span><span class="lv retry">warn</span><span class="msg">TreeSelect.vue 上下文 812 行超窗 · 触发 AST 切片</span></div>
+                <div class="tl"><span class="ts">17:14:20</span><span class="lv ckpt">turn</span><span class="msg"><b>浏览器验证专家</b> 预热 Chromium 通道 · 2 instances</span></div>
+                <div class="tl"><span class="ts">17:13:52</span><span class="lv turn">turn</span><span class="msg"><b>记忆归纳专家</b> 载入 128 条经验 · 相似度阈值 0.82</span></div>
+                <div class="tl"><span class="ts">17:13:10</span><span class="lv batch">batch.claim</span><span class="msg">批次 #18 启动 · 7 文件 · 并发 1 批 · 上下文 28k</span></div>
+                <div class="tl"><span class="ts">17:12:59</span><span class="lv ckpt">ckpt</span><span class="msg">恢复检查点 · 批次 #16 → #18 · 跳过 2 个已完成批</span></div>
+                <span class="cursor"></span>
+              </div>
+              <div class="panel-ft" style="justify-content:space-between">
+                <span class="mono" style="font-size:9.5px;color:var(--ink-4)">stdout · 21 行 · 缓冲 512KB</span>
+                <span class="row" style="gap:8px">
+                  <button class="btn sm ghost" data-action="toast-info" data-toast="已复制日志到剪贴板"><svg><use href="#i-copy"/></svg>复制</button>
+                  <button class="btn sm ghost" data-action="toast-info" data-toast="下载 run-2026-1018-43.log"><svg><use href="#i-download"/></svg>下载</button>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- right: agents + evidence -->
+          <div class="sp4 stack">
+            <div class="panel">
+              <div class="panel-hd">
+                <svg class="ph-icon"><use href="#i-bot"/></svg>
+                <span class="panel-title">Agent 实时状态</span>
+                <span class="spacer"></span>
+                <span class="mono" style="font-size:9px;color:var(--ink-4)">6 online</span>
+              </div>
+              <div class="agent-live">
+                <div class="ag-row run">
+                  <div class="ava sm green">质</div>
+                  <div class="ag-main"><div class="ag-name">质量分析专家 <span class="st run" style="height:16px;font-size:8.5px"><span class="dt"></span>run</span></div><div class="ag-task">评分 UserList.vue · 4/5 信号</div></div>
+                  <svg class="ag-spark" viewBox="0 0 44 16" fill="none"><path d="M1 12l6-2 6 3 7-6 7 4 7-8 9 2" stroke="#35CFC1" stroke-width="1.2"/></svg>
+                  <span class="ag-time" data-timer="4.2" data-direction="up">4.2s</span>
+                </div>
+                <div class="ag-row">
+                  <div class="ava sm">转</div>
+                  <div class="ag-main"><div class="ag-name">代码转化专家 <span class="st ok" style="height:16px;font-size:8.5px"><span class="dt"></span>idle</span></div><div class="ag-task">等待批次 #19 派单</div></div>
+                  <svg class="ag-spark" viewBox="0 0 44 16" fill="none"><path d="M1 9l6-3 6 1 7 4 7-4 7 2 9-3" stroke="#4E9E77" stroke-width="1.2"/></svg>
+                  <span class="ag-time">42.6s</span>
+                </div>
+                <div class="ag-row">
+                  <div class="ava sm amber">修</div>
+                  <div class="ag-main"><div class="ag-name">修复专家 <span class="st warn" style="height:16px;font-size:8.5px"><span class="dt"></span>loop</span></div><div class="ag-task">批次 #18 · TreeSelect.vue</div></div>
+                  <svg class="ag-spark" viewBox="0 0 44 16" fill="none"><path d="M1 7l6 3 6-2 7 5 7-3 7 2 9-6" stroke="#E0A93E" stroke-width="1.2"/></svg>
+                  <span class="ag-time" data-timer="38.2" data-direction="up">38.2s</span>
+                </div>
+                <div class="ag-row">
+                  <div class="ava sm blue">验</div>
+                  <div class="ag-main"><div class="ag-name">浏览器验证专家 <span class="st idle" style="height:16px;font-size:8.5px"><span class="dt"></span>wait</span></div><div class="ag-task">等待 gate 放行</div></div>
+                  <svg class="ag-spark" viewBox="0 0 44 16" fill="none"><path d="M1 12h42" stroke="#2A3541" stroke-width="1.2"/></svg>
+                  <span class="ag-time">—</span>
+                </div>
+                <div class="ag-row">
+                  <div class="ava sm grey">析</div>
+                  <div class="ag-main"><div class="ag-name">结构分析专家 <span class="st idle" style="height:16px;font-size:8.5px"><span class="dt"></span>idle</span></div><div class="ag-task">批次 #19 预读 · 7 文件</div></div>
+                  <svg class="ag-spark" viewBox="0 0 44 16" fill="none"><path d="M1 11l6-2 6-1 7 3 7-6 7 3 9-4" stroke="#4C5865" stroke-width="1.2"/></svg>
+                  <span class="ag-time">2.1s</span>
+                </div>
+                <div class="ag-row">
+                  <div class="ava sm grey">依</div>
+                  <div class="ag-main"><div class="ag-name">依赖分析专家 <span class="st ok" style="height:16px;font-size:8.5px"><span class="dt"></span>done</span></div><div class="ag-task">版本矩阵 · 18 packages</div></div>
+                  <svg class="ag-spark" viewBox="0 0 44 16" fill="none"><path d="M1 10l6 2 6-5 7 2 7 3 7-5 9-2" stroke="#4E9E77" stroke-width="1.2"/></svg>
+                  <span class="ag-time">8.4s</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel evidence-panel" style="display:flex;flex-direction:column;flex:1;min-height:0">
+              <div class="panel-hd">
+                <svg class="ph-icon"><use href="#i-file"/></svg>
+                <span class="panel-title">证据链</span>
+                <span class="count">批次 #18 · TreeSelect.vue</span>
+                <span class="spacer"></span>
+                <span class="st err"><span class="dt"></span>build failed</span>
+              </div>
+              <div class="evidence-tabs" role="tablist">
+                <button class="tab active" data-ev-tab="build">构建日志</button>
+                <button class="tab" data-ev-tab="diff">diff</button>
+                <button class="tab" data-ev-tab="shot">截图</button><button class="tab" data-ev-tab="batch">批次</button>
+              </div>
+              <div class="panel-bd evidence-bd" style="flex:1;min-height:0;overflow:auto">
+                <div class="evidence-pane on" id="ev-build">
+                  <div class="error-panel">
+                    <div class="ep-head"><svg><use href="#i-alert-circle"/></svg>构建失败 · 2 error / 4 warning</div>
+                    <p><code>TS2339</code> Property <code>filters</code> does not exist on type <code>TreeSelect</code>; <code>el-tree</code> 已由 <code>a-tree</code> 取代，node-key 类型不匹配。</p>
+                    <div class="ep-actions">
+                      <button class="btn sm" data-action="toast-info" data-toast="已重试构建 · 排队第 1 位"><svg><use href="#i-refresh"/></svg>重试构建</button>
+                      <button class="btn sm ghost" data-ev-jump="diff">查看 diff<svg><use href="#i-chev-right"/></svg></button>
+                    </div>
+                  </div>
+                  <div class="evidence-file" style="margin-top:9px"><svg><use href="#i-terminal"/></svg>build-8430.log · 3.2s</div>
+                  <pre class="code" style="max-height:126px"><span class="ctx">[vite] building for production...</span>
+<span class="ctx">[vue-tsc] src/components/TreeSelect.vue:118:18</span>
+<span class="del">  error TS2339: Property 'filters' does not exist</span>
+<span class="ctx">  [vue-tsc] src/components/TreeSelect.vue:142:9</span>
+<span class="del">  error TS2322: Type 'string' is not assignable to 'number'</span>
+<span class="ctx">[vite] 4 warnings · chunk size 812kb</span>
+<span class="ctx">[vite] build finished with 2 errors</span></pre>
+                </div>
+                <div class="evidence-pane" id="ev-diff">
+                  <div class="evidence-file"><svg><use href="#i-file"/></svg>src/components/TreeSelect.vue <span class="add">+18</span> <span class="del">−12</span></div>
+                  <pre class="code"><span class="hunk">@@ -112,8 +112,10 @@</span>
+<span class="ctx"> &lt;template&gt;</span>
+<span class="del">-  &lt;el-tree :data="treeData" @node-click="onClick"&gt;</span>
+<span class="add">+  &lt;a-tree :tree-data="treeData" :field-names="{ key: 'id' }"</span>
+<span class="add">+          @select="onSelect"&gt;</span>
+<span class="ctx">     &lt;template #default="{ data }"&gt;</span>
+<span class="ctx">       {{ data.label }}</span>
+<span class="ctx">     &lt;/template&gt;</span>
+<span class="del">-  &lt;/el-tree&gt;</span>
+<span class="add">+  &lt;/a-tree&gt;</span>
+<span class="hunk">@@ -138,6 +140,7 @@</span>
+<span class="del">-  filters: { formatDate }</span>
+<span class="add">+  const formatDate = (v) =&gt; dayjs(v).format('YYYY-MM-DD')</span></pre>
+                </div>
+                <div class="evidence-pane" id="ev-batch">
+                  <div class="evidence-file"><svg><use href="#i-layers"/></svg>batch-18.summary.json · 7 文件 · 5 done / 1 failed / 1 pending</div>
+                  <div class="batch-hint" style="padding:0;border:0;margin-bottom:6px">
+                    <span><b>批次</b> #18</span><span><b>评分</b> 88</span><span><b>耗时</b> 42.6s</span><span><b>租约</b> 1800s</span>
+                  </div>
+                  <table class="data" style="font-size:10px">
+                    <thead><tr><th>文件</th><th style="width:64px">状态</th><th class="num" style="width:78px">diff</th></tr></thead>
+                    <tbody>
+                      <tr><td class="mono">src/views/UserList.vue</td><td><span class="st ok" style="height:16px;font-size:8px"><span class="dt"></span>done</span></td><td class="num">+148/−96</td></tr>
+                      <tr><td class="mono">src/views/OrderDetail.vue</td><td><span class="st ok" style="height:16px;font-size:8px"><span class="dt"></span>done</span></td><td class="num">+22/−8</td></tr>
+                      <tr><td class="mono">src/components/TreeSelect.vue</td><td><span class="st err" style="height:16px;font-size:8px"><span class="dt"></span>failed</span></td><td class="num">—</td></tr>
+                      <tr><td class="mono">src/components/RichEditor.vue</td><td><span class="st idle" style="height:16px;font-size:8px">pending</span></td><td class="num">—</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="evidence-pane" id="ev-shot">
+                  <div class="shot">
+                    <div class="shot-top"><i></i><i></i><i></i><span class="mono" style="font-size:8px;color:var(--ink-4);margin-left:4px">localhost:5173/user/list</span></div>
+                    <div class="shot-body">
+                      <div class="pane">
+                        <div class="l w40"></div><div class="l w70"></div>
+                        <div class="grid2"><div></div><div></div><div></div><div></div></div>
+                        <div class="l w55" style="margin-top:6px"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="evidence-file" style="margin-top:8px"><svg><use href="#i-camera"/></svg>shot-12.png · 1440×900 · baseline diff 3.2%</div>
+                  <div class="note" style="margin-top:7px"><svg><use href="#i-info"/></svg><span>行为一致性 81：树节点点击后选中态未同步，已在修复建议中标注。</span></div>
+                </div>
+              </div>
+              <div class="panel-ft">
+                <span class="mono" style="font-size:9px;color:var(--ink-4)">证据 12 项 · 2 项失败</span>
+                <span class="spacer"></span>
+                <button class="btn sm ghost" data-action="toast-info" data-toast="已打开完整证据链">全部证据<svg><use href="#i-external"/></svg></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================
+           06 记忆中心
+      ============================================================ -->
+      <section class="page" id="page-memory" aria-label="记忆中心">
+        <div class="page-head">
+          <div>
+            <div class="eyebrow">Govern · 06 <span class="dim">/ memory center</span></div>
+            <h1 class="page-title">记忆中心 <small>128 experiences · 342 hits</small></h1>
+            <p class="page-desc">把踩坑、偏好与工作区事实沉淀为可检索的结构化记忆；运行时按相似度自动回灌，避免重复踩坑。</p>
+          </div>
+          <div class="head-actions">
+            <div class="head-meta"><span>自动回灌</span><span class="switch" role="switch" aria-checked="true" tabindex="0" data-switch></span><span style="color:var(--acc)">ON</span></div>
+            <button class="btn" data-action="toast-info" data-toast="导出记忆库为 memory.json"><svg><use href="#i-export"/></svg>导出</button>
+            <button class="btn primary" data-action="toast-info" data-toast="新建记忆：支持手动沉淀与从运行导入"><svg><use href="#i-plus"/></svg>沉淀经验</button>
+          </div>
+        </div>
+
+        <div class="mem-stats">
+          <div class="kpi acc">
+            <div class="kpi-top"><span class="kpi-label">经验卡片</span><span class="kpi-ico"><svg><use href="#i-memory"/></svg></span></div>
+            <div class="kpi-mid"><span class="kpi-num">128</span><span class="mono" style="font-size:10px;color:var(--ok)">+6 本周</span></div>
+            <div class="kpi-foot"><span>语法迁移 42 · API 兼容 31 · 构建 24</span></div>
+          </div>
+          <div class="kpi ok">
+            <div class="kpi-top"><span class="kpi-label">累计命中</span><span class="kpi-ico"><svg><use href="#i-target"/></svg></span></div>
+            <div class="kpi-mid"><span class="kpi-num">342</span><span class="spark" style="width:56px;height:20px"><svg viewBox="0 0 56 20" fill="none"><path d="M1 16l7-3 7 2 8-5 8 3 8-6 8 2 8-7" stroke="#56C98A" stroke-width="1.2"/></svg></span></div>
+            <div class="kpi-foot"><span class="delta up"><svg><use href="#i-arrow-up"/></svg>+38 今日</span></div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-top"><span class="kpi-label">回灌命中率</span><span class="kpi-ico"><svg><use href="#i-repeat"/></svg></span></div>
+            <div class="kpi-mid"><span class="kpi-num">76.4<small>%</small></span></div>
+            <div class="kpi-foot"><span>相似度阈值 0.82</span></div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-top"><span class="kpi-label">用户偏好</span><span class="kpi-ico"><svg><use href="#i-user"/></svg></span></div>
+            <div class="kpi-mid"><span class="kpi-num">12</span><span class="mono" style="font-size:10px;color:var(--ink-3)">已固化</span></div>
+            <div class="kpi-foot"><span>工作区记忆 34 条</span></div>
+          </div>
+        </div>
+
+        <div class="toolbar">
+          <div class="field" style="width:262px">
+            <svg><use href="#i-search"/></svg>
+            <input class="input" id="memSearch" placeholder="搜索坑类型 / 触发条件 / 解法" aria-label="搜索记忆">
+          </div>
+          <div class="filters" id="memFilters">
+            <button class="chip active" data-cat="all">全部 <span class="n">6</span></button>
+            <button class="chip" data-cat="syntax">语法迁移坑 <span class="n">2</span></button>
+            <button class="chip" data-cat="api">API 兼容坑 <span class="n">2</span></button>
+            <button class="chip" data-cat="build">构建坑 <span class="n">1</span></button>
+            <button class="chip" data-cat="flow">流程经验 <span class="n">1</span></button>
+          </div>
+          <div class="spacer"></div>
+          <span class="mono" style="font-size:10px;color:var(--ink-4)">按命中次数排序 · 全工作区</span>
+        </div>
+
+        <div class="mem-layout">
+          <div class="stack">
+            <div class="mem-grid" id="memGrid">
+              <article class="mem-card" data-cat="syntax" data-keys="filters 过滤器 移除 dateFormat computed 语法迁移坑">
+                <div class="mc-top"><span class="tag warn">语法迁移坑</span><span class="mono" style="font-size:9px;color:var(--ink-4)">syntax/filters</span><span class="mc-hits"><svg><use href="#i-target"/></svg>23 次</span></div>
+                <div class="mc-title">filters 过滤器在 Vue 3 中被移除</div>
+                <dl class="mc-grid">
+                  <div class="mc-item"><dt>触发条件</dt><dd>模板中出现 <code>{{ msg | dateFormat }}</code> 或组件内声明 <code>filters</code></dd></div>
+                  <div class="mc-item"><dt>解法</dt><dd class="sol">改写为 <code>computed</code> 或方法调用；批量场景由「Vue3 语法升级」技能自动转换，保留格式化函数签名。</dd></div>
+                </dl>
+                <div class="mc-foot"><span class="mono">最近命中 4m 前 · UserList.vue</span><span class="spacer"></span><button class="btn sm ghost" data-action="toast-ok" data-toast="已回灌 3 张经验卡片到当前运行">回灌</button></div>
+              </article>
+
+              <article class="mem-card" data-cat="api" data-keys="ztree a-tree 事件名 参数 兼容层 API 兼容坑">
+                <div class="mc-top"><span class="tag warn">API 兼容坑</span><span class="mono" style="font-size:9px;color:var(--ink-4)">api/ztree</span><span class="mc-hits"><svg><use href="#i-target"/></svg>8 次</span></div>
+                <div class="mc-title">ztree → a-tree 事件名与参数结构差异</div>
+                <dl class="mc-grid">
+                  <div class="mc-item"><dt>触发条件</dt><dd><code>onClick(event, treeId, treeNode)</code> 迁移后拿到的是 <code>(selectedKeys, info)</code></dd></div>
+                  <div class="mc-item"><dt>解法</dt><dd class="sol">在兼容层重映射 <code>treeNode</code> 字段（id→key、name→title），业务代码保持零改动。</dd></div>
+                </dl>
+                <div class="mc-foot"><span class="mono">最近命中 2m 前 · TreeSelect.vue</span><span class="spacer"></span><button class="btn sm ghost" data-action="toast-ok" data-toast="已回灌到修复专家上下文">回灌</button></div>
+              </article>
+
+              <article class="mem-card" data-cat="build" data-keys="Webpack alias Vite resolve 别名 构建坑">
+                <div class="mc-top"><span class="tag warn">构建坑</span><span class="mono" style="font-size:9px;color:var(--ink-4)">build/alias</span><span class="mc-hits"><svg><use href="#i-target"/></svg>15 次</span></div>
+                <div class="mc-title">Webpack alias 未同步到 Vite resolve.alias</div>
+                <dl class="mc-grid">
+                  <div class="mc-item"><dt>触发条件</dt><dd>深层导入 <code>@/utils/request</code> 在构建期报 <code>Failed to resolve import</code></dd></div>
+                  <div class="mc-item"><dt>解法</dt><dd class="sol">把 webpack <code>resolve.alias</code> 完整映射到 <code>vite.config.ts</code>，并校验 <code>@</code> / <code>~</code> / 业务别名三类。</dd></div>
+                </dl>
+                <div class="mc-foot"><span class="mono">最近命中 1h 前 · vite.config.ts</span><span class="spacer"></span><button class="btn sm ghost" data-action="toast-ok" data-toast="已回灌到依赖分析专家上下文">回灌</button></div>
+              </article>
+
+              <article class="mem-card" data-cat="syntax" data-keys="v-model sync model 选项 Vue3 语法迁移坑">
+                <div class="mc-top"><span class="tag warn">语法迁移坑</span><span class="mono" style="font-size:9px;color:var(--ink-4)">syntax/v-model</span><span class="mc-hits"><svg><use href="#i-target"/></svg>11 次</span></div>
+                <div class="mc-title">.sync 与 model 选项失效</div>
+                <dl class="mc-grid">
+                  <div class="mc-item"><dt>触发条件</dt><dd>子组件使用 <code>this.$emit('update:visible')</code> + <code>.sync</code> 修饰符</dd></div>
+                  <div class="mc-item"><dt>解法</dt><dd class="sol">改为 <code>defineModel()</code> 或 <code>v-model:visible</code>；旧写法在 Vue 3 静默失效。</dd></div>
+                </dl>
+                <div class="mc-foot"><span class="mono">最近命中 22m 前 · RichEditor.vue</span><span class="spacer"></span><button class="btn sm ghost" data-action="toast-ok" data-toast="已回灌 2 张经验卡片">回灌</button></div>
+              </article>
+
+              <article class="mem-card" data-cat="flow" data-keys="大文件 AST 切片 上下文截断 流程经验">
+                <div class="mc-top"><span class="tag">流程经验</span><span class="mono" style="font-size:9px;color:var(--ink-4)">flow/slicing</span><span class="mc-hits"><svg><use href="#i-target"/></svg>6 次</span></div>
+                <div class="mc-title">超过 800 行的组件按 AST 切片更稳</div>
+                <dl class="mc-grid">
+                  <div class="mc-item"><dt>触发条件</dt><dd>单文件 &gt; 800 行，模型出现上下文截断或半成品输出</dd></div>
+                  <div class="mc-item"><dt>解法</dt><dd class="sol">按 <code>&lt;script&gt;</code> / <code>&lt;template&gt;</code> / <code>&lt;style&gt;</code> 分段迁移，每段独立验证后合并，降低截断率。</dd></div>
+                </dl>
+                <div class="mc-foot"><span class="mono">最近命中 36m 前 · TreeSelect.vue（812 行）</span><span class="spacer"></span><button class="btn sm ghost" data-action="toast-ok" data-toast="已启用 AST 切片策略">回灌</button></div>
+              </article>
+
+              <article class="mem-card" data-cat="api" data-keys="$listeners $scopedSlots 移除 Vue3 API 兼容坑">
+                <div class="mc-top"><span class="tag warn">API 兼容坑</span><span class="mono" style="font-size:9px;color:var(--ink-4)">api/instance</span><span class="mc-hits"><svg><use href="#i-target"/></svg>9 次</span></div>
+                <div class="mc-title">$listeners / $scopedSlots 已移除</div>
+                <dl class="mc-grid">
+                  <div class="mc-item"><dt>触发条件</dt><dd>高阶组件透传 <code>v-on="$listeners"</code> 或读取 <code>$scopedSlots</code></dd></div>
+                  <div class="mc-item"><dt>解法</dt><dd class="sol">改用 <code>v-bind="$attrs"</code> + <code>inheritAttrs:false</code>；插槽统一走 <code>$slots</code>。</dd></div>
+                </dl>
+                <div class="mc-foot"><span class="mono">最近命中 3h 前 · BaseTable.vue</span><span class="spacer"></span><button class="btn sm ghost" data-action="toast-ok" data-toast="已回灌到代码转化专家上下文">回灌</button></div>
+              </article>
+            </div>
+            <div class="empty" id="memEmpty" style="display:none;border:1px dashed var(--line-2);border-radius:var(--r-md)">
+              <div class="e-ico"><svg><use href="#i-search"/></svg></div>
+              <h4>没有命中记忆</h4>
+              <p>当前关键词与筛选项无匹配。换一个坑类型，或从本次运行自动归纳新经验。</p>
+              <button class="btn sm" id="memReset">清除筛选</button>
+            </div>
+          </div>
+
+          <div class="stack rail-stack">
+            <div class="panel rail-panel">
+              <div class="panel-hd"><svg class="ph-icon"><use href="#i-user"/></svg><span class="panel-title">用户偏好</span><span class="count">12 条</span></div>
+              <div class="panel-bd">
+                <div class="pref-row"><span class="pr-k">代码风格</span><span class="pr-v">统一使用 <code>&lt;script setup&gt;</code>，禁止 Options API 混写</span></div>
+                <div class="pref-row"><span class="pr-k">注释</span><span class="pr-v">保留原中文注释，迁移不改写语义</span></div>
+                <div class="pref-row"><span class="pr-k">命名</span><span class="pr-v">组件 PascalCase，store 使用 <code>useXxxStore</code></span></div>
+                <div class="pref-row"><span class="pr-k">类型</span><span class="pr-v">禁止 <code>any</code>；接口优先 <code>interface</code></span></div>
+                <div class="pref-row"><span class="pr-k">测试</span><span class="pr-v">Vitest 单测 + Playwright 行为验证双轨</span></div>
+              </div>
+              <div class="panel-ft"><span class="mono" style="font-size:9px;color:var(--ink-4)">最后更新 10-16</span><span class="spacer"></span><button class="btn sm ghost" data-action="toast-info" data-toast="偏好编辑：新增一条长期偏好">编辑</button></div>
+            </div>
+
+            <div class="panel rail-panel">
+              <div class="panel-hd"><svg class="ph-icon"><use href="#i-folder"/></svg><span class="panel-title">工作区记忆</span><span class="count">src/**</span></div>
+              <div class="panel-bd" style="padding-top:5px;padding-bottom:5px">
+                <div class="ws-row"><span class="mono">src/views/UserList.vue</span><span class="muted" style="font-size:9px">v3 迁移</span><span class="st ok"><span class="dt"></span>done</span></div>
+                <div class="ws-row"><span class="mono">src/components/TreeSelect.vue</span><span class="muted" style="font-size:9px">回环</span><span class="st warn"><span class="dt"></span>round 2</span></div>
+                <div class="ws-row"><span class="mono">src/store/modules/user.js</span><span class="muted" style="font-size:9px">Pinia</span><span class="st idle"><span class="dt"></span>todo</span></div>
+                <div class="ws-row"><span class="mono">vite.config.ts</span><span class="muted" style="font-size:9px">alias</span><span class="st ok"><span class="dt"></span>done</span></div>
+                <div class="ws-row"><span class="mono">src/utils/request.js</span><span class="muted" style="font-size:9px">compat</span><span class="st info"><span class="dt"></span>agent</span></div>
+              </div>
+            </div>
+
+            <div class="panel rail-panel">
+              <div class="panel-hd"><svg class="ph-icon"><use href="#i-repeat"/></svg><span class="panel-title">回灌设置</span></div>
+              <div class="panel-bd">
+                <div class="switch-row" style="padding-top:0"><div class="sr-txt"><strong>自动回灌</strong><span>命中相似度 ≥ 0.82 时注入上下文</span></div><span class="switch" role="switch" aria-checked="true" tabindex="0" data-switch></span></div>
+                <div class="switch-row" style="border-top:1px solid #192129"><div class="sr-txt"><strong>跨工作区共享</strong><span>仅共享通用语法坑，不含业务代码</span></div><span class="switch" role="switch" aria-checked="false" tabindex="0" data-switch></span></div>
+                <div class="feed-stats" style="margin-top:10px">
+                  <div><div class="fs-l">今日注入</div><div class="fs-v">38</div></div>
+                  <div><div class="fs-l">节省重试</div><div class="fs-v">12</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>

@@ -1,0 +1,20 @@
+{
+  "serial": {
+    "concurrency": 1,
+    "done": true,
+    "batches": 3,
+    "max_active": 1,
+    "elapsed_seconds": 0.552,
+    "stable_order": true,
+    "worktree_files": 0
+  },
+  "parallel": {
+    "concurrency": 3,
+    "done": true,
+    "batches": 3,
+    "max_active": 3,
+    "elapsed_seconds": 0.235,
+    "stable_order": true,
+    "worktree_files": 9
+  }
+}

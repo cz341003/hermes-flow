@@ -1,0 +1,464 @@
+      <!-- ============================================================
+           01 工作台
+      ============================================================ -->
+      <section class="page active" id="page-workbench" aria-label="工作台">
+        <div class="page-head">
+          <div>
+            <div class="eyebrow">Run · 01 <span class="dim">/ live mission</span></div>
+            <h1 class="page-title">工作台 <small>2026-10-18 17:22:41</small></h1>
+            <p class="page-desc">当前目标：将 <b>Admin 平台</b> 287 个 Vue2 文件迁移至 Vue3 + Pinia + Vite。六阶段工作流自动推进，五信号质量门控 ≥ 85 才放行。</p>
+          </div>
+          <div class="head-actions">
+            <div class="head-meta"><span class="live"><span class="dot live"></span>LIVE</span> · 同步 4s 前</div>
+            <button class="btn" data-action="toast-info" data-toast="目标切换面板即将开放"><svg><use href="#i-folder"/></svg>目标</button>
+            <button class="btn primary" data-action="toast-navigator" data-target="monitor"><svg><use href="#i-play"/></svg>查看当前运行</button>
+          </div>
+        </div>
+
+        <div class="kpi-grid">
+          <div class="kpi acc">
+            <div class="kpi-top"><span class="kpi-label">目标文件</span><span class="kpi-ico"><svg><use href="#i-file"/></svg></span></div>
+            <div class="kpi-mid">
+              <span class="kpi-num">287</span>
+              <svg class="spark" viewBox="0 0 66 22" fill="none" aria-hidden="true">
+                <path d="M1 18 10 15 19 16 28 11 37 12 46 8 55 9 65 4" stroke="#35CFC1" stroke-width="1.3" opacity=".8"/>
+                <path d="M1 18 10 15 19 16 28 11 37 12 46 8 55 9 65 4V22H1z" fill="url(#kw1)" opacity=".5"/>
+                <defs><linearGradient id="kw1" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#35CFC1" stop-opacity=".3"/><stop offset="1" stop-color="#35CFC1" stop-opacity="0"/></linearGradient></defs>
+              </svg>
+            </div>
+            <div class="kpi-foot"><span>43 批次 · 单批 7 文件</span></div>
+          </div>
+          <div class="kpi ok">
+            <div class="kpi-top"><span class="kpi-label">已转化</span><span class="kpi-ico"><svg><use href="#i-check-circle"/></svg></span></div>
+            <div class="kpi-mid"><span class="kpi-num">126 <small>/ 287</small></span><span class="mono" style="color:var(--ok);font-size:11px">43.9%</span></div>
+            <div class="kpi-foot"><span class="delta up"><svg><use href="#i-arrow-up"/></svg>+12 本批</span><span>· 门控通过 78</span></div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-top"><span class="kpi-label">质量通过率</span><span class="kpi-ico"><svg><use href="#i-shield"/></svg></span></div>
+            <div class="kpi-mid"><span class="kpi-num">91.0<small>%</small></span><span class="mono" style="color:var(--ink-3);font-size:11px">均值 88.6</span></div>
+            <div class="kpi-foot"><span class="delta up"><svg><use href="#i-arrow-up"/></svg>+2.1</span><span>· 门控阈值 85</span></div>
+          </div>
+          <div class="kpi warn">
+            <div class="kpi-top"><span class="kpi-label">活跃异常</span><span class="kpi-ico"><svg><use href="#i-alert"/></svg></span></div>
+            <div class="kpi-mid"><span class="kpi-num" style="color:var(--warn)">3</span><span class="mono" style="color:var(--ink-3);font-size:10.5px">1 可自动恢复</span></div>
+            <div class="kpi-foot"><span>429 限流 · 上下文截断 · 超时</span></div>
+          </div>
+        </div>
+
+        <div class="run-layout" style="margin-top:var(--gap)">
+          <!-- current run -->
+          <div class="panel run-panel">
+            <div class="panel-hd">
+              <span class="dot live"></span>
+              <span class="panel-title">当前运行</span>
+              <span class="count">批次 18 / 43</span>
+              <span class="spacer"></span>
+              <span class="st run"><span class="dt"></span>执行中</span>
+              <span class="ph-link" data-action="toast-navigator" data-target="monitor">完整运行 <svg><use href="#i-chev-right"/></svg></span>
+            </div>
+            <div class="run-top">
+              <div class="run-goal">
+                <div class="rg-k">Workflow · Vue2 → Vue3 六阶段模板</div>
+                <div class="rg-v">质量门控 <code>gate.score ≥ 85</code> · 回环上限 3 轮</div>
+              </div>
+              <div class="run-actions">
+                <button class="btn sm" data-action="pause-run"><svg><use href="#i-pause"/></svg><span>暂停</span></button>
+                <button class="btn sm icon" title="更多" aria-label="更多"><svg><use href="#i-more"/></svg></button>
+              </div>
+            </div>
+            <div class="run-progress">
+              <div class="rp-line">
+                <span class="rp-label">阶段 <b>4 / 6</b> · 质量门控 · <b>UserList.vue</b> 评分中</span>
+                <span class="rp-pct" id="wbPct">61.4<small>%</small></span>
+              </div>
+              <div class="bar hi"><i id="wbBar" style="width:61.4%"></i></div>
+              <div class="rp-sub">
+                <span class="item"><svg width="10" height="10"><use href="#i-clock"/></svg>已用 01:12:48</span>
+                <span class="item">ETA 00:41:20</span>
+                <span class="item">并发 3 / 8</span>
+                <span class="item" style="margin-left:auto;color:var(--ink-3)">18 / 43 批次</span>
+              </div>
+              <div class="batch-progress">
+                <div class="bp-row">
+                  <span class="bp-label"><svg><use href="#i-layers"/></svg>批次循环</span>
+                  <span class="bp-val">批次 <b>18 / 43</b>（42%）<span class="sep">·</span>文件 <b>126 / 287</b>（44%）</span>
+                </div>
+                <div class="bp-bars">
+                  <div class="bp-item batch"><div class="bp-top"><span>BATCH</span><span>42%</span></div><div class="bar"><i style="width:42%"></i></div></div>
+                  <div class="bp-item files"><div class="bp-top"><span>FILES</span><span>44%</span></div><div class="bar"><i style="width:44%"></i></div></div>
+                </div>
+              </div>
+            </div>
+            <div class="stage-rail">
+              <div class="stage done">
+                <div class="sg-top"><span class="sg-idx">01</span><span class="sg-dur">2.1s</span></div>
+                <div class="sg-name">结构分析</div><div class="sg-agent">结构分析专家</div>
+                <div class="sg-st"><span class="st ok"><span class="dt"></span>完成</span></div>
+              </div>
+              <div class="rail-link done"></div>
+              <div class="stage done">
+                <div class="sg-top"><span class="sg-idx">02</span><span class="sg-dur">8.4s</span></div>
+                <div class="sg-name">依赖分析</div><div class="sg-agent">依赖分析专家</div>
+                <div class="sg-st"><span class="st ok"><span class="dt"></span>完成</span></div>
+              </div>
+              <div class="rail-link done"></div>
+              <div class="stage done">
+                <div class="sg-top"><span class="sg-idx">03</span><span class="sg-dur">42.6s</span></div>
+                <div class="sg-name">代码转化</div><div class="sg-agent">代码转化专家</div>
+                <div class="sg-st"><span class="st ok"><span class="dt"></span>完成</span></div>
+              </div>
+              <div class="rail-link now"></div>
+              <div class="stage now">
+                <div class="sg-top"><span class="sg-idx">04</span><svg class="sg-ico"><use href="#i-shield"/></svg><span class="sg-dur">评分中</span></div>
+                <div class="sg-name">质量门控</div><div class="sg-agent">质量分析专家</div>
+                <div class="sg-st"><span class="st run"><span class="dt"></span>运行中</span></div>
+              </div>
+              <div class="rail-link"></div>
+              <div class="stage todo">
+                <div class="sg-top"><span class="sg-idx">05</span><span class="sg-dur">—</span></div>
+                <div class="sg-name">浏览器验证</div><div class="sg-agent">浏览器验证专家</div>
+                <div class="sg-st"><span class="st idle"><span class="dt"></span>等待</span></div>
+              </div>
+              <div class="rail-link"></div>
+              <div class="stage todo">
+                <div class="sg-top"><span class="sg-idx">06</span><span class="sg-dur">—</span></div>
+                <div class="sg-name">修复回环</div><div class="sg-agent">修复专家</div>
+                <div class="sg-st"><span class="st idle"><span class="dt"></span>待命</span></div>
+              </div>
+            </div>
+            <div class="loop-note">
+              <svg><use href="#i-repeat"/></svg>
+              <span>回环中 · <b>TreeSelect.vue</b> 行为一致性 45 分，第 2 / 3 轮修复</span>
+              <span class="spacer"></span>
+              <span class="mono">+38.2s</span>
+            </div>
+          </div>
+
+          <!-- agent live -->
+          <div class="panel">
+            <div class="panel-hd">
+              <svg class="ph-icon"><use href="#i-bot"/></svg>
+              <span class="panel-title">Agent 实时状态</span>
+              <span class="count">6 在线</span>
+              <span class="spacer"></span>
+              <span class="ph-link" data-action="toast-navigator" data-target="agents">专家管理 <svg><use href="#i-chev-right"/></svg></span>
+            </div>
+            <div class="agent-load">
+              <div class="al-row">
+                <div class="ava sm">转</div>
+                <div class="al-main"><div class="al-name">代码转化专家</div><div class="al-task">批次 #18 · 7 文件</div></div>
+                <div class="al-meter"><div class="bar"><i style="width:100%"></i></div><div class="al-cap"><span>done</span><span class="mono">42.6s</span></div></div>
+                <span class="st ok"><span class="dt"></span>完成</span>
+              </div>
+              <div class="al-row">
+                <div class="ava sm green">析</div>
+                <div class="al-main"><div class="al-name">质量分析专家</div><div class="al-task">评分 UserList.vue</div></div>
+                <div class="al-meter"><div class="bar"><i style="width:72%"></i></div><div class="al-cap"><span>scoring</span><span class="mono">4.2s</span></div></div>
+                <span class="st run"><span class="dt"></span>运行</span>
+              </div>
+              <div class="al-row">
+                <div class="ava sm amber">修</div>
+                <div class="al-main"><div class="al-name">修复专家</div><div class="al-task">TreeSelect.vue · 第2轮</div></div>
+                <div class="al-meter"><div class="bar warn"><i style="width:38%"></i></div><div class="al-cap"><span>loop</span><span class="mono">+38.2s</span></div></div>
+                <span class="st warn"><span class="dt"></span>回环</span>
+              </div>
+              <div class="al-row">
+                <div class="ava sm blue">验</div>
+                <div class="al-main"><div class="al-name">浏览器验证专家</div><div class="al-task">等待 gate 放行</div></div>
+                <div class="al-meter"><div class="bar"><i style="width:0%"></i></div><div class="al-cap"><span>queued</span><span class="mono">—</span></div></div>
+                <span class="st idle"><span class="dt"></span>等待</span>
+              </div>
+              <div class="al-row">
+                <div class="ava sm grey">析</div>
+                <div class="al-main"><div class="al-name">结构分析专家</div><div class="al-task">批次 #19 · 预读</div></div>
+                <div class="al-meter"><div class="bar"><i style="width:0%"></i></div><div class="al-cap"><span>idle</span><span class="mono">—</span></div></div>
+                <span class="st idle"><span class="dt"></span>空闲</span>
+              </div>
+              <div class="al-row">
+                <div class="ava sm grey">记</div>
+                <div class="al-main"><div class="al-name">记忆归纳专家</div><div class="al-task">本批次经验归纳</div></div>
+                <div class="al-meter"><div class="bar"><i style="width:0%"></i></div><div class="al-cap"><span>idle</span><span class="mono">—</span></div></div>
+                <span class="st idle"><span class="dt"></span>空闲</span>
+              </div>
+            </div>
+            <div class="panel-ft" style="justify-content:space-between">
+              <span class="mono" style="font-size:9.5px;color:var(--ink-4)">调度心跳 1.2s · 队列 3</span>
+              <span class="mono" style="font-size:9.5px;color:var(--ink-3)">并发 3 / 8</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid" style="margin-top:var(--gap)">
+          <div class="panel sp7">
+            <div class="panel-hd">
+              <svg class="ph-icon"><use href="#i-diff"/></svg>
+              <span class="panel-title">执行证据流</span>
+              <span class="count">最近 6 条</span>
+              <span class="spacer"></span>
+              <span class="ph-link" data-action="toast-navigator" data-target="monitor">证据详情 <svg><use href="#i-chev-right"/></svg></span>
+            </div>
+            <div class="ev-list">
+              <div class="ev-row">
+                <div class="ev-ico ok"><svg><use href="#i-check"/></svg></div>
+                <div class="ev-main"><div class="ev-title">构建通过 · vite build 3.2s · 0 error / 2 warn</div><div class="ev-meta">src/views/UserList.vue · 证据 build-8431.log</div></div>
+                <span class="st ok"><span class="dt"></span>通过</span><span class="ev-time">17:21:56</span>
+              </div>
+              <div class="ev-row">
+                <div class="ev-ico acc"><svg><use href="#i-camera"/></svg></div>
+                <div class="ev-main"><div class="ev-title">DOM 快照比对 · 表格列 / 分页 / 空态一致</div><div class="ev-meta">playwright · 12 shots · 0 console error</div></div>
+                <span class="st info"><span class="dt"></span>快照</span><span class="ev-time">17:21:41</span>
+              </div>
+              <div class="ev-row">
+                <div class="ev-ico warn"><svg><use href="#i-alert"/></svg></div>
+                <div class="ev-main"><div class="ev-title">评分 64 · behavior 45 低于 70，进入回环</div><div class="ev-meta">TreeSelect.vue · round 2/3 · 修复专家接单</div></div>
+                <span class="st warn"><span class="dt"></span>回环</span><span class="ev-time">17:20:52</span>
+              </div>
+              <div class="ev-row">
+                <div class="ev-ico ok"><svg><use href="#i-shield"/></svg></div>
+                <div class="ev-main"><div class="ev-title">评分 88 · ast 92 / build 88 / types 86 / browser 90 / behavior 84</div><div class="ev-meta">UserList.vue · 通过门控 85 · 已写检查点</div></div>
+                <span class="st ok"><span class="dt"></span>通过</span><span class="ev-time">17:20:11</span>
+              </div>
+              <div class="ev-row">
+                <div class="ev-ico warn"><svg><use href="#i-zap"/></svg></div>
+                <div class="ev-main"><div class="ev-title">429 限流 · 指数退避 8s 后重试成功</div><div class="ev-meta">model-router · attempt 2/5 · retry-after 8</div></div>
+                <span class="st warn"><span class="dt"></span>退避</span><span class="ev-time">17:19:30</span>
+              </div>
+              <div class="ev-row">
+                <div class="ev-ico acc"><svg><use href="#i-file"/></svg></div>
+                <div class="ev-main"><div class="ev-title">Diff 生成 · +148 / −96 行，保留原中文注释</div><div class="ev-meta">UserList.vue.diff · 语法升级技能 v2.3</div></div>
+                <span class="st info"><span class="dt"></span>Diff</span><span class="ev-time">17:19:12</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel sp5">
+            <div class="panel-hd">
+              <svg class="ph-icon"><use href="#i-gauge"/></svg>
+              <span class="panel-title">质量信号快照</span>
+              <span class="count">UserList.vue</span>
+              <span class="spacer"></span>
+              <span class="st ok"><span class="dt"></span>综合 88</span>
+            </div>
+            <div class="panel-bd">
+              <div class="sig-list">
+                <div class="sig-row"><div class="sg-top"><span class="sg-name">AST 结构</span><span class="sg-code">ast</span><span class="sg-val">92</span></div><div class="bar"><i style="width:92%"></i></div></div>
+                <div class="sig-row"><div class="sg-top"><span class="sg-name">构建通过</span><span class="sg-code">build</span><span class="sg-val">88</span></div><div class="bar"><i style="width:88%"></i></div></div>
+                <div class="sig-row"><div class="sg-top"><span class="sg-name">类型检查</span><span class="sg-code">types</span><span class="sg-val">86</span></div><div class="bar"><i style="width:86%"></i></div></div>
+                <div class="sig-row"><div class="sg-top"><span class="sg-name">浏览器验证</span><span class="sg-code">browser</span><span class="sg-val">90</span></div><div class="bar"><i style="width:90%"></i></div></div>
+                <div class="sig-row"><div class="sg-top"><span class="sg-name">行为一致性</span><span class="sg-code">behavior</span><span class="sg-val">84</span></div><div class="bar"><i style="width:84%"></i></div></div>
+              </div>
+            </div>
+            <div class="panel-ft">
+              <span class="mono" style="font-size:9.5px;color:var(--ink-4)">阈值 85 · 权重 20/25/15/25/15</span>
+              <span class="spacer"></span>
+              <button class="btn sm ghost" data-action="toast-navigator" data-target="quality">质量报告<svg><use href="#i-chev-right"/></svg></button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================
+           02 专家
+      ============================================================ -->
+      <section class="page" id="page-agents" aria-label="专家管理">
+        <div class="page-head">
+          <div>
+            <div class="eyebrow">Build · 02 <span class="dim">/ expert registry</span></div>
+            <h1 class="page-title">专家 <small>8 registered · 8 enabled</small></h1>
+            <p class="page-desc">从角色提示词一键创建 / 导入专家，按需绑定 0..N 个技能；每个专家在运行中以独立上下文执行，可暂停、回环与热更新。</p>
+          </div>
+          <div class="head-actions">
+            <button class="btn" data-action="toast-info" data-toast="导入面板：支持 .md / .txt / prompt json"><svg><use href="#i-import"/></svg>导入角色提示词</button>
+            <button class="btn primary" data-open-drawer="transform"><svg><use href="#i-plus"/></svg>新建专家</button>
+          </div>
+        </div>
+
+        <div class="toolbar">
+          <div class="filters" id="agentFilters">
+            <button class="chip active" data-filter="all">全部 <span class="n">8</span></button>
+            <button class="chip" data-filter="running">运行 <span class="n">2</span></button>
+            <button class="chip" data-filter="idle">空闲 <span class="n">4</span></button>
+            <button class="chip" data-filter="failed">失败 <span class="n">1</span></button>
+            <button class="chip" data-filter="done">已完成 <span class="n">1</span></button>
+          </div>
+          <div class="spacer"></div>
+          <div class="field" style="width:220px">
+            <svg><use href="#i-search"/></svg>
+            <input class="input" id="agentSearch" placeholder="搜索专家 / 技能 / 角色" aria-label="搜索专家">
+          </div>
+          <div class="seg" id="agentView">
+            <button class="active" data-view="cards" title="卡片视图" aria-label="卡片视图"><svg><use href="#i-grid-view"/></svg></button>
+            <button data-view="list" title="列表视图" aria-label="列表视图"><svg><use href="#i-list"/></svg></button>
+          </div>
+        </div>
+
+        <div class="agents-wrap" id="agentsWrap">
+          <div class="agent-grid" id="agentGrid">
+            <article class="agent-card running" data-agent="transform" data-state="running" data-keys="代码转化专家 transform vue3语法升级 options composition ztree" tabindex="0">
+              <div class="ac-top">
+                <div class="ac-ava">转</div>
+                <div class="ac-id"><div class="ac-name">代码转化专家 <span class="ac-v">v2.3.1</span></div><div class="ac-role">transform · 批次循环 · API 迁移</div>
+                  <div class="ac-runline"><span class="loop-badge"><svg><use href="#i-loop"/></svg>循环 · 7 文件/批</span><span class="bar"><i style="width:42%"></i></span><b>批次 18/43</b></div>
+                </div>
+                <span class="st run"><span class="dt"></span>运行中</span>
+              </div>
+              <div class="ac-prompt">你是 Vue2→Vue3 迁移专家。逐文件将 Options API 改写为 &lt;script setup&gt;，保持业务行为不变，保留中文注释与原文件结构。</div>
+              <div class="ac-skills"><span class="tag">Vue3 语法升级</span><span class="tag">Options→Composition</span><span class="tag">ztree→a-tree</span><span class="tag more">+2</span></div>
+              <div class="ac-foot">
+                <span class="ac-stat">成功率 <b>97.4%</b></span>
+                <span class="ac-stat">·</span>
+                <span class="ac-stat">批次 <b>18/43</b> · 126/287</span>
+                <button class="icon-btn" data-open-drawer="transform" title="查看详情" aria-label="查看代码转化专家详情"><svg><use href="#i-chev-right"/></svg></button>
+              </div>
+            </article>
+
+            <article class="agent-card" data-agent="structure" data-state="idle" data-keys="结构分析专家 structure 结构分析 路由 依赖图 批次切分" tabindex="0">
+              <div class="ac-top">
+                <div class="ac-ava grey">析</div>
+                <div class="ac-id"><div class="ac-name">结构分析专家 <span class="ac-v">v1.8.0</span></div><div class="ac-role">structure · SFC / 路由 / 组件依赖解析</div></div>
+                <span class="st idle"><span class="dt"></span>空闲</span>
+              </div>
+              <div class="ac-prompt">你是前端架构分析专家。解析 SFC 结构、路由与组件依赖，输出迁移风险清单与批次切分建议，标注高风险文件。</div>
+              <div class="ac-skills"><span class="tag">结构解析</span><span class="tag">风险分级</span><span class="tag">批次切分</span></div>
+              <div class="ac-foot">
+                <span class="ac-stat">成功率 <b>99.1%</b></span>
+                <span class="ac-stat">·</span>
+                <span class="ac-stat">最近 <b>4m 前</b></span>
+                <button class="icon-btn" data-open-drawer="structure" title="查看详情" aria-label="查看结构分析专家详情"><svg><use href="#i-chev-right"/></svg></button>
+              </div>
+            </article>
+
+            <article class="agent-card" data-agent="deps" data-state="done" data-keys="依赖分析专家 deps vuex pinia antd ant design vue webpack vite 版本矩阵" tabindex="0">
+              <div class="ac-top">
+                <div class="ac-ava blue">依</div>
+                <div class="ac-id"><div class="ac-name">依赖分析专家 <span class="ac-v">v1.6.2</span></div><div class="ac-role">deps · 版本矩阵与构建迁移</div></div>
+                <span class="st ok"><span class="dt"></span>已完成</span>
+              </div>
+              <div class="ac-prompt">你是依赖治理专家。比对 package.json 与锁文件，给出 Vuex→Pinia、Ant Design Vue 1.x→4.x、Webpack→Vite 的升级路径。</div>
+              <div class="ac-skills"><span class="tag">Vuex→Pinia</span><span class="tag">AntD 1.x→4.x 映射</span><span class="tag">Vite 配置迁移</span></div>
+              <div class="ac-foot">
+                <span class="ac-stat">成功率 <b>95.8%</b></span>
+                <span class="ac-stat">·</span>
+                <span class="ac-stat">最近 <b>12m 前</b></span>
+                <button class="icon-btn" data-open-drawer="deps" title="查看详情" aria-label="查看依赖分析专家详情"><svg><use href="#i-chev-right"/></svg></button>
+              </div>
+            </article>
+
+            <article class="agent-card running" data-agent="quality" data-state="running" data-keys="质量分析专家 quality 评分 门控 ast build types browser behavior" tabindex="0">
+              <div class="ac-top">
+                <div class="ac-ava green">质</div>
+                <div class="ac-id"><div class="ac-name">质量分析专家 <span class="ac-v">v2.0.4</span></div><div class="ac-role">quality · 五信号加权评分</div></div>
+                <span class="st run"><span class="dt"></span>运行中</span>
+              </div>
+              <div class="ac-prompt">你是质量门控专家。聚合 AST / 构建 / 类型 / 浏览器 / 行为五信号，按权重输出 0-100 评分并给出可解释的失分原因。</div>
+              <div class="ac-skills"><span class="tag">质量门控评分</span><span class="tag">vue-tsc</span><span class="tag">五信号权重</span></div>
+              <div class="ac-foot">
+                <span class="ac-stat">成功率 <b>93.6%</b></span>
+                <span class="ac-stat">·</span>
+                <span class="ac-stat">当前 <b>UserList.vue</b></span>
+                <button class="icon-btn" data-open-drawer="quality" title="查看详情" aria-label="查看质量分析专家详情"><svg><use href="#i-chev-right"/></svg></button>
+              </div>
+            </article>
+
+            <article class="agent-card" data-agent="browser" data-state="idle" data-keys="浏览器验证专家 browser playwright e2e dom 快照 控制台" tabindex="0">
+              <div class="ac-top">
+                <div class="ac-ava amber">验</div>
+                <div class="ac-id"><div class="ac-name">浏览器验证专家 <span class="ac-v">v1.9.0</span></div><div class="ac-role">browser · Playwright 渲染与交互</div></div>
+                <span class="st idle"><span class="dt"></span>空闲</span>
+              </div>
+              <div class="ac-prompt">你是 E2E 验证专家。用 Playwright 打开迁移后的页面，采集 DOM 快照、交互行为与控制台错误，与基线逐项比对。</div>
+              <div class="ac-skills"><span class="tag">浏览器自动化</span><span class="tag">行为一致性</span><span class="tag">DOM Diff</span></div>
+              <div class="ac-foot">
+                <span class="ac-stat">成功率 <b>96.2%</b></span>
+                <span class="ac-stat">·</span>
+                <span class="ac-stat">最近 <b>26m 前</b></span>
+                <button class="icon-btn" data-open-drawer="browser" title="查看详情" aria-label="查看浏览器验证专家详情"><svg><use href="#i-chev-right"/></svg></button>
+              </div>
+            </article>
+
+            <article class="agent-card failed" data-agent="fix" data-state="failed" data-keys="修复专家 fix 回环 修复 低分 behavior tree select" tabindex="0">
+              <div class="ac-top">
+                <div class="ac-ava red">修</div>
+                <div class="ac-id"><div class="ac-name">修复专家 <span class="ac-v">v1.4.7</span></div><div class="ac-role">fix · 低分信号最小修复</div></div>
+                <span class="st err"><span class="dt"></span>失败</span>
+              </div>
+              <div class="ac-prompt">你是回环修复专家。读取低分信号与证据，定位最小修复面，禁止重写无关代码；每次修复必须产出 diff 与验证证据。</div>
+              <div class="ac-skills"><span class="tag">问题修复</span><span class="tag">经验回灌</span><span class="tag">Diff 最小化</span></div>
+              <div class="ac-foot">
+                <span class="ac-stat">成功率 <b>81.2%</b></span>
+                <span class="ac-stat">·</span>
+                <span class="ac-stat" style="color:var(--err)">TreeSelect.vue 第 2 轮失败</span>
+                <button class="icon-btn" data-action="retry-agent" title="重试" aria-label="重试修复专家"><svg><use href="#i-refresh"/></svg></button>
+              </div>
+            </article>
+
+            <article class="agent-card" data-agent="memory" data-state="idle" data-keys="记忆归纳专家 memory 经验卡片 踩坑 回灌" tabindex="0">
+              <div class="ac-top">
+                <div class="ac-ava grey">记</div>
+                <div class="ac-id"><div class="ac-name">记忆归纳专家 <span class="ac-v">v1.2.0</span></div><div class="ac-role">memory · 踩坑经验结构化沉淀</div></div>
+                <span class="st idle"><span class="dt"></span>空闲</span>
+              </div>
+              <div class="ac-prompt">你是经验归纳专家。把本次运行中的踩坑压缩为可复用的经验卡片，标注坑类型、触发条件、解法与适用范围。</div>
+              <div class="ac-skills"><span class="tag">经验归纳</span><span class="tag">去重合并</span><span class="tag">命中统计</span></div>
+              <div class="ac-foot">
+                <span class="ac-stat">成功率 <b>98.0%</b></span>
+                <span class="ac-stat">·</span>
+                <span class="ac-stat">最近 <b>1h 前</b></span>
+                <button class="icon-btn" data-open-drawer="memory" title="查看详情" aria-label="查看记忆归纳专家详情"><svg><use href="#i-chev-right"/></svg></button>
+              </div>
+            </article>
+
+            <article class="agent-card" data-agent="pinia" data-state="idle" data-keys="Pinia 迁移专家 store Vuex 状态 数据层 deps" tabindex="0">
+              <div class="ac-top">
+                <div class="ac-ava blue">迁</div>
+                <div class="ac-id"><div class="ac-name">Pinia 迁移专家 <span class="ac-v">v1.5.0</span></div><div class="ac-role">state · Vuex module → Pinia store</div></div>
+                <span class="st idle"><span class="dt"></span>空闲</span>
+              </div>
+              <div class="ac-prompt">你是状态层迁移专家。将 Vuex module 改写为 Pinia store（setup store 优先），保持 getter / action 语义与调用方零改动。</div>
+              <div class="ac-skills"><span class="tag">Vuex→Pinia</span><span class="tag">数据流校验</span><span class="tag">类型补全</span></div>
+              <div class="ac-foot">
+                <span class="ac-stat">成功率 <b>94.7%</b></span>
+                <span class="ac-stat">·</span>
+                <span class="ac-stat">最近 <b>18m 前</b></span>
+                <button class="icon-btn" data-open-drawer="pinia" title="查看详情" aria-label="查看 Pinia 迁移专家详情"><svg><use href="#i-chev-right"/></svg></button>
+              </div>
+            </article>
+
+            <button class="agent-add" data-action="toast-info" data-toast="新建专家：粘贴角色提示词即可自动生成技能绑定建议">
+              <span class="aa-plus"><svg><use href="#i-plus"/></svg></span>
+              <span>添加自定义专家</span>
+              <small>粘贴 prompt · 自动解析角色</small>
+            </button>
+          </div>
+
+          <div class="agents-table" id="agentsTable">
+            <div class="panel">
+              <div class="table-wrap">
+                <table class="data">
+                  <thead>
+                    <tr><th style="width:230px">专家</th><th>角色 · 版本</th><th style="width:200px">绑定技能</th><th style="width:96px">状态</th><th style="width:88px" class="num">成功率</th><th style="width:110px" class="num">最近运行</th><th style="width:80px"></th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><td><div class="cell-file"><div class="ava sm">转</div><div><span class="mono" style="color:var(--ink)">代码转化专家</span></div></div></td><td class="mono">transform · v2.3.1</td><td><span class="tag">Vue3 语法升级</span> <span class="tag more">+3</span></td><td><span class="st run"><span class="dt"></span>运行中</span></td><td class="num">97.4%</td><td class="num">2m 前</td><td><button class="btn sm ghost" data-open-drawer="transform">详情</button></td></tr>
+                    <tr><td><div class="cell-file"><div class="ava sm grey">析</div><div><span class="mono" style="color:var(--ink)">结构分析专家</span></div></div></td><td class="mono">structure · v1.8.0</td><td><span class="tag">结构解析</span> <span class="tag more">+2</span></td><td><span class="st idle"><span class="dt"></span>空闲</span></td><td class="num">99.1%</td><td class="num">4m 前</td><td><button class="btn sm ghost" data-open-drawer="structure">详情</button></td></tr>
+                    <tr><td><div class="cell-file"><div class="ava sm blue">依</div><div><span class="mono" style="color:var(--ink)">依赖分析专家</span></div></div></td><td class="mono">deps · v1.6.2</td><td><span class="tag">Vuex→Pinia</span> <span class="tag more">+2</span></td><td><span class="st ok"><span class="dt"></span>已完成</span></td><td class="num">95.8%</td><td class="num">12m 前</td><td><button class="btn sm ghost" data-open-drawer="deps">详情</button></td></tr>
+                    <tr><td><div class="cell-file"><div class="ava sm green">质</div><div><span class="mono" style="color:var(--ink)">质量分析专家</span></div></div></td><td class="mono">quality · v2.0.4</td><td><span class="tag">质量门控评分</span> <span class="tag more">+2</span></td><td><span class="st run"><span class="dt"></span>运行中</span></td><td class="num">93.6%</td><td class="num">1m 前</td><td><button class="btn sm ghost" data-open-drawer="quality">详情</button></td></tr>
+                    <tr><td><div class="cell-file"><div class="ava sm amber">验</div><div><span class="mono" style="color:var(--ink)">浏览器验证专家</span></div></div></td><td class="mono">browser · v1.9.0</td><td><span class="tag">浏览器自动化</span> <span class="tag more">+2</span></td><td><span class="st idle"><span class="dt"></span>空闲</span></td><td class="num">96.2%</td><td class="num">26m 前</td><td><button class="btn sm ghost" data-open-drawer="browser">详情</button></td></tr>
+                    <tr><td><div class="cell-file"><div class="ava sm red">修</div><div><span class="mono" style="color:var(--ink)">修复专家</span></div></div></td><td class="mono">fix · v1.4.7</td><td><span class="tag">问题修复</span> <span class="tag more">+2</span></td><td><span class="st err"><span class="dt"></span>失败</span></td><td class="num">81.2%</td><td class="num">38s 前</td><td><button class="btn sm ghost" data-open-drawer="fix">详情</button></td></tr>
+                    <tr><td><div class="cell-file"><div class="ava sm grey">记</div><div><span class="mono" style="color:var(--ink)">记忆归纳专家</span></div></div></td><td class="mono">memory · v1.2.0</td><td><span class="tag">经验归纳</span> <span class="tag more">+2</span></td><td><span class="st idle"><span class="dt"></span>空闲</span></td><td class="num">98.0%</td><td class="num">1h 前</td><td><button class="btn sm ghost" data-open-drawer="memory">详情</button></td></tr>
+                    <tr><td><div class="cell-file"><div class="ava sm blue">迁</div><div><span class="mono" style="color:var(--ink)">Pinia 迁移专家</span></div></div></td><td class="mono">state · v1.5.0</td><td><span class="tag">Vuex→Pinia</span> <span class="tag more">+2</span></td><td><span class="st idle"><span class="dt"></span>空闲</span></td><td class="num">94.7%</td><td class="num">18m 前</td><td><button class="btn sm ghost" data-open-drawer="pinia">详情</button></td></tr>
+                    <tr><td colspan="7"><div class="empty" style="padding:18px"><p>此视图仅展示已注册专家，创建后自动热加载。</p></div></td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="empty" id="agentEmpty" style="display:none;border:1px dashed var(--line-2);border-radius:var(--r-md);margin-top:2px">
+            <div class="e-ico"><svg><use href="#i-search"/></svg></div>
+            <h4>没有匹配的专家</h4>
+            <p>尝试更换关键词或清除筛选。你也可以直接粘贴角色提示词创建新专家。</p>
+            <button class="btn sm" id="agentReset">清除筛选</button>
+          </div>
+        </div>
+      </section>

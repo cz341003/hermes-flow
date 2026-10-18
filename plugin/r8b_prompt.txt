@@ -1,0 +1,6 @@
+你正在做 R8b 真实并行采样。Run 与批次组已创建：
+
+flow_batch_auto(group_id="g-06091d475a", max_batches=5, max_seconds=300, apply=true, concurrency=3)
+
+请调用一次，然后把完整 JSON 结果报告出来；如果 done=false 且无 failed/rate_limited，再调用一次同样的命令（最多 2 次）。最后调用 flow_batch_status(group_id="g-06091d475a") 报告 done/total。
+不要安装依赖，不要修改 E:\deepSeek\plugin\r8b-real 之外的文件。

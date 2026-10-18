@@ -1,0 +1,113 @@
+      </div><!-- /view-inner -->
+    </main>
+  </div><!-- /main -->
+</div><!-- /app -->
+
+<!-- ==================== expert drawer ==================== -->
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-label="专家详情" aria-hidden="true">
+  <div class="drawer-hd">
+    <div class="ava" id="dAva">转</div>
+    <div>
+      <div class="dh-name" id="dName">代码转化专家</div>
+      <div class="dh-sub" id="dSub">transform · v2.3.1 · agent-04</div>
+    </div>
+    <button class="icon-btn" id="drawerClose" aria-label="关闭详情"><svg><use href="#i-x"/></svg></button>
+  </div>
+
+  <div class="drawer-bd">
+    <div class="drawer-sec">
+      <div class="sec-h">状态 <span class="n" id="dStatusText">running</span></div>
+      <div class="row" style="gap:8px;margin-bottom:11px">
+        <span class="st run" id="dStatus"><span class="dt"></span>运行中</span>
+        <span class="tag" id="dSkillCount">5 个技能</span>
+        <span class="mono" style="font-size:10px;color:var(--ink-4)">最近 2m 前</span>
+      </div>
+      <div class="mini-stats">
+        <div class="mini-stat"><div class="ms-l">成功率</div><div class="ms-v" id="dRate">97.4<small>%</small></div></div>
+        <div class="mini-stat"><div class="ms-l">执行次数</div><div class="ms-v" id="dRuns">412</div></div>
+        <div class="mini-stat"><div class="ms-l">平均耗时</div><div class="ms-v" id="dAvg">38<small>s</small></div></div>
+        <div class="mini-stat"><div class="ms-l">回环率</div><div class="ms-v" id="dLoop">6.2<small>%</small></div></div>
+      </div>
+    </div>
+
+    <div class="drawer-sec">
+      <div class="sec-h">角色提示词 <span class="n">PROMPT</span></div>
+      <div class="prompt-box" id="dPrompt"></div>
+      <div class="row" style="gap:6px;margin-top:8px">
+        <button class="btn sm" data-action="toast-info" data-toast="已复制提示词到剪贴板"><svg><use href="#i-copy"/></svg>复制</button>
+        <button class="btn sm ghost" data-action="toast-info" data-toast="提示词编辑器：支持变量 {{file}} {{skills}}">编辑提示词</button>
+        <span class="spacer"></span>
+        <span class="mono" style="font-size:9px;color:var(--ink-4)">1,286 chars</span>
+      </div>
+    </div>
+
+    <div class="drawer-sec" id="dLoopSec">
+      <div class="sec-h">批次循环 <span class="n">FR-10</span></div>
+      <div class="loop-mode"><span class="on">per_batch</span><span>single_file</span></div>
+      <div class="batch-cfg" style="margin-top:8px">
+        <div><div class="bc-l">每批文件</div><div class="bc-v"><em>7</em> 个</div></div>
+        <div><div class="bc-l">并发批次</div><div class="bc-v">1</div></div>
+        <div><div class="bc-l">内层循环</div><div class="bc-v">serial</div></div>
+        <div><div class="bc-l">失败拆分</div><div class="bc-v">2 层</div></div>
+        <div><div class="bc-l">上下文预算</div><div class="bc-v">28,000</div></div>
+        <div><div class="bc-l">每批质量门</div><div class="bc-v" style="color:var(--ok)">ON</div></div>
+      </div>
+      <div class="mono" style="font-size:9px;color:var(--ink-4);margin-top:7px">1 子代理 / 批 · 断点精确到文件 · 失败仅拆该批</div>
+    </div>
+
+    <div class="drawer-sec">
+      <div class="sec-h">技能绑定 <span class="n">0..N</span></div>
+      <div class="bind-list" id="dBind">
+        <div class="bind-row"><span class="tag">Vue3 语法升级</span><span class="bind-meta">transform</span><span class="switch" role="switch" aria-checked="true" tabindex="0" data-switch></span></div>
+        <div class="bind-row"><span class="tag">Options → Composition API</span><span class="bind-meta">transform</span><span class="switch" role="switch" aria-checked="true" tabindex="0" data-switch></span></div>
+        <div class="bind-row"><span class="tag">ztree → a-tree 迁移</span><span class="bind-meta">transform</span><span class="switch" role="switch" aria-checked="true" tabindex="0" data-switch></span></div>
+        <div class="bind-row"><span class="tag">AntD 1.x→4.x 映射</span><span class="bind-meta">transform</span><span class="switch" role="switch" aria-checked="false" tabindex="0" data-switch></span></div>
+        <div class="bind-row"><span class="tag more">+ 添加技能绑定</span><span class="bind-meta">from skill library</span><span class="spacer"></span></div>
+      </div>
+    </div>
+
+    <div class="drawer-sec">
+      <div class="sec-h">最近运行 <span class="n">3</span></div>
+      <div class="timeline" style="padding:0">
+        <div class="tl-row run"><div class="tl-time">17:22</div><div class="tl-dot"></div><div class="tl-body"><div class="tl-title">UserList.vue · 处理中</div><div class="tl-meta"><span>批次 #18</span><span class="sep"></span><span>42.6s</span></div></div></div>
+        <div class="tl-row ok"><div class="tl-time">17:20</div><div class="tl-dot"></div><div class="tl-body"><div class="tl-title">UserTable.vue · 完成</div><div class="tl-meta"><span>score 92</span><span class="sep"></span><span>38.1s</span></div></div></div>
+        <div class="tl-row warn"><div class="tl-time">17:12</div><div class="tl-dot"></div><div class="tl-body"><div class="tl-title">TreeSelect.vue · 回环</div><div class="tl-meta"><span>behavior 45</span><span class="sep"></span><span>交给修复专家</span></div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="drawer-ft">
+    <button class="btn danger sm" data-action="toast-warn" data-toast="下线专家需先解除工作流绑定"><svg><use href="#i-trash"/></svg>下线</button>
+    <span class="spacer"></span>
+    <button class="btn sm ghost" data-action="toast-info" data-toast="已打开运行记录">运行记录</button>
+    <button class="btn primary sm" data-action="toast-ok" data-toast="专家配置已保存并热加载"><svg><use href="#i-save"/></svg>保存并热加载</button>
+  </div>
+</aside>
+
+<!-- ==================== command palette ==================== -->
+<div class="palette-wrap" id="paletteWrap" role="dialog" aria-modal="true" aria-label="命令面板">
+  <div class="palette">
+    <div class="pal-input">
+      <svg><use href="#i-search"/></svg>
+      <input id="palInput" placeholder="输入页面、专家、技能或动作…" autocomplete="off" spellcheck="false" aria-label="命令搜索">
+      <kbd>ESC</kbd>
+    </div>
+    <div class="pal-list" id="palList"></div>
+    <div class="pal-foot">
+      <span><kbd>↑</kbd><kbd>↓</kbd> 选择</span>
+      <span><kbd>↵</kbd> 打开</span>
+      <span><kbd>Esc</kbd> 关闭</span>
+      <span style="margin-left:auto"><kbd>Ctrl</kbd> + <kbd>K</kbd></span>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== toasts ==================== -->
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<script>
+/* JS_PLACEHOLDER */
+</script>
+</body>
+</html>

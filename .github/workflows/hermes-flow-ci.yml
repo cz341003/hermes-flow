@@ -1,0 +1,63 @@
+name: hermes-flow-ci
+
+on:
+  push:
+    paths:
+      - "plugin/hermes_flow/**"
+      - ".github/workflows/hermes-flow-ci.yml"
+  pull_request:
+    paths:
+      - "plugin/hermes_flow/**"
+
+jobs:
+  unit:
+    name: unit (${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12"]
+    defaults:
+      run:
+        working-directory: plugin/hermes_flow
+    env:
+      FLOW_TEST_TMP: ${{ runner.temp }}/flow-tmp
+      PYTHONIOENCODING: utf-8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Prepare temp dir
+        run: mkdir -p "$FLOW_TEST_TMP"
+      - name: Compile
+        run: python -m compileall -q .
+      - name: Dashboard static smoke
+        run: python scripts/dashboard_smoke.py
+      - name: New unit tests
+        run: python -m unittest discover -s tests -v
+      - name: Legacy regression
+        run: python -m unittest discover -s tests/legacy -v
+      - name: Smoke core
+        run: python tests/smoke_core.py
+
+  windows:
+    name: unit (windows)
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: plugin/hermes_flow
+    env:
+      FLOW_TEST_TMP: ${{ runner.temp }}\flow-tmp
+      PYTHONIOENCODING: utf-8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Prepare temp dir
+        run: New-Item -ItemType Directory -Force -Path "$env:FLOW_TEST_TMP" | Out-Null
+      - name: New unit tests
+        run: python -m unittest discover -s tests -q
+      - name: Legacy regression
+        run: python -m unittest discover -s tests/legacy -q

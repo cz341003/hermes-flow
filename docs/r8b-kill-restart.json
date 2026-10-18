@@ -1,0 +1,51 @@
+{
+  "killed_after_seconds": 1.0,
+  "recover_exit": 0,
+  "worker_result": {
+    "ok": true,
+    "driver": "flow",
+    "group_id": "g-r-kill-transform",
+    "processed": 2,
+    "batches_done": 2,
+    "batches_total": 2,
+    "done": true,
+    "busy": false,
+    "rate_limited": false,
+    "retry_after": 0,
+    "driver_unavailable": false,
+    "write_scope_violation": false,
+    "events": [
+      {
+        "batch_id": "g-r-kill-transform--b0001",
+        "attempt": 2,
+        "action": "done",
+        "state": "",
+        "score": 97.6,
+        "files_done": 4,
+        "files_failed": 0,
+        "error": "",
+        "child_id": "sa-1",
+        "elapsed": 0.03
+      },
+      {
+        "batch_id": "g-r-kill-transform--b0002",
+        "attempt": 1,
+        "action": "done",
+        "state": "",
+        "score": 97.6,
+        "files_done": 4,
+        "files_failed": 0,
+        "error": "",
+        "child_id": "sa-2",
+        "elapsed": 0.029
+      }
+    ],
+    "error": ""
+  },
+  "done_batches": 2,
+  "total_batches": 2,
+  "failed": [],
+  "files": 8,
+  "all_v3": true,
+  "recover_stderr": ""
+}

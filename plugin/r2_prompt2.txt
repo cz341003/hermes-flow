@@ -1,0 +1,9 @@
+继续 R2 真实迁移 E2E，批次组 g-f02b7994bc 当前 5/8 完成。
+
+请直接调用：
+flow_batch_auto(group_id="g-f02b7994bc", max_batches=5, max_seconds=300, apply=true)
+
+如果返回 done=false 且还有 ready/planned 批次，再调用一次同样的命令（最多 3 次），直到 done=true 或没有可推进批次。
+最后调用 flow_batch_status(group_id="g-f02b7994bc")，报告每次 flow_batch_auto 的 JSON 摘要和最终 done/total/failed。
+
+不要安装依赖，不要修改 r2-work 之外的文件，不要手动调用 flow_batch_next/ingest。

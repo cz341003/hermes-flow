@@ -1,0 +1,444 @@
+      <!-- ============================================================
+           07 质量门控
+      ============================================================ -->
+      <section class="page" id="page-quality" aria-label="质量门控">
+        <div class="page-head">
+          <div>
+            <div class="eyebrow">Govern · 07 <span class="dim">/ quality gate</span></div>
+            <h1 class="page-title">质量门控 <small>threshold 85 · 5 signals</small></h1>
+            <p class="page-desc">五信号加权评分（AST 20 / 构建 25 / 类型 15 / 浏览器 25 / 行为 15）：≥ 85 通过，70–84 警告通过，&lt; 70 进入回环，超过 3 轮升级人工门。</p>
+          </div>
+          <div class="head-actions">
+            <span class="st plain" style="height:22px">门控阈值 <b class="mono" style="color:var(--acc)">85</b></span>
+            <button class="btn" data-action="toast-info" data-toast="质量报告已导出 quality-report-2026-1018.pdf"><svg><use href="#i-export"/></svg>导出报告</button>
+            <button class="btn primary" id="reviewBtn" data-action="review"><svg><use href="#i-refresh" id="reviewIcon"/></svg><span id="reviewLabel">重新审查</span></button>
+          </div>
+        </div>
+
+        <div class="kpi-grid five">
+          <div class="kpi acc">
+            <div class="kpi-top"><span class="kpi-label">平均评分</span><span class="kpi-ico"><svg><use href="#i-gauge"/></svg></span></div>
+            <div class="kpi-mid"><span class="kpi-num" id="kpiAvg">88.6</span><span class="mono" style="font-size:10.5px;color:var(--ok)">+2.1</span></div>
+            <div class="kpi-foot"><span>较上批提升 · 78 项样本</span></div>
+          </div>
+          <div class="kpi ok">
+            <div class="kpi-top"><span class="kpi-label">通过率 · ≥ 85</span><span class="kpi-ico"><svg><use href="#i-check-circle"/></svg></span></div>
+            <div class="kpi-mid"><span class="kpi-num">91.0<small>%</small></span><span class="mono" style="font-size:10.5px;color:var(--ink-3)">71 / 78</span></div>
+            <div class="kpi-foot"><span>一次通过 64 · 回环后通过 7</span></div>
+          </div>
+          <div class="kpi warn">
+            <div class="kpi-top"><span class="kpi-label">回环中</span><span class="kpi-ico"><svg><use href="#i-repeat"/></svg></span></div>
+            <div class="kpi-mid"><span class="kpi-num" style="color:var(--warn)" id="kpiLoop">1</span><span class="mono" style="font-size:10.5px;color:var(--ink-3)">上限 3 轮</span></div>
+            <div class="kpi-foot"><span>TreeSelect.vue · 第 2 轮</span></div>
+          </div>
+          <div class="kpi err">
+            <div class="kpi-top"><span class="kpi-label">未达标</span><span class="kpi-ico"><svg><use href="#i-alert"/></svg></span></div>
+            <div class="kpi-mid"><span class="kpi-num" style="color:var(--err)">1</span><span class="mono" style="font-size:10.5px;color:var(--ink-3)">待人工门</span></div>
+            <div class="kpi-foot"><span>RichEditor.vue · 67</span></div>
+          </div>
+          <div class="kpi acc">
+            <div class="kpi-top"><span class="kpi-label">批次通过率</span><span class="kpi-ico"><svg><use href="#i-layers"/></svg></span></div>
+            <div class="kpi-mid"><span class="kpi-num sm">92.0<small>%</small></span><span class="mono" style="font-size:10px;color:var(--ink-3)">18 批完成</span></div>
+            <div class="kpi-foot"><span>回环 2 · 拆分 1 · 人工 1</span></div>
+          </div>
+        </div>
+
+        <div class="q-layout" style="margin-top:var(--gap)">
+          <div class="panel radar-panel">
+            <div class="panel-hd">
+              <svg class="ph-icon"><use href="#i-shield"/></svg>
+              <span class="panel-title">五信号评分</span>
+              <span class="count">UserList.vue</span>
+              <span class="spacer"></span>
+              <span class="st ok"><span class="dt"></span>综合 88 · 通过</span>
+            </div>
+            <div class="radar-body">
+              <svg class="radar-svg" viewBox="0 0 210 196" role="img" aria-label="五信号雷达图：AST 92、构建 88、类型 86、浏览器 90、行为 84">
+                <g fill="none" stroke="#1E262F" stroke-width="1">
+                  <polygon points="105,24 175.4,75.1 148.5,157.9 61.5,157.9 34.6,75.1"/>
+                  <polygon points="105,38.8 161.3,79.7 139.8,145.9 70.2,145.9 48.7,79.7"/>
+                  <polygon points="105,53.6 147.2,84.3 131.1,133.9 78.9,133.9 62.8,84.3"/>
+                  <polygon points="105,68.4 133.2,88.9 122.4,121.9 87.6,121.9 76.8,88.9"/>
+                  <polygon points="105,83.2 119.1,93.4 113.7,110 96.3,110 90.9,93.4"/>
+                  <line x1="105" y1="98" x2="105" y2="24"/>
+                  <line x1="105" y1="98" x2="175.4" y2="75.1"/>
+                  <line x1="105" y1="98" x2="148.5" y2="157.9"/>
+                  <line x1="105" y1="98" x2="61.5" y2="157.9"/>
+                  <line x1="105" y1="98" x2="34.6" y2="75.1"/>
+                </g>
+                <!-- 门控阈值参考线 85 -->
+                <polygon points="105,35.1 164.8,78.6 142,148.9 68,148.9 45.2,78.6" fill="none" stroke="#E0A93E" stroke-width="1" stroke-dasharray="3 3" opacity=".75"/>
+                <text x="169" y="96" fill="#A17B32" font-family="Cascadia Mono, Consolas, monospace" font-size="8">gate 85</text>
+                <g class="radar-plot">
+                  <polygon points="105,29.9 166.9,77.9 142.4,149.5 65.9,151.9 45.9,78.8" fill="rgba(53,207,193,.13)" stroke="#35CFC1" stroke-width="1.6" stroke-linejoin="round"/>
+                  <circle cx="105" cy="29.9" r="2.3" fill="#35CFC1"/>
+                  <circle cx="166.9" cy="77.9" r="2.3" fill="#35CFC1"/>
+                  <circle cx="142.4" cy="149.5" r="2.3" fill="#35CFC1"/>
+                  <circle cx="65.9" cy="151.9" r="2.3" fill="#35CFC1"/>
+                  <circle cx="45.9" cy="78.8" r="2.3" fill="#35CFC1"/>
+                </g>
+                <g font-family="Cascadia Mono, Consolas, monospace" font-size="9">
+                  <text x="105" y="13" text-anchor="middle" fill="#A3AFBB">AST <tspan fill="#7FE3D8">92</tspan></text>
+                  <text x="198" y="73" text-anchor="end" fill="#A3AFBB">构建 <tspan fill="#7FE3D8">88</tspan></text>
+                  <text x="150" y="180" text-anchor="middle" fill="#A3AFBB">类型 <tspan fill="#7FE3D8">86</tspan></text>
+                  <text x="60" y="180" text-anchor="middle" fill="#A3AFBB">浏览器 <tspan fill="#7FE3D8">90</tspan></text>
+                  <text x="12" y="73" text-anchor="start" fill="#A3AFBB">行为 <tspan fill="#EFC069">84</tspan></text>
+                </g>
+              </svg>
+              <div class="sig-list">
+                <div class="sig-row"><div class="sg-top"><span class="sg-name">AST 结构</span><span class="sg-code">ast</span><span class="sg-val">92</span></div><div class="bar"><i style="width:92%"></i></div></div>
+                <div class="sig-row"><div class="sg-top"><span class="sg-name">构建通过</span><span class="sg-code">build</span><span class="sg-val">88</span></div><div class="bar"><i style="width:88%"></i></div></div>
+                <div class="sig-row"><div class="sg-top"><span class="sg-name">类型检查</span><span class="sg-code">types</span><span class="sg-val">86</span></div><div class="bar"><i style="width:86%"></i></div></div>
+                <div class="sig-row"><div class="sg-top"><span class="sg-name">浏览器验证</span><span class="sg-code">browser</span><span class="sg-val">90</span></div><div class="bar"><i style="width:90%"></i></div></div>
+                <div class="sig-row low"><div class="sg-top"><span class="sg-name">行为一致性</span><span class="sg-code">behavior</span><span class="sg-val">84</span></div><div class="bar warn"><i style="width:84%"></i></div></div>
+                <div style="margin-top:4px;font:400 9px/1.5 var(--f-mono);color:var(--ink-4)">权重 20 / 25 / 15 / 25 / 15 · 综合 88.4</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel dist-panel">
+            <div class="panel-hd">
+              <svg class="ph-icon"><use href="#i-grid-view"/></svg>
+              <span class="panel-title">评分分布</span>
+              <span class="count">78 个文件</span>
+            </div>
+            <div class="panel-bd">
+              <div class="dist">
+                <div class="dist-row"><div class="dr-top"><span>90 – 100</span><span>53 项 · 68%</span></div><div class="bar"><i style="width:68%;background:var(--ok)"></i></div></div>
+                <div class="dist-row"><div class="dr-top"><span>85 – 89</span><span>18 项 · 23%</span></div><div class="bar"><i style="width:23%;background:var(--acc)"></i></div></div>
+                <div class="dist-row"><div class="dr-top"><span>70 – 84</span><span>6 项 · 8%</span></div><div class="bar"><i style="width:8%;background:var(--warn)"></i></div></div>
+                <div class="dist-row"><div class="dr-top"><span>&lt; 70</span><span>1 项 · 1.3%</span></div><div class="bar"><i style="width:1.6%;background:var(--err)"></i></div></div>
+              </div>
+              <div class="dist-legend">
+                <span><i style="background:var(--ok)"></i>通过 ≥ 85</span>
+                <span><i style="background:var(--acc)"></i>85–89 安全区</span>
+                <span><i style="background:var(--warn)"></i>警告通过 70–84</span>
+                <span><i style="background:var(--err)"></i>回环 &lt; 70</span>
+              </div>
+              <div class="note" style="margin-top:12px"><svg><use href="#i-info"/></svg><span>五信号加权聚合：≥ 85 通过；70–84 记录为警告通过；&lt; 70 进入回环，最多 3 轮。</span></div>
+            </div>
+          </div>
+
+          <div class="panel gate-panel">
+            <div class="panel-hd"><svg class="ph-icon"><use href="#i-sliders"/></svg><span class="panel-title">门控规则</span></div>
+            <div class="panel-bd">
+              <div class="gate-threshold">
+                <div class="gt-num">85</div>
+                <div class="gt-lbl">Pass threshold</div>
+              </div>
+              <div class="range" aria-hidden="true" style="position:relative;height:3px;background:linear-gradient(90deg,var(--acc) 0 85%,#202A34 85% 100%)"></div>
+              <div class="gate-rule"><span>通过阈值</span><b>85</b></div>
+              <div class="gate-rule"><span>警告通过</span><b>70 – 84</b></div>
+              <div class="gate-rule"><span>回环区间</span><b>&lt; 70</b></div>
+              <div class="gate-rule"><span>回环上限</span><b>3 轮</b></div>
+              <div class="gate-rule"><span>失败升级</span><b>人工门</b></div>
+              <div class="gate-rule"><span>审查人</span><b>齐</b></div>
+              <button class="btn sm" style="width:100%;margin-top:2px" data-action="toast-info" data-toast="门控规则编辑：阈值 / 权重 / 升级策略"><svg><use href="#i-pencil"/></svg>编辑门控规则</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="quality-bottom">
+          <div class="panel q-table">
+            <div class="panel-hd">
+              <svg class="ph-icon"><use href="#i-file"/></svg>
+              <span class="panel-title">文件评分明细</span>
+              <span class="count">低分 Top 10 · 显示 5</span>
+              <span class="spacer"></span>
+              <div class="tabs"><button class="tab active">按批次</button><button class="tab">全部</button><button class="tab">未达标</button><button class="tab">回环中</button></div>
+            </div>
+            <div class="table-wrap">
+              <table class="data" id="qualityTable">
+                <thead>
+                  <tr>
+                    <th style="width:206px">文件</th><th style="width:64px">批次</th><th style="width:48px">轮次</th>
+                    <th style="width:88px" class="num">AST</th><th style="width:88px" class="num">构建</th><th style="width:88px" class="num">类型</th><th style="width:88px" class="num">浏览器</th><th style="width:88px" class="num">行为</th>
+                    <th style="width:64px" class="num">综合</th><th style="width:104px">状态</th><th style="width:88px"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="group-start">
+                    <td><div class="cell-file"><svg><use href="#i-file"/></svg><span class="mono">src/views/UserList.vue</span></div></td>
+                    <td class="batch-col"><span class="batch-chip sm run">#18</span></td>
+                    <td class="num">0</td>
+                    <td><div class="sig-cell"><span class="sig-bar"><i style="width:92%;background:var(--ok)"></i></span><span class="v">92</span></div></td>
+                    <td><div class="sig-cell"><span class="sig-bar"><i style="width:88%;background:var(--ok)"></i></span><span class="v">88</span></div></td>
+                    <td><div class="sig-cell"><span class="sig-bar"><i style="width:86%;background:var(--ok)"></i></span><span class="v">86</span></div></td>
+                    <td><div class="sig-cell"><span class="sig-bar"><i style="width:90%;background:var(--ok)"></i></span><span class="v">90</span></div></td>
+                    <td><div class="sig-cell"><span class="sig-bar"><i style="width:84%;background:var(--warn)"></i></span><span class="v low">84</span></div></td>
+                    <td class="num strong">88</td>
+                    <td><span class="st ok"><span class="dt"></span>通过</span></td>
+                    <td><button class="btn sm ghost" data-action="toast-info" data-toast="打开 UserList.vue 评分详情">详情</button></td>
+                  </tr>
+                  <tr id="loopRow">
+                    <td><div class="cell-file"><svg><use href="#i-file"/></svg><span class="mono">src/components/TreeSelect.vue</span></div></td>
+                    <td class="batch-col"><span class="batch-chip sm run">#18</span></td>
+                    <td class="num" id="loopRound">2</td>
+                    <td><div class="sig-cell"><span class="sig-bar"><i style="width:86%;background:var(--ok)"></i></span><span class="v">86</span></div></td>
+                    <td><div class="sig-cell"><span class="sig-bar"><i style="width:0%;background:var(--err)"></i></span><span class="v bad">0</span></div></td>
+                    <td><div class="sig-cell"><span class="sig-bar"><i style="width:82%;background:var(--ok)"></i></span><span class="v">82</span></div></td>
+                    <td><div class="sig-cell"><span class="sig-bar"><i style="width:91%;background:var(--ok)"></i></span><span class="v">91</span></div></td>
+                    <td><div class="sig-cell"><span class="sig-bar"><i style="width:81%;background:var(--ok)"></i></span><span class="v">81</span></div></td>
+                    <td class="num strong" style="color:var(--err)" id="loopScore">64</td>
+                    <td><div class="loop-status"><span class="st warn" id="loopStatus"><span class="dt"></span>回环中</span><span class="ls-sub" id="loopSub">behavior 45 · build 0</span></div></td>
+                    <td><button class="btn sm" id="reviewRowBtn" data-action="review">重新审查</button></td>
+                  </tr>
+                  <tr class="group-start">
+                    <td><div class="cell-file"><svg><use href="#i-file"/></svg><span class="mono">src/views/UserTable.vue</span></div></td>
+                    <td class="batch-col"><span class="batch-chip sm gated">#17</span></td>
+                    <td class="num">1</td>
+                    <td><div class="sig-cell"><span class="sig-bar"><i style="width:94%;background:var(--ok)"></i></span><span class="v">94</span></div></td>
+                    <td><div class="sig-cell"><span class="sig-bar"><i style="width:91%;background:var(--ok)"></i></span><span class="v">91</span></div></td>
+                    <td><div class="sig-cell"><span class="sig-bar"><i style="width:88%;background:var(--ok)"></i></span><span class="v">88</span></div></td>
+                    <td><div class="sig-cell"><span class="sig-bar"><i style="width:86%;background:var(--ok)"></i></span><span class="v">86</span></div></td>
+                    <td><div class="sig-cell"><span class="sig-bar"><i style="width:83%;background:var(--warn)"></i></span><span class="v low">83</span></div></td>
+                    <td class="num strong">89</td>
+                    <td><span class="st ok"><span class="dt"></span>通过</span></td>
+                    <td><button class="btn sm ghost" data-action="toast-info" data-toast="打开 UserTable.vue 评分详情">详情</button></td>
+                  </tr>
+                  <tr class="group-start">
+                    <td><div class="cell-file"><svg><use href="#i-file"/></svg><span class="mono">src/views/OrderDetail.vue</span></div></td>
+                    <td class="batch-col"><span class="batch-chip sm done">#16</span></td>
+                    <td class="num">1</td>
+                    <td><div class="sig-cell"><span class="sig-bar"><i style="width:78%;background:var(--warn)"></i></span><span class="v low">78</span></div></td>
+                    <td><div class="sig-cell"><span class="sig-bar"><i style="width:84%;background:var(--warn)"></i></span><span class="v low">84</span></div></td>
+                    <td><div class="sig-cell"><span class="sig-bar"><i style="width:74%;background:var(--warn)"></i></span><span class="v low">74</span></div></td>
+                    <td><div class="sig-cell"><span class="sig-bar"><i style="width:83%;background:var(--warn)"></i></span><span class="v low">83</span></div></td>
+                    <td><div class="sig-cell"><span class="sig-bar"><i style="width:76%;background:var(--warn)"></i></span><span class="v low">76</span></div></td>
+                    <td class="num strong" style="color:var(--warn)">80</td>
+                    <td><span class="st warn"><span class="dt"></span>警告通过</span></td>
+                    <td><button class="btn sm ghost" data-action="toast-info" data-toast="查看回环记录：68 → 80（警告通过）">记录</button></td>
+                  </tr>
+                  <tr class="group-start">
+                    <td><div class="cell-file"><svg><use href="#i-file"/></svg><span class="mono">src/components/RichEditor.vue</span></div></td>
+                    <td class="batch-col"><span class="batch-chip sm split">#15</span></td>
+                    <td class="num">3</td>
+                    <td><div class="sig-cell"><span class="sig-bar"><i style="width:71%;background:var(--warn)"></i></span><span class="v low">71</span></div></td>
+                    <td><div class="sig-cell"><span class="sig-bar"><i style="width:62%;background:var(--warn)"></i></span><span class="v low">62</span></div></td>
+                    <td><div class="sig-cell"><span class="sig-bar"><i style="width:58%;background:var(--err)"></i></span><span class="v bad">58</span></div></td>
+                    <td><div class="sig-cell"><span class="sig-bar"><i style="width:74%;background:var(--warn)"></i></span><span class="v low">74</span></div></td>
+                    <td><div class="sig-cell"><span class="sig-bar"><i style="width:66%;background:var(--warn)"></i></span><span class="v low">66</span></div></td>
+                    <td class="num strong" style="color:var(--err)">67</td>
+                    <td><span class="st err"><span class="dt"></span>人工门</span></td>
+                    <td><button class="btn sm ghost" data-action="toast-info" data-toast="升级人工门：等待迁移负责人确认">接管</button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="stack audit-panel">
+            <div class="panel">
+              <div class="panel-hd"><svg class="ph-icon"><use href="#i-repeat"/></svg><span class="panel-title">低分回环记录</span><span class="count">今日 7</span></div>
+              <div class="panel-bd" style="padding-top:4px">
+                <div class="tl-row warn" style="padding:4px 0"><div class="tl-time">17:20</div><div class="tl-dot"></div><div class="tl-body"><div class="tl-title" style="font-size:11px">TreeSelect.vue · 第 2 轮</div><div class="tl-meta"><span>64 <span style="color:var(--warn)">← 69</span></span><span class="sep"></span><span>behavior 45</span></div></div></div>
+                <div class="tl-row ok" style="padding:4px 0"><div class="tl-time">17:06</div><div class="tl-dot"></div><div class="tl-body"><div class="tl-title" style="font-size:11px">OrderDetail.vue · 第 1 轮</div><div class="tl-meta"><span>80 <span style="color:var(--warn)">← 68</span></span><span class="sep"></span><span>警告通过</span></div></div></div>
+                <div class="tl-row err" style="padding:4px 0"><div class="tl-time">16:48</div><div class="tl-dot" style="background:var(--err)"></div><div class="tl-body"><div class="tl-title" style="font-size:11px">RichEditor.vue · 第 1 轮</div><div class="tl-meta"><span>67 ← 63</span><span class="sep"></span><span>升级人工门</span></div></div></div>
+              </div>
+              <div class="panel-ft"><span class="mono" style="font-size:9px;color:var(--ink-4)">人工门待处理 1</span><span class="spacer"></span><button class="btn sm ghost" data-action="toast-info" data-toast="查看全部回环记录">全部<svg><use href="#i-chev-right"/></svg></button></div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-hd"><svg class="ph-icon"><use href="#i-check-circle"/></svg><span class="panel-title">门控审计</span></div>
+              <div class="audit-box">
+                <div class="audit-row"><span class="ar-k">最近审查</span><span class="ar-v">17:20:52</span></div>
+                <div class="audit-row"><span class="ar-k">权重</span><span class="ar-v">20/25/15/25/15</span></div>
+                <div class="audit-log" id="auditLog">
+                  <div class="al-row"><span class="al-time">17:20</span><span class="al-txt">TreeSelect.vue 64 &lt; 70 → 回环 #2</span></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================
+           08 设置
+      ============================================================ -->
+      <section class="page" id="page-settings" aria-label="设置">
+        <div class="page-head">
+          <div>
+            <div class="eyebrow">System · 08 <span class="dim">/ settings</span></div>
+            <h1 class="page-title">设置 <small>profile · production</small></h1>
+            <p class="page-desc">内核、并发、配额、质量门控与模型路由。修改实时生效，重要变更写入审计日志。</p>
+          </div>
+          <div class="head-actions">
+            <span class="mono" style="font-size:10px;color:var(--ink-4)">上次保存 17:22:06</span>
+            <button class="btn" data-action="toast-info" data-toast="已恢复默认配置（未保存可直接撤销）"><svg><use href="#i-refresh"/></svg>恢复默认</button>
+            <button class="btn primary" id="saveSettings" data-action="toast-ok" data-toast="配置已保存 · 已下发到 8 个 Agent"><svg><use href="#i-save"/></svg>保存更改</button>
+          </div>
+        </div>
+
+        <div class="set-layout">
+          <div class="set-main">
+            <div class="panel set-card full">
+              <div class="panel-hd"><svg class="ph-icon"><use href="#i-cpu"/></svg><span class="panel-title">内核选择</span><span class="spacer"></span><span class="st ok"><span class="dt"></span>运行中 · SQLite</span></div>
+              <div class="panel-bd">
+                <div class="kernel-grid">
+                  <button class="kernel-opt on" data-kernel="sqlite" aria-pressed="true">
+                    <div class="ko-top"><span class="ko-radio"></span><span class="ko-name">自研 SQLite Kernel</span><span class="ko-ver">v0.8.4</span></div>
+                    <div class="ko-desc">默认生产内核。SQLite 持久化断点、回环调度、限流退避与多 Agent 并发上下文隔离。</div>
+                    <div class="ko-tags"><span class="tag">生产验证</span><span class="tag">断点续跑</span><span class="tag">并发 3</span></div>
+                    <span class="ko-st st ok" style="height:16px;font-size:8.5px"><span class="dt"></span>已连接</span>
+                  </button>
+                  <button class="kernel-opt" data-kernel="loopx" aria-pressed="false">
+                    <div class="ko-top"><span class="ko-radio"></span><span class="ko-name">LoopX Kernel</span><span class="ko-ver">v2.0.0a1</span></div>
+                    <div class="ko-desc">可选实验内核，提供自适应编排；当前版本未接入 Skills / Memory 协议，暂不建议生产使用。</div>
+                    <div class="ko-tags"><span class="tag grey">可选</span><span class="tag grey">实验</span><span class="tag grey">未启用</span></div>
+                    <span class="ko-st st idle" style="height:16px;font-size:8.5px">未启用</span>
+                  </button>
+                </div>
+                <div class="note" style="margin-top:9px"><svg><use href="#i-info"/></svg><span>切换内核会中断当前运行并写入检查点；建议在批次边界切换。SQLite Kernel 的 Skills / Memory 协议与当前版本一致。</span></div>
+              </div>
+            </div>
+
+            <div class="panel set-card">
+              <div class="panel-hd"><svg class="ph-icon"><use href="#i-zap"/></svg><span class="panel-title">运行时与并发</span></div>
+              <div class="panel-bd" style="padding-top:2px;padding-bottom:4px">
+                <div class="set-row">
+                  <div class="sr-l">最大并发 Agent<small>3 max · 受配额限制</small></div>
+                  <div class="sr-c"><div class="inline-fields"><div class="stepper" style="width:112px"><button aria-label="减少并发">−</button><span class="sv" id="concurrencyVal">3</span><button aria-label="增加并发">+</button></div><span class="unit">/ 8 可用槽位</span></div></div>
+                </div>
+                <div class="set-row">
+                  <div class="sr-l">单任务超时<small>超时后自动重试一次</small></div>
+                  <div class="sr-c"><div class="inline-fields"><input class="input mono" value="180" style="width:78px"><span class="unit">秒</span><span class="mono" style="font-size:9.5px;color:var(--ink-4);margin-left:6px">timeout → backoff → retry</span></div></div>
+                </div>
+                <div class="set-row">
+                  <div class="sr-l">检查点间隔<small>断点续跑的粒度</small></div>
+                  <div class="sr-c"><div class="inline-fields"><input class="input mono" value="30" style="width:78px"><span class="unit">秒</span></div></div>
+                </div>
+                <div class="switch-row" style="border-top:1px solid #192129">
+                  <div class="sr-txt"><strong>自动恢复</strong><span>限流 / 截断 / 超时等可恢复异常自动处置并继续</span></div>
+                  <span class="switch" role="switch" aria-checked="true" tabindex="0" data-switch></span>
+                </div>
+                <div class="switch-row" style="border-top:1px solid #192129">
+                  <div class="sr-txt"><strong>上下文自动压缩</strong><span>单文件超 800 行时按 AST 切片，降低截断概率</span></div>
+                  <span class="switch" role="switch" aria-checked="true" tabindex="0" data-switch></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel set-card">
+              <div class="panel-hd"><svg class="ph-icon"><use href="#i-layers"/></svg><span class="panel-title">批量执行</span><span class="spacer"></span><span class="st run"><span class="dt"></span>7 文件/批</span></div>
+              <div class="panel-bd" style="padding-top:6px;padding-bottom:7px">
+                <div class="batch-grid">
+                  <div class="bg-item"><div class="bg-l">默认批大小</div><div class="bg-v">7 <small>文件</small></div></div>
+                  <div class="bg-item"><div class="bg-l">最大并发批次</div><div class="bg-v">1 <small>波次串行</small></div></div>
+                  <div class="bg-item"><div class="bg-l">每 tick 批数</div><div class="bg-v">10 <small>批</small></div></div>
+                  <div class="bg-item"><div class="bg-l">单批等待</div><div class="bg-v">1800 <small>s</small></div></div>
+                  <div class="bg-item"><div class="bg-l">拆分深度</div><div class="bg-v">2 <small>层</small></div></div>
+                  <div class="bg-item"><div class="bg-l">上下文预算</div><div class="bg-v">28,000 <small>chars</small></div></div>
+                </div>
+                <div class="note" style="margin-top:7px;padding:6px 8px;font-size:10px"><svg><use href="#i-info"/></svg><span>批次 = 最小治理单元；失败仅拆该批，断点精确到文件。</span></div>
+              </div>
+            </div>
+
+            <div class="panel set-card full">
+              <div class="panel-hd"><svg class="ph-icon"><use href="#i-shield"/></svg><span class="panel-title">质量门控</span><span class="spacer"></span><span class="mono" style="font-size:9px;color:var(--ink-4)">gate-v2.4</span></div>
+              <div class="panel-bd" style="padding-top:2px;padding-bottom:4px">
+                <div class="set-row">
+                  <div class="sr-l">通过阈值<small>低于阈值自动回环</small></div>
+                  <div class="sr-c">
+                    <div class="inline-fields" style="gap:12px">
+                      <input class="range" type="range" min="60" max="95" value="85" aria-label="通过阈值" style="flex:1">
+                      <span class="range-val" id="thresholdVal">85</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="set-row" style="align-items:flex-start">
+                  <div class="sr-l">信号权重<small>合计需为 100</small></div>
+                  <div class="sr-c">
+                    <div class="weight-row"><span class="wl">AST 结构</span><div class="bar"><i style="width:20%"></i></div><span class="wv">20</span></div>
+                    <div class="weight-row"><span class="wl">构建</span><div class="bar"><i style="width:25%"></i></div><span class="wv">25</span></div>
+                    <div class="weight-row"><span class="wl">类型</span><div class="bar"><i style="width:15%"></i></div><span class="wv">15</span></div>
+                    <div class="weight-row"><span class="wl">浏览器</span><div class="bar"><i style="width:25%"></i></div><span class="wv">25</span></div>
+                    <div class="weight-row"><span class="wl">行为</span><div class="bar"><i style="width:15%"></i></div><span class="wv">15</span></div>
+                  </div>
+                </div>
+                <div class="set-row">
+                  <div class="sr-l">回环上限<small>超过后升级人工门</small></div>
+                  <div class="sr-c"><div class="inline-fields"><div class="stepper" style="width:100px"><button aria-label="减少回环">−</button><span class="sv">3</span><button aria-label="增加回环">+</button></div><span class="unit">轮</span></div></div>
+                </div>
+                <div class="switch-row" style="border-top:1px solid #192129">
+                  <div class="sr-txt"><strong>失败升级人工门</strong><span>超限后暂停等待迁移负责人确认，不自动放行</span></div>
+                  <span class="switch" role="switch" aria-checked="true" tabindex="0" data-switch></span>
+                </div>
+                <div class="switch-row" style="border-top:1px solid #192129">
+                  <div class="sr-txt"><strong>低分文件优先重排</strong><span>将 &lt; 70 的文件提前到下一批次</span></div>
+                  <span class="switch" role="switch" aria-checked="false" tabindex="0" data-switch></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="set-rail">
+            <div class="panel set-card">
+              <div class="panel-hd"><svg class="ph-icon"><use href="#i-bot"/></svg><span class="panel-title">模型路由</span><span class="spacer"></span><span class="st run"><span class="dt"></span>3 通道</span></div>
+              <div class="panel-bd" style="padding-top:4px;padding-bottom:2px">
+                <div class="model-row">
+                  <div class="ava sm">主</div>
+                  <div><div class="mr-name">deepseek-chat</div><div class="mr-id">V3.2 · 主模型 · 温度 0.2</div></div>
+                  <div class="mr-right"><span class="st ok" style="height:16px;font-size:8.5px"><span class="dt"></span>健康</span></div>
+                </div>
+                <div class="model-row">
+                  <div class="ava sm grey">备</div>
+                  <div><div class="mr-name">claude-sonnet-4.5</div><div class="mr-id">fallback · 429 时切换</div></div>
+                  <div class="mr-right"><span class="st ok" style="height:16px;font-size:8.5px"><span class="dt"></span>健康</span></div>
+                </div>
+                <div class="model-row">
+                  <div class="ava sm blue">校</div>
+                  <div><div class="mr-name">deepseek-reasoner</div><div class="mr-id">质量校验 · 门控复核</div></div>
+                  <div class="mr-right"><span class="st ok" style="height:16px;font-size:8.5px"><span class="dt"></span>健康</span></div>
+                </div>
+                <div class="kv" style="margin-top:10px;padding-top:9px;border-top:1px solid #192129">
+                  <dt>429 退避策略</dt><dd>指数退避 · 最大 32s</dd>
+                  <dt>单请求超时</dt><dd>180s</dd>
+                  <dt>最大输出</dt><dd>64k tokens</dd>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel set-card">
+              <div class="panel-hd"><svg class="ph-icon"><use href="#i-coin"/></svg><span class="panel-title">配额与用量</span><span class="spacer"></span><span class="mono" style="font-size:9px;color:var(--ink-4)">重置 00:00</span></div>
+              <div class="panel-bd">
+                <div class="quota-bar">
+                  <div class="quota-top"><span>Token 配额</span><span><b>816K</b> / 1.2M</span></div>
+                  <div class="bar hi"><i style="width:68%"></i></div>
+                  <div class="quota-top" style="margin-top:6px"><span class="mono" style="font-size:9px">剩余 384K · 预计可跑 42 批次</span><span class="mono" style="font-size:9px;color:var(--warn)">68%</span></div>
+                </div>
+                <div class="kv" style="margin-top:13px">
+                  <dt>API QPS</dt><dd>12 / 20</dd>
+                  <dt>并发槽位</dt><dd>3 / 8</dd>
+                  <dt>浏览器实例</dt><dd>2 / 4</dd>
+                  <dt>存储用量</dt><dd>1.8 GB</dd>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel set-card">
+              <div class="panel-hd"><svg class="ph-icon"><use href="#i-terminal"/></svg><span class="panel-title">生效配置</span><span class="spacer"></span><span class="st plain" style="height:16px;font-size:8.5px">read-only</span></div>
+              <pre class="effective-code" style="margin:0"><span class="k">"kernel"</span>: <span class="s">"sqlite"</span>,
+<span class="k">"concurrency"</span>: <span class="n">3</span>,
+<span class="k">"batch"</span>: { <span class="k">"size"</span>: <span class="n">7</span>, <span class="k">"conc"</span>: <span class="n">1</span>, <span class="k">"tick"</span>: <span class="n">10</span> },
+<span class="k">"gate"</span>: {
+  <span class="k">"threshold"</span>: <span class="n">85</span>,
+  <span class="k">"warn_from"</span>: <span class="n">70</span>,
+  <span class="k">"max_loop"</span>: <span class="n">3</span>,
+  <span class="k">"weights"</span>: [<span class="n">20</span>,<span class="n">25</span>,<span class="n">15</span>,<span class="n">25</span>,<span class="n">15</span>]
+},
+<span class="k">"auto_recover"</span>: <span class="b">true</span></pre>
+            </div>
+
+            <div class="panel set-card danger-zone">
+              <div class="panel-hd"><svg class="ph-icon" style="color:var(--err)"><use href="#i-alert"/></svg><span class="panel-title">危险区</span></div>
+              <div class="danger-row">
+                <div><div class="dr-t">清空工作区记忆</div><div class="dr-s">128 条经验 · 不可恢复</div></div>
+                <button class="btn sm danger" data-action="toast-warn" data-toast="需输入工作区名确认后清空">清空</button>
+              </div>
+              <div class="danger-row">
+                <div><div class="dr-t">重置内核状态</div><div class="dr-s">中断当前运行并丢弃队列</div></div>
+                <button class="btn sm danger" data-action="toast-warn" data-toast="重置需二次确认">重置</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>

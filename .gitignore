@@ -1,0 +1,38 @@
+# 敏感文件
+apiKey.txt
+.env
+*.key
+*.pem
+
+# Python / 缓存
+**/__pycache__/
+*.py[cod]
+**/.pytest_cache/
+**/.tmp/
+plugin/.tmp/
+
+# 生成/测试产物
+plugin/logs/
+plugin/tests/out/
+plugin/test-output.txt
+plugin/r2-work/
+plugin/.hermes-test/
+plugin/.hermes-verify/
+plugin/auto-e2e/
+plugin/r8b-real/
+plugin/sample-app/dist/
+
+# 依赖
+**/node_modules/
+**/.vite/
+**/.cache/
+
+# 发布 zip 作为 Release 附件，不入源码
+plugin/hermes_flow/dist/*.zip
+plugin/hermes_flow/dist/*.sha256
+releases/*/*.zip
+releases/*/*.sha256
+
+# 系统
+.DS_Store
+Thumbs.db

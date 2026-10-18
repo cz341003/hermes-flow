@@ -1,0 +1,423 @@
+{
+  "generated_at": "2026-10-18T15:03:45+08:00",
+  "demo": "HERMES Flow e2e (mock transform, real apply)",
+  "plugin_root": "E:\\deepSeek\\plugin\\hermes_flow",
+  "plugin_version": "0.6.0",
+  "project": "E:\\deepSeek\\plugin\\.tmp\\tmpiuwi3ffm\\project",
+  "sample_app": "E:\\deepSeek\\plugin\\sample-app",
+  "run_id": "run-e2e-demo",
+  "group_id": "g-e2e-demo",
+  "done": true,
+  "elapsed_seconds": 0.303,
+  "policy": {
+    "max_files_per_batch": 5,
+    "context_budget_chars": 28000,
+    "max_concurrent_batches": 1,
+    "max_batches_per_tick": 10,
+    "tick_budget_seconds": 600,
+    "wait_slice_seconds": 60,
+    "batch_timeout_seconds": 1800,
+    "max_attempts": 3,
+    "max_split_depth": 2,
+    "inner_loop": "serial",
+    "split_on_failure": true,
+    "quality_gate_per_batch": true,
+    "write_mode": "staging_apply",
+    "max_batch_size_cap": 12
+  },
+  "plan": {
+    "total_files": 20,
+    "total_batches": 10,
+    "waves": 6,
+    "high_risk_files": [
+      "src/router/index.js",
+      "src/store/index.js"
+    ],
+    "batches": [
+      {
+        "id": "b-0001",
+        "wave": 0,
+        "priority": "normal",
+        "files": [
+          "babel.config.js",
+          "package.json",
+          "src/mixins/loadingMixin.js",
+          "src/styles/variables.less",
+          "src/utils/format.js"
+        ]
+      },
+      {
+        "id": "b-0002",
+        "wave": 0,
+        "priority": "normal",
+        "files": [
+          "src/utils/request.js"
+        ]
+      },
+      {
+        "id": "b-0003",
+        "wave": 1,
+        "priority": "normal",
+        "files": [
+          "webpack.config.js",
+          "src/styles/global.less",
+          "src/components/HelloWorld.vue",
+          "src/components/TreeMenu.vue",
+          "src/components/UserCard.vue"
+        ]
+      },
+      {
+        "id": "b-0004",
+        "wave": 1,
+        "priority": "normal",
+        "files": [
+          "src/store/modules/user.js"
+        ]
+      },
+      {
+        "id": "b-0005",
+        "wave": 2,
+        "priority": "normal",
+        "files": [
+          "src/views/Home.vue",
+          "src/App.vue",
+          "src/views/About.vue"
+        ]
+      },
+      {
+        "id": "b-0006",
+        "wave": 2,
+        "priority": "high",
+        "files": [
+          "src/store/index.js"
+        ]
+      },
+      {
+        "id": "b-0007",
+        "wave": 2,
+        "priority": "normal",
+        "files": [
+          "src/views/UserList.vue"
+        ]
+      },
+      {
+        "id": "b-0008",
+        "wave": 3,
+        "priority": "high",
+        "files": [
+          "src/router/index.js"
+        ]
+      },
+      {
+        "id": "b-0009",
+        "wave": 4,
+        "priority": "normal",
+        "files": [
+          "src/main.js"
+        ]
+      },
+      {
+        "id": "b-0010",
+        "wave": 5,
+        "priority": "normal",
+        "files": [
+          "index.html"
+        ]
+      }
+    ]
+  },
+  "gate": {
+    "per_batch_scores": [
+      97.6,
+      97.6,
+      97.6,
+      97.6,
+      97.6,
+      97.6,
+      97.6,
+      97.6,
+      97.6,
+      97.6
+    ],
+    "average": 97.6,
+    "aggregate": {
+      "score": 97.6,
+      "verdict": "pass",
+      "coverage": 1.0,
+      "reasons": []
+    }
+  },
+  "status": {
+    "total_batches": 10,
+    "done_batches": 10,
+    "failed_batches": [],
+    "ready_batches": [],
+    "running_batches": [],
+    "item_status_counts": {
+      "applied": 20
+    }
+  },
+  "batches": [
+    {
+      "id": "g-e2e-demo--b0001",
+      "wave": 0,
+      "files": [
+        "babel.config.js",
+        "package.json",
+        "src/mixins/loadingMixin.js",
+        "src/styles/variables.less",
+        "src/utils/format.js"
+      ],
+      "attempt": 1,
+      "status": "done",
+      "score": 97.6,
+      "applied": [
+        "babel.config.js",
+        "package.json",
+        "src/mixins/loadingMixin.js",
+        "src/styles/variables.less",
+        "src/utils/format.js"
+      ]
+    },
+    {
+      "id": "g-e2e-demo--b0002",
+      "wave": 0,
+      "files": [
+        "src/utils/request.js"
+      ],
+      "attempt": 1,
+      "status": "done",
+      "score": 97.6,
+      "applied": [
+        "src/utils/request.js"
+      ]
+    },
+    {
+      "id": "g-e2e-demo--b0003",
+      "wave": 1,
+      "files": [
+        "webpack.config.js",
+        "src/styles/global.less",
+        "src/components/HelloWorld.vue",
+        "src/components/TreeMenu.vue",
+        "src/components/UserCard.vue"
+      ],
+      "attempt": 1,
+      "status": "done",
+      "score": 97.6,
+      "applied": [
+        "webpack.config.js",
+        "src/styles/global.less",
+        "src/components/HelloWorld.vue",
+        "src/components/TreeMenu.vue",
+        "src/components/UserCard.vue"
+      ]
+    },
+    {
+      "id": "g-e2e-demo--b0004",
+      "wave": 1,
+      "files": [
+        "src/store/modules/user.js"
+      ],
+      "attempt": 1,
+      "status": "done",
+      "score": 97.6,
+      "applied": [
+        "src/store/modules/user.js"
+      ]
+    },
+    {
+      "id": "g-e2e-demo--b0005",
+      "wave": 2,
+      "files": [
+        "src/views/Home.vue",
+        "src/App.vue",
+        "src/views/About.vue"
+      ],
+      "attempt": 1,
+      "status": "done",
+      "score": 97.6,
+      "applied": [
+        "src/views/Home.vue",
+        "src/App.vue",
+        "src/views/About.vue"
+      ]
+    },
+    {
+      "id": "g-e2e-demo--b0006",
+      "wave": 2,
+      "files": [
+        "src/store/index.js"
+      ],
+      "attempt": 1,
+      "status": "done",
+      "score": 97.6,
+      "applied": [
+        "src/store/index.js"
+      ]
+    },
+    {
+      "id": "g-e2e-demo--b0007",
+      "wave": 2,
+      "files": [
+        "src/views/UserList.vue"
+      ],
+      "attempt": 1,
+      "status": "done",
+      "score": 97.6,
+      "applied": [
+        "src/views/UserList.vue"
+      ]
+    },
+    {
+      "id": "g-e2e-demo--b0008",
+      "wave": 3,
+      "files": [
+        "src/router/index.js"
+      ],
+      "attempt": 1,
+      "status": "done",
+      "score": 97.6,
+      "applied": [
+        "src/router/index.js"
+      ]
+    },
+    {
+      "id": "g-e2e-demo--b0009",
+      "wave": 4,
+      "files": [
+        "src/main.js"
+      ],
+      "attempt": 1,
+      "status": "done",
+      "score": 97.6,
+      "applied": [
+        "src/main.js"
+      ]
+    },
+    {
+      "id": "g-e2e-demo--b0010",
+      "wave": 5,
+      "files": [
+        "index.html"
+      ],
+      "attempt": 1,
+      "status": "done",
+      "score": 97.6,
+      "applied": [
+        "index.html"
+      ]
+    }
+  ],
+  "applied_files": [
+    {
+      "path": "babel.config.js",
+      "applied_hash": "77c8f7892c3ea6dd50601071fc6ff84c0782478473c38d464bb5a2dd0b8368bb",
+      "bytes": 136
+    },
+    {
+      "path": "index.html",
+      "applied_hash": "49e89e21492d67f6f1886d06f9e38f26d1885aaaf6e8bf1a9e9d22a0203cf4a5",
+      "bytes": 270
+    },
+    {
+      "path": "package.json",
+      "applied_hash": "3e8a3ddc5597d7f500595150cfc6d75a474b86f1024c67cc9e4a074d341804af",
+      "bytes": 868
+    },
+    {
+      "path": "src/App.vue",
+      "applied_hash": "90d853b0323acd55e5470e44298a7665b7aa0ca3eda00551b1104c3278c74eb1",
+      "bytes": 810
+    },
+    {
+      "path": "src/components/HelloWorld.vue",
+      "applied_hash": "6632aae332851c66e7194df5a17e5c9e989148a806172ee618cfeebc36baeb53",
+      "bytes": 403
+    },
+    {
+      "path": "src/components/TreeMenu.vue",
+      "applied_hash": "8c9a74c81b0ff51b8f46704bcc53191a0e0ee63b3b6697afcef91516b8cee57d",
+      "bytes": 901
+    },
+    {
+      "path": "src/components/UserCard.vue",
+      "applied_hash": "027751e7e45b780059b439cf5689574bdca370ab06c163c9bf6fcead0a9797ca",
+      "bytes": 393
+    },
+    {
+      "path": "src/main.js",
+      "applied_hash": "fa16cb913c46da3f49ba6ca7dc873bd7bd2d574af9cd1abf718fc9dbe37783ae",
+      "bytes": 379
+    },
+    {
+      "path": "src/mixins/loadingMixin.js",
+      "applied_hash": "ad0bb35993831945a16cd1ec99c1a5c5618d8924911752609d61c05dbc995967",
+      "bytes": 321
+    },
+    {
+      "path": "src/router/index.js",
+      "applied_hash": "46a65ff4150b5eadeebfa25c07485fd2187475e630f95ea4354055223e885c59",
+      "bytes": 729
+    },
+    {
+      "path": "src/store/index.js",
+      "applied_hash": "e88a7ac3627786f21188665cefba06782c218d333de8d46472b6defb2e1a2889",
+      "bytes": 202
+    },
+    {
+      "path": "src/store/modules/user.js",
+      "applied_hash": "7677d9b0d44b859d1fd7eeabff5594f3d9fba93ecaf4ec81b058a4a47e8126b8",
+      "bytes": 646
+    },
+    {
+      "path": "src/styles/global.less",
+      "applied_hash": "dc85ee78f34c497cbce559820b6af99a4af8b8d6ca323d5df7de0287d83f2716",
+      "bytes": 251
+    },
+    {
+      "path": "src/styles/variables.less",
+      "applied_hash": "1afdebeb56e5c0eb42c9c0922d9590fa57db4f1579a4ea94f3c0aced700755c8",
+      "bytes": 108
+    },
+    {
+      "path": "src/utils/format.js",
+      "applied_hash": "e499b02f6c4c811569fe5195d3e4b04e54c705301bef9352f8c5e6dc94cc40e9",
+      "bytes": 391
+    },
+    {
+      "path": "src/utils/request.js",
+      "applied_hash": "ddddd2cb29e7999f24c3ff74d5b22cc1b55e1f0131964fac25e94545cd17001e",
+      "bytes": 497
+    },
+    {
+      "path": "src/views/About.vue",
+      "applied_hash": "7d4816c47ee1d65afd41efb8cf2a8b031d613ca9585a24b82ca5eea7f9832522",
+      "bytes": 459
+    },
+    {
+      "path": "src/views/Home.vue",
+      "applied_hash": "b7965b9ab84f4ad9fb438144939f71fa54fc2219390075fd4d7e3b5d9f0381e3",
+      "bytes": 889
+    },
+    {
+      "path": "src/views/UserList.vue",
+      "applied_hash": "7105ed6ebf67a48b78c304340f53c2a9f72d6a28064dd678372c991942b9496d",
+      "bytes": 1142
+    },
+    {
+      "path": "webpack.config.js",
+      "applied_hash": "303924d8b25e60ba91a646e857f9cc866eab665fba7f22401bb2ef00939ca423",
+      "bytes": 825
+    }
+  ],
+  "checks": {
+    "all_batches_done": true,
+    "no_failed_batches": true,
+    "all_20_files_applied": true,
+    "applied_hash_matches_workspace": true,
+    "aggregate_gate_pass": true,
+    "idempotent_apply": true,
+    "high_risk_isolated": true
+  }
+}

@@ -1,0 +1,18 @@
+你正在验证 HERMES Flow 的自动批次 driver。请严格按顺序调用工具，不要只解释：
+
+1. 调用 flow_run_start：
+   workflow_id="vue3-migrate-6phase"
+   project_root="E:\\deepSeek\\plugin\\auto-e2e"
+   files=[{"path":"src/A.vue","size":129},{"path":"src/B.vue","size":129}]
+2. 取返回的 run id，调用 flow_batch_plan：
+   run_id=<上一步返回值>
+   node_id="transform"
+3. 取返回的 group_id，调用 flow_batch_auto：
+   group_id=<上一步返回值>
+   max_batches=3
+   max_seconds=180
+   apply=true
+4. 如果返回 driver_unavailable/rate_limited/failed，请把 JSON 原文报告出来，不要重试超过一次。
+5. 最后报告：flow_batch_auto 的完整 JSON 结果 + 工作区 src/A.vue 与 src/B.vue 当前内容是否被修改。
+
+注意：flow_batch_auto 会启动一个子代理实际把 staging 文件转换并应用；子代理只应写 staging_path。不要修改 auto-e2e 之外的文件，不要安装依赖。

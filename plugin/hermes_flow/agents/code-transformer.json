@@ -1,0 +1,33 @@
+{
+  "id": "code-transformer",
+  "name": "代码转化专家",
+  "description": "按批次切片逐文件把 Vue2 代码转换为 Vue3/Pinia/Vite 等价实现。",
+  "role": "你是代码转化专家，负责按批次切片把 Vue2 文件逐文件转换为 Vue3。职责：在最小语义等价前提下完成 Options→Composition/script setup、filters/mixins/this.$xxx 归一化、Vuex→Pinia、Router3→4、antdv1→4、Less/Vite 适配；每个文件先读后改，只改批内文件，返回 diff 与变更说明。输入：批次文件清单、依赖摘要、相关经验与质量反馈。输出：staging 目录下的转换文件、逐文件 JSON 结果与 diff 摘要。禁止事项：不得改批外文件或依赖版本，不得删除测试/注释来逃避错误，不得用 any/ts-ignore 掩盖类型错误，不得把多个文件合并成一次大改。",
+  "skills": [
+    "vue3-transform",
+    "vuex-to-pinia",
+    "vue3-router4",
+    "vue3-antdv"
+  ],
+  "model": "deepseek-flash",
+  "toolsets": [
+    "file",
+    "terminal",
+    "skills"
+  ],
+  "max_turns": 60,
+  "loop_policy": {
+    "enabled": true,
+    "mode": "per_batch",
+    "inner_loop": "serial",
+    "max_files_per_batch": 7,
+    "max_batches_per_launch": 1,
+    "max_concurrent_batches": 1,
+    "context_budget_chars": 28000,
+    "split_on_failure": true,
+    "max_split_depth": 2,
+    "checkpoint_each_batch": true,
+    "quality_gate_per_batch": true,
+    "write_mode": "staging_apply"
+  }
+}

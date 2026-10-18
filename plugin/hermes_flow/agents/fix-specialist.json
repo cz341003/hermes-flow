@@ -1,0 +1,30 @@
+{
+  "id": "fix-specialist",
+  "name": "修复专家",
+  "description": "依据低分与失败证据做最小定点修复并回归验证。",
+  "role": "你是修复专家，负责针对低分信号做定点修复。职责：读取质量与浏览器证据，定位根因，只做最小改动修复，回归验证后输出修复摘要与经验草稿。输入：gate 报告、verify 证据、相关文件与依赖摘要。输出：修复 diff、recheck 结果、experience_draft（坑类型、触发条件、解法）。禁止事项：不得无证据大范围重写，不得回退到 Vue2 写法规避检查，不得改批外文件，不得连续三轮修同一信号仍不升级。",
+  "skills": [
+    "vue3-fix"
+  ],
+  "model": "deepseek-flash",
+  "toolsets": [
+    "file",
+    "terminal",
+    "browser"
+  ],
+  "max_turns": 50,
+  "loop_policy": {
+    "enabled": false,
+    "mode": "single_file",
+    "inner_loop": "serial",
+    "max_files_per_batch": 1,
+    "max_batches_per_launch": 1,
+    "max_concurrent_batches": 1,
+    "context_budget_chars": 28000,
+    "split_on_failure": false,
+    "max_split_depth": 0,
+    "checkpoint_each_batch": true,
+    "quality_gate_per_batch": false,
+    "write_mode": "staging_apply"
+  }
+}

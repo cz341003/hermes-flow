@@ -1,0 +1,267 @@
+{
+  "schema": "hermes-flow/workflow@1",
+  "id": "vue3-migrate-6phase",
+  "name": "Vue2→Vue3 六阶段迁移",
+  "description": "结构分析 → 依赖分析 → 代码转化（批次循环）→ 质量门控 → 浏览器验证 / 修复回环 → 人工验收。串行硬约束，批次 7 文件/批、28k 上下文预算、批级质量门。",
+  "version": "1.0.0",
+  "vars": {
+    "project_root": "",
+    "package_manager": "pnpm",
+    "pass_score": 85,
+    "warn_score": 70,
+    "max_rework": 3,
+    "batch_size": 7,
+    "context_budget_chars": 28000
+  },
+  "nodes": [
+    {
+      "id": "analyze",
+      "type": "agent_task",
+      "name": "结构分析",
+      "phase": "analyze",
+      "agent": "structure-analyst",
+      "agent_name": "结构分析专家",
+      "skill": "vue3-analyze",
+      "skills": [
+        "vue3-analyze"
+      ],
+      "input": {
+        "project_root": "${project_root}",
+        "exclude": [
+          "node_modules",
+          "dist",
+          "build",
+          "coverage",
+          ".git"
+        ]
+      },
+      "output": {
+        "file": "reports/analyze.json",
+        "schema": "files/type/legacy_hits/risk_top/batch_hint"
+      },
+      "timeout_s": 1800,
+      "max_attempts": 2,
+      "parallel": false
+    },
+    {
+      "id": "deps",
+      "type": "agent_task",
+      "name": "依赖分析",
+      "phase": "deps",
+      "agent": "dependency-analyst",
+      "agent_name": "依赖分析专家",
+      "skill": "vue3-deps",
+      "skills": [
+        "vue3-deps"
+      ],
+      "input": {
+        "report": "reports/analyze.json",
+        "package_json": "package.json"
+      },
+      "output": {
+        "file": "reports/deps.json",
+        "schema": "graph/topo/waves/cycles/versions/upgrade_steps"
+      },
+      "timeout_s": 1800,
+      "max_attempts": 2,
+      "parallel": false
+    },
+    {
+      "id": "transform",
+      "type": "batch",
+      "name": "代码转化",
+      "phase": "transform",
+      "agent": "code-transformer",
+      "agent_name": "代码转化专家",
+      "skill": "vue3-transform",
+      "skills": [
+        "vue3-transform",
+        "vuex-to-pinia",
+        "vue3-router4",
+        "vue3-antdv"
+      ],
+      "input": {
+        "files": "${report:deps.files}",
+        "order": "topo",
+        "experience": "auto"
+      },
+      "output": {
+        "file": "reports/transform.json",
+        "staging_root": "staging/transform"
+      },
+      "batch": {
+        "source": "inline",
+        "order": "topo",
+        "size": 7,
+        "adaptive": true,
+        "context_budget_chars": 28000,
+        "inner_loop": "serial",
+        "concurrency": 1,
+        "max_split_depth": 2,
+        "split_on_failure": true,
+        "quality_gate_per_batch": true,
+        "write_mode": "staging_apply",
+        "files": []
+      },
+      "timeout_s": 1800,
+      "max_attempts": 3,
+      "parallel": false
+    },
+    {
+      "id": "quality",
+      "type": "quality_gate",
+      "name": "质量门控",
+      "phase": "quality",
+      "agent": "quality-analyst",
+      "agent_name": "质量分析专家",
+      "skill": "vue3-quality",
+      "skills": [
+        "vue3-quality"
+      ],
+      "input": {
+        "diff": "staging/transform",
+        "transform_report": "reports/transform.json"
+      },
+      "output": {
+        "file": "reports/quality.json"
+      },
+      "gate": {
+        "signals": [
+          "ast",
+          "build",
+          "types",
+          "browser",
+          "behavior"
+        ],
+        "weights": [
+          20,
+          25,
+          15,
+          25,
+          15
+        ],
+        "pass": 85,
+        "warn": 70,
+        "max_rework": 3
+      },
+      "timeout_s": 1800,
+      "max_attempts": 1,
+      "parallel": false
+    },
+    {
+      "id": "verify",
+      "type": "agent_task",
+      "name": "浏览器验证",
+      "phase": "verify",
+      "agent": "browser-verifier",
+      "agent_name": "浏览器验证专家",
+      "skill": "vue3-verify",
+      "skills": [
+        "vue3-verify"
+      ],
+      "input": {
+        "project_root": "${project_root}",
+        "build": "dist",
+        "routes": "src/router"
+      },
+      "output": {
+        "file": "reports/verify.json",
+        "screenshots": "evidence/screenshots"
+      },
+      "timeout_s": 1800,
+      "max_attempts": 2,
+      "parallel": true
+    },
+    {
+      "id": "fix",
+      "type": "loop",
+      "name": "修复回环",
+      "phase": "fix",
+      "agent": "fix-specialist",
+      "agent_name": "修复专家",
+      "skill": "vue3-fix",
+      "skills": [
+        "vue3-fix"
+      ],
+      "input": {
+        "quality": "reports/quality.json",
+        "verify": "reports/verify.json"
+      },
+      "output": {
+        "file": "reports/fix.json",
+        "experience": "experience_draft"
+      },
+      "when": "${quality.verdict} == 'rework'",
+      "exit": "${quality.verdict} == 'pass'",
+      "max_rounds": 3,
+      "back_to": "transform",
+      "on_exhausted": "human_gate",
+      "timeout_s": 1800,
+      "max_attempts": 3,
+      "parallel": false
+    },
+    {
+      "id": "review",
+      "type": "human_gate",
+      "name": "人工验收",
+      "phase": "fix",
+      "agent": "",
+      "agent_name": "迁移负责人",
+      "skill": null,
+      "skills": [],
+      "input": {
+        "evidence": [
+          "reports/analyze.json",
+          "reports/deps.json",
+          "reports/quality.json",
+          "reports/verify.json",
+          "reports/fix.json"
+        ]
+      },
+      "output": {
+        "file": "reports/acceptance.json"
+      },
+      "question": "是否合并迁移分支并进入下一阶段？",
+      "options": [
+        "approve",
+        "reject",
+        "pause"
+      ],
+      "timeout_s": 86400,
+      "max_attempts": 1,
+      "parallel": false
+    }
+  ],
+  "edges": [
+    {
+      "source": "analyze",
+      "target": "deps"
+    },
+    {
+      "source": "deps",
+      "target": "transform"
+    },
+    {
+      "source": "transform",
+      "target": "quality"
+    },
+    {
+      "source": "quality",
+      "target": "verify",
+      "condition": "score >= 85"
+    },
+    {
+      "source": "quality",
+      "target": "fix",
+      "condition": "verdict == 'rework'"
+    },
+    {
+      "source": "verify",
+      "target": "review"
+    },
+    {
+      "source": "fix",
+      "target": "review"
+    }
+  ]
+}

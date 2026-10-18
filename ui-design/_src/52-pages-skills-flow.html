@@ -1,0 +1,486 @@
+      <!-- ============================================================
+           03 技能
+      ============================================================ -->
+      <section class="page" id="page-skills" aria-label="技能管理">
+        <div class="page-head">
+          <div>
+            <div class="eyebrow">Build · 03 <span class="dim">/ skill library</span></div>
+            <h1 class="page-title">技能 <small>12 skills · 9 bound</small></h1>
+            <p class="page-desc">技能是可复用的领域能力单元：一段提示词 + 输入输出契约 + 适用阶段。专家按阶段挂载技能，运行时可热替换。</p>
+          </div>
+          <div class="head-actions">
+            <button class="btn" data-action="toast-info" data-toast="导入 SKILL.md / JSON 技能定义"><svg><use href="#i-import"/></svg>导入技能</button>
+            <button class="btn primary" data-action="toast-info" data-toast="新建技能：编写适用阶段与输入输出契约"><svg><use href="#i-plus"/></svg>新建技能</button>
+          </div>
+        </div>
+
+        <div class="toolbar">
+          <div class="field" style="width:250px">
+            <svg><use href="#i-search"/></svg>
+            <input class="input" id="skillSearch" placeholder="搜索技能名称 / 描述 / 阶段" aria-label="搜索技能">
+          </div>
+          <div class="filters" id="skillFilters">
+            <button class="chip active" data-stage="all">全部 <span class="n">12</span></button>
+            <button class="chip" data-stage="transform">transform <span class="n">5</span></button>
+            <button class="chip" data-stage="deps">deps <span class="n">3</span></button>
+            <button class="chip" data-stage="quality">quality <span class="n">1</span></button>
+            <button class="chip" data-stage="verify">verify <span class="n">1</span></button>
+            <button class="chip" data-stage="memory">memory <span class="n">1</span></button>
+          </div>
+          <div class="spacer"></div>
+          <span class="mono" style="font-size:10px;color:var(--ink-4)">已绑定 9 / 12 · 未绑定 3</span>
+        </div>
+
+        <div class="skills-layout">
+          <div class="panel" id="skillsPanel">
+            <div class="panel-hd">
+              <svg class="ph-icon"><use href="#i-layers"/></svg>
+              <span class="panel-title">技能库</span>
+              <span class="count">按最近使用排序</span>
+              <span class="spacer"></span>
+              <span class="ph-link" id="skillsReload" title="模拟重新加载（骨架屏）"><svg><use href="#i-refresh"/></svg></span>
+              <span class="ph-link" data-action="toast-info" data-toast="切换为卡片视图"><svg><use href="#i-grid-view"/></svg></span>
+              <span class="ph-link" data-action="toast-info" data-toast="导出技能清单"><svg><use href="#i-export"/></svg></span>
+            </div>
+            <div class="table-wrap">
+              <table class="data" id="skillsTable">
+                <thead>
+                  <tr>
+                    <th style="width:300px">技能</th>
+                    <th style="width:92px">适用阶段</th>
+                    <th style="width:132px">绑定专家</th>
+                    <th style="width:150px">使用情况</th>
+                    <th style="width:104px">最近使用</th>
+                    <th style="width:84px">来源</th>
+                    <th style="width:74px"></th>
+                  </tr>
+                </thead>
+                <tbody id="skillsBody">
+                  <tr data-stage="transform" data-keys="Vue3 语法升级 v-model filters 事件修饰符 transform">
+                    <td><div class="skill-name"><div class="skill-ico acc"><svg><use href="#i-layers"/></svg></div><div><div class="skill-title">Vue3 语法升级</div><div class="skill-desc">v-model / filters / 事件修饰符 / v-if 优先级</div></div></div></td>
+                    <td><span class="tag">transform</span></td>
+                    <td><div class="bind-count"><b>3</b><span class="muted" style="font-size:10.5px">位专家</span></div></td>
+                    <td><div class="usage"><div class="u-top"><span class="mono">86%</span><span class="mono">128 次</span></div><div class="bar"><i style="width:86%"></i></div></div></td>
+                    <td class="num">2 分钟前</td>
+                    <td><span class="tag grey">内置</span></td>
+                    <td><div class="row-actions"><button class="btn sm ghost" data-action="toast-info" data-toast="技能详情：Vue3 语法升级">编辑</button></div></td>
+                  </tr>
+                  <tr data-stage="transform" data-keys="Options Composition API script setup 转换">
+                    <td><div class="skill-name"><div class="skill-ico"><svg><use href="#i-diff"/></svg></div><div><div class="skill-title">Options → Composition API</div><div class="skill-desc">setup() / &lt;script setup&gt; / 生命周期映射</div></div></div></td>
+                    <td><span class="tag">transform</span></td>
+                    <td><div class="bind-count"><b>2</b><span class="muted" style="font-size:10.5px">位专家</span></div></td>
+                    <td><div class="usage"><div class="u-top"><span class="mono">71%</span><span class="mono">96 次</span></div><div class="bar"><i style="width:71%"></i></div></div></td>
+                    <td class="num">2 分钟前</td>
+                    <td><span class="tag grey">内置</span></td>
+                    <td><div class="row-actions"><button class="btn sm ghost" data-action="toast-info" data-toast="技能详情：Options → Composition API">编辑</button></div></td>
+                  </tr>
+                  <tr data-stage="deps" data-keys="Vuex Pinia store 迁移 deps">
+                    <td><div class="skill-name"><div class="skill-ico"><svg><use href="#i-memory"/></svg></div><div><div class="skill-title">Vuex → Pinia 迁移</div><div class="skill-desc">state / getters / mutations / actions 结构映射</div></div></div></td>
+                    <td><span class="tag">deps</span></td>
+                    <td><div class="bind-count"><b>2</b><span class="muted" style="font-size:10.5px">位专家</span></div></td>
+                    <td><div class="usage"><div class="u-top"><span class="mono">48%</span><span class="mono">54 次</span></div><div class="bar"><i style="width:48%"></i></div></div></td>
+                    <td class="num">1 小时前</td>
+                    <td><span class="tag grey">内置</span></td>
+                    <td><div class="row-actions"><button class="btn sm ghost" data-action="toast-info" data-toast="技能详情：Vuex → Pinia 迁移">编辑</button></div></td>
+                  </tr>
+                  <tr data-stage="transform" data-keys="Ant Design Vue AntD 1.x 4.x 组件映射 transform">
+                    <td><div class="skill-name"><div class="skill-ico"><svg><use href="#i-grid-view"/></svg></div><div><div class="skill-title">Ant Design Vue 1.x → 4.x 映射</div><div class="skill-desc">a-table / a-modal / message 组件与 API 差异</div></div></div></td>
+                    <td><span class="tag">transform</span></td>
+                    <td><div class="bind-count"><b>2</b><span class="muted" style="font-size:10.5px">位专家</span></div></td>
+                    <td><div class="usage"><div class="u-top"><span class="mono">52%</span><span class="mono">61 次</span></div><div class="bar"><i style="width:52%"></i></div></div></td>
+                    <td class="num">3 小时前</td>
+                    <td><span class="tag grey">自建</span></td>
+                    <td><div class="row-actions"><button class="btn sm ghost" data-action="toast-info" data-toast="技能详情：Ant Design Vue 1.x → 4.x 映射">编辑</button></div></td>
+                  </tr>
+                  <tr data-stage="deps" data-keys="Webpack Vite 配置迁移 alias env deps">
+                    <td><div class="skill-name"><div class="skill-ico"><svg><use href="#i-cpu"/></svg></div><div><div class="skill-title">Webpack → Vite 配置迁移</div><div class="skill-desc">alias / env / 插件映射 / 静态资源路径</div></div></div></td>
+                    <td><span class="tag">deps</span></td>
+                    <td><div class="bind-count"><b>1</b><span class="muted" style="font-size:10.5px">位专家</span></div></td>
+                    <td><div class="usage"><div class="u-top"><span class="mono">33%</span><span class="mono">37 次</span></div><div class="bar"><i style="width:33%"></i></div></div></td>
+                    <td class="num">1 小时前</td>
+                    <td><span class="tag grey">内置</span></td>
+                    <td><div class="row-actions"><button class="btn sm ghost" data-action="toast-info" data-toast="技能详情：Webpack → Vite 配置迁移">编辑</button></div></td>
+                  </tr>
+                  <tr data-stage="transform" data-keys="ztree a-tree 迁移 兼容层 transform">
+                    <td><div class="skill-name"><div class="skill-ico"><svg><use href="#i-git-branch"/></svg></div><div><div class="skill-title">ztree → a-tree 迁移</div><div class="skill-desc">API 兼容层封装 · 事件参数重映射</div></div></div></td>
+                    <td><span class="tag">transform</span></td>
+                    <td><div class="bind-count"><b>1</b><span class="muted" style="font-size:10.5px">位专家</span></div></td>
+                    <td><div class="usage"><div class="u-top"><span class="mono">27%</span><span class="mono">31 次</span></div><div class="bar"><i style="width:27%"></i></div></div></td>
+                    <td class="num">30 分钟前</td>
+                    <td><span class="tag grey">自建</span></td>
+                    <td><div class="row-actions"><button class="btn sm ghost" data-action="toast-info" data-toast="技能详情：ztree → a-tree 迁移">编辑</button></div></td>
+                  </tr>
+                  <tr data-stage="quality" data-keys="质量门控评分 quality 五信号 权重">
+                    <td><div class="skill-name"><div class="skill-ico"><svg><use href="#i-shield"/></svg></div><div><div class="skill-title">质量门控评分</div><div class="skill-desc">五信号聚合 · 权重计算 · 失分归因</div></div></div></td>
+                    <td><span class="tag">quality</span></td>
+                    <td><div class="bind-count"><b>1</b><span class="muted" style="font-size:10.5px">位专家</span></div></td>
+                    <td><div class="usage"><div class="u-top"><span class="mono">76%</span><span class="mono">112 次</span></div><div class="bar"><i style="width:76%"></i></div></div></td>
+                    <td class="num">4 分钟前</td>
+                    <td><span class="tag grey">内置</span></td>
+                    <td><div class="row-actions"><button class="btn sm ghost" data-action="toast-info" data-toast="技能详情：质量门控评分">编辑</button></div></td>
+                  </tr>
+                  <tr data-stage="verify" data-keys="浏览器自动化验证 verify playwright dom">
+                    <td><div class="skill-name"><div class="skill-ico"><svg><use href="#i-camera"/></svg></div><div><div class="skill-title">浏览器自动化验证</div><div class="skill-desc">Playwright 渲染 / 交互 / console 采集</div></div></div></td>
+                    <td><span class="tag">verify</span></td>
+                    <td><div class="bind-count"><b>1</b><span class="muted" style="font-size:10.5px">位专家</span></div></td>
+                    <td><div class="usage"><div class="u-top"><span class="mono">41%</span><span class="mono">48 次</span></div><div class="bar"><i style="width:41%"></i></div></div></td>
+                    <td class="num">26 分钟前</td>
+                    <td><span class="tag grey">内置</span></td>
+                    <td><div class="row-actions"><button class="btn sm ghost" data-action="toast-info" data-toast="技能详情：浏览器自动化验证">编辑</button></div></td>
+                  </tr>
+                  <tr data-stage="transform" data-keys="自定义 指令 directive 迁移 transform">
+                    <td><div class="skill-name"><div class="skill-ico"><svg><use href="#i-pencil"/></svg></div><div><div class="skill-title">自定义指令迁移</div><div class="skill-desc">bind → beforeMount · inserted → mounted 映射</div></div></div></td>
+                    <td><span class="tag">transform</span></td>
+                    <td><div class="bind-count"><b>0</b><span class="muted" style="font-size:10.5px">未绑定</span></div></td>
+                    <td><div class="usage"><div class="u-top"><span class="mono">6%</span><span class="mono">7 次</span></div><div class="bar"><i style="width:6%"></i></div></div></td>
+                    <td class="num">昨天</td>
+                    <td><span class="tag grey">自建</span></td>
+                    <td><div class="row-actions"><button class="btn sm ghost" data-action="toast-info" data-toast="技能详情：自定义指令迁移">编辑</button></div></td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="empty" id="skillEmpty" style="display:none">
+                <div class="e-ico"><svg><use href="#i-layers"/></svg></div>
+                <h4>没有匹配的技能</h4>
+                <p>换个关键词，或从提示词一键导入技能定义。</p>
+                <button class="btn sm" id="skillReset">清除筛选</button>
+              </div>
+              <div id="skillSkeleton" style="display:none">
+                <div class="sk-row"><div class="skeleton" style="width:26px;height:26px;border-radius:5px"></div><div style="flex:1"><div class="skeleton" style="width:180px"></div><div class="skeleton" style="width:120px;margin-top:6px;height:7px"></div></div><div class="skeleton" style="width:60px"></div><div class="skeleton" style="width:80px"></div></div>
+                <div class="sk-row"><div class="skeleton" style="width:26px;height:26px;border-radius:5px"></div><div style="flex:1"><div class="skeleton" style="width:150px"></div><div class="skeleton" style="width:100px;margin-top:6px;height:7px"></div></div><div class="skeleton" style="width:60px"></div><div class="skeleton" style="width:80px"></div></div>
+                <div class="sk-row"><div class="skeleton" style="width:26px;height:26px;border-radius:5px"></div><div style="flex:1"><div class="skeleton" style="width:200px"></div><div class="skeleton" style="width:140px;margin-top:6px;height:7px"></div></div><div class="skeleton" style="width:60px"></div><div class="skeleton" style="width:80px"></div></div>
+                <div class="sk-row"><div class="skeleton" style="width:26px;height:26px;border-radius:5px"></div><div style="flex:1"><div class="skeleton" style="width:170px"></div><div class="skeleton" style="width:110px;margin-top:6px;height:7px"></div></div><div class="skeleton" style="width:60px"></div><div class="skeleton" style="width:80px"></div></div>
+                <div class="sk-row"><div class="skeleton" style="width:26px;height:26px;border-radius:5px"></div><div style="flex:1"><div class="skeleton" style="width:190px"></div><div class="skeleton" style="width:130px;margin-top:6px;height:7px"></div></div><div class="skeleton" style="width:60px"></div><div class="skeleton" style="width:80px"></div></div>
+              </div>
+            </div>
+            <div class="panel-ft">
+              <span class="mono" style="font-size:9.5px;color:var(--ink-4)">显示 <span id="skillCount">9</span> / 12 条 · 每页 20</span>
+              <span class="spacer"></span>
+              <button class="btn sm ghost" data-action="toast-info" data-toast="复制技能：将创建「质量门控评分·副本」"><svg><use href="#i-copy"/></svg>复制</button>
+              <button class="btn sm ghost" data-action="toast-info" data-toast="导出技能清单为 skills.json"><svg><use href="#i-export"/></svg>导出</button>
+            </div>
+          </div>
+
+          <div class="stack">
+            <div class="panel rail-panel">
+              <div class="panel-hd"><span class="panel-title">阶段分布</span><span class="count">按适用阶段</span></div>
+              <div class="panel-bd">
+                <div class="dist-list">
+                  <div class="dist-row"><div class="dr-top"><span>transform · 代码转化</span><span class="num">5</span></div><div class="bar"><i style="width:100%"></i></div></div>
+                  <div class="dist-row"><div class="dr-top"><span>deps · 依赖治理</span><span class="num">3</span></div><div class="bar"><i style="width:60%"></i></div></div>
+                  <div class="dist-row"><div class="dr-top"><span>quality · 质量门控</span><span class="num">1</span></div><div class="bar"><i style="width:20%"></i></div></div>
+                  <div class="dist-row"><div class="dr-top"><span>verify · 浏览器验证</span><span class="num">1</span></div><div class="bar"><i style="width:20%"></i></div></div>
+                  <div class="dist-row"><div class="dr-top"><span>memory · 经验沉淀</span><span class="num">1</span></div><div class="bar"><i style="width:20%"></i></div></div>
+                  <div class="dist-row"><div class="dr-top"><span>未绑定技能</span><span class="num">3</span></div><div class="bar warn"><i style="width:60%"></i></div></div>
+                </div>
+                <div class="note" style="margin-top:13px">
+                  <svg><use href="#i-info"/></svg>
+                  <span>阶段由工作流模板决定：技能只在匹配阶段的节点上可被挂载。</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel import-card">
+              <div class="panel-hd"><span class="panel-title">导入技能</span><span class="count">SKILL.md</span></div>
+              <div class="panel-bd">
+                <div class="drop" data-action="toast-info" data-toast="选择文件：支持 .md / .json，单文件 ≤ 256KB">
+                  <svg><use href="#i-import"/></svg>
+                  拖入 SKILL.md 或粘贴提示词
+                  <span class="mono">自动解析适用阶段与输入输出契约</span>
+                </div>
+                <div style="margin-top:10px" class="row">
+                  <button class="btn sm" style="flex:1" data-action="toast-info" data-toast="导入向导：粘贴角色提示词">粘贴提示词</button>
+                  <button class="btn sm" style="flex:1" data-action="toast-info" data-toast="模板下载已开始">下载模板</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel rail-panel">
+              <div class="panel-hd"><span class="panel-title">最近绑定变更</span></div>
+              <div class="panel-bd" style="padding-top:6px;padding-bottom:6px">
+                <div class="ws-row"><span class="mono">Vue3 语法升级</span><span class="muted" style="font-size:10px">→ 代码转化专家</span><span class="st ok" style="height:16px;font-size:8.5px">+1</span></div>
+                <div class="ws-row"><span class="mono">质量门控评分</span><span class="muted" style="font-size:10px">→ 质量分析专家</span><span class="st ok" style="height:16px;font-size:8.5px">+1</span></div>
+                <div class="ws-row"><span class="mono">自定义指令迁移</span><span class="muted" style="font-size:10px">解绑 · 无专家</span><span class="st idle" style="height:16px;font-size:8.5px">−1</span></div>
+                <div class="ws-row"><span class="mono">ztree→a-tree 迁移</span><span class="muted" style="font-size:10px">→ 修复专家</span><span class="st ok" style="height:16px;font-size:8.5px">+1</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================
+           04 工作流编排
+      ============================================================ -->
+      <section class="page" id="page-flow" aria-label="工作流编排">
+        <div class="page-head">
+          <div>
+            <div class="eyebrow">Build · 04 <span class="dim">/ orchestration</span></div>
+            <h1 class="page-title">工作流编排 <small>vue2-to-vue3 · v3</small></h1>
+            <p class="page-desc">可视化 DAG：Agent 节点 = 任务，连线 = 依赖。支持串行、并行、条件分支、循环回环与质量门；画布节点可点击配置，右侧属性面板即时生效。</p>
+          </div>
+          <div class="head-actions">
+            <span class="st plain" style="height:22px"><span class="dt" style="background:var(--ok)"></span>草稿已保存 17:18:44</span>
+            <button class="btn" data-action="toast-info" data-toast="已保存为 v4 草稿"><svg><use href="#i-save"/></svg>保存</button>
+            <button class="btn primary" data-action="toast-navigator" data-target="monitor"><svg><use href="#i-play"/></svg>运行工作流</button>
+          </div>
+        </div>
+
+        <div class="flow-bar">
+          <div style="position:relative">
+            <select class="select" id="templateSelect" aria-label="工作流模板">
+              <option>Vue2→Vue3 六阶段模板 · v3</option>
+              <option>单文件快速迁移模板 · v2</option>
+              <option>依赖治理专用模板 · v1</option>
+              <option>从空白画布开始</option>
+            </select>
+          </div>
+          <span class="st info"><span class="dt"></span>模板库 6</span>
+          <span class="tag grey">8 节点 · 8 连线</span><span class="tag grey">43 批 / 287 文件</span>
+          <span class="tag grey">画布 980 × 554</span>
+          <span class="spacer"></span>
+          <span class="st ok"><span class="dt"></span>校验通过</span>
+          <button class="btn sm" data-action="toast-info" data-toast="已自动布局（dagre · 分层）"><svg><use href="#i-fit"/></svg>自动布局</button>
+          <button class="btn sm" data-action="toast-info" data-toast="版本历史：v3 / v2 / v1"><svg><use href="#i-clock"/></svg>历史</button>
+        </div>
+
+        <div class="flow-layout">
+          <div class="panel flow-canvas-panel">
+            <div class="canvas-head">
+              <span class="ch-item"><svg><use href="#i-flow"/></svg>Vue2→Vue3 六阶段</span>
+              <span class="ch-item"><span class="dot" style="background:var(--ok)"></span>8 节点</span>
+              <span class="ch-item"><span class="dot" style="background:var(--line-3)"></span>8 连线</span>
+              <span class="spacer"></span>
+              <span class="ch-item" style="color:var(--ink-3)">点击节点查看属性 · 拖拽调整</span>
+            </div>
+            <div class="canvas" id="dagCanvas">
+              <div class="canvas-inner" id="canvasInner">
+                <svg class="edge-svg" viewBox="0 0 980 554" preserveAspectRatio="none" aria-hidden="true">
+                  <defs>
+                    <marker id="arr" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#3B4856"/></marker>
+                    <marker id="arrOk" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#4E9E77"/></marker>
+                    <marker id="arrWarn" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#A17B32"/></marker>
+                  </defs>
+                  <path class="e done" d="M172 271 H222" marker-end="url(#arrOk)"/>
+                  <path class="e done" d="M370 271 H420" marker-end="url(#arrOk)"/>
+                  <path class="e done" d="M370 262 H396 V115 H420" marker-end="url(#arrOk)"/>
+                  <path class="e done" d="M568 115 H692 V232" marker-end="url(#arrOk)"/>
+                  <path class="e" d="M568 271 H618" marker-end="url(#arr)"/>
+                  <path class="e" d="M766 271 H816" marker-end="url(#arr)"/>
+                  <path class="e loop" d="M692 310 V394" marker-end="url(#arrWarn)"/>
+                  <path class="e loop" d="M618 433 H494 V310" marker-end="url(#arrWarn)"/>
+                  <text class="e-lbl acc" x="600" y="198">通过</text>
+                  <text class="e-lbl neutral" x="779" y="262">≥ 85</text>
+                  <text class="e-lbl" x="702" y="356">低分回环</text>
+                  <text class="e-lbl" x="512" y="424">≤ 3 轮</text>
+                </svg>
+
+                <button class="node done" style="left:24px;top:232px" data-node="structure">
+                  <div class="nd-top"><span class="nd-kind">agent</span><span class="nd-idx">01</span></div>
+                  <div class="nd-name">结构分析</div>
+                  <div class="nd-meta">结构分析专家 · 2.1s</div>
+                  <div class="nd-prog"><i></i></div>
+                  <span class="nd-st"></span>
+                </button>
+                <button class="node done" style="left:222px;top:232px" data-node="deps">
+                  <div class="nd-top"><span class="nd-kind">agent</span><span class="nd-idx">02</span></div>
+                  <div class="nd-name">依赖分析</div>
+                  <div class="nd-meta">依赖分析专家 · 8.4s</div>
+                  <div class="nd-prog"><i></i></div>
+                  <span class="nd-st"></span>
+                </button>
+                <button class="node done" style="left:420px;top:76px" data-node="config">
+                  <div class="nd-top"><span class="nd-kind">agent · 并行</span><span class="nd-idx">03b</span></div>
+                  <div class="nd-name">配置迁移</div>
+                  <div class="nd-meta">依赖分析专家 · 6.2s</div>
+                  <div class="nd-prog"><i></i></div>
+                  <span class="nd-st"></span>
+                </button>
+                <button class="node run sel" style="left:420px;top:232px" data-node="transform" aria-pressed="true">
+                  <div class="nd-top"><span class="nd-kind">agent</span><span class="nd-idx">03</span></div>
+                  <div class="nd-name">代码转化 <span class="nd-batch">×43 批</span></div>
+                  <div class="nd-meta">代码转化专家 · 批次 18/43</div>
+                  <div class="nd-prog"><i></i></div>
+                  <span class="nd-st"></span>
+                </button>
+                <button class="node gate" style="left:618px;top:232px" data-node="gate" aria-pressed="false">
+                  <div class="nd-top"><span class="nd-kind">gate</span><span class="nd-idx">04</span></div>
+                  <div class="nd-name">质量门控</div>
+                  <div class="nd-meta">score ≥ 85 · 5 信号</div>
+                  <div class="nd-prog"><i></i></div>
+                  <span class="nd-st"></span>
+                </button>
+                <button class="node wait" style="left:816px;top:232px" data-node="verify">
+                  <div class="nd-top"><span class="nd-kind">agent</span><span class="nd-idx">05</span></div>
+                  <div class="nd-name">浏览器验证</div>
+                  <div class="nd-meta">浏览器验证专家 · —</div>
+                  <div class="nd-prog"><i></i></div>
+                  <span class="nd-st"></span>
+                </button>
+                <button class="node loop wait" style="left:618px;top:394px" data-node="fix">
+                  <div class="nd-top"><span class="nd-kind">loop</span><span class="nd-idx">06</span></div>
+                  <div class="nd-name">修复回环</div>
+                  <div class="nd-meta">修复专家 · 上限 3 轮</div>
+                  <div class="nd-prog"><i></i></div>
+                  <span class="nd-st"></span>
+                </button>
+                <button class="node wait" style="left:816px;top:394px" data-node="human">
+                  <div class="nd-top"><span class="nd-kind">human</span><span class="nd-idx">07</span></div>
+                  <div class="nd-name">人工复核</div>
+                  <div class="nd-meta">迁移负责人 · 超 3 轮升级</div>
+                  <div class="nd-prog"><i></i></div>
+                  <span class="nd-st"></span>
+                </button>
+              </div>
+            </div>
+
+            <div class="node-palette">
+              <div class="np-h"><svg><use href="#i-plus"/></svg>节点库</div>
+              <div class="np-item"><svg><use href="#i-bot"/></svg>Agent 节点<span class="np-k">agent</span></div>
+              <div class="np-item"><svg><use href="#i-diamond"/></svg>条件分支<span class="np-k">cond</span></div>
+              <div class="np-item"><svg><use href="#i-shield"/></svg>质量门<span class="np-k">gate</span></div>
+              <div class="np-item"><svg><use href="#i-loop"/></svg>循环 / 回环<span class="np-k">loop</span></div>
+              <div class="np-item"><svg><use href="#i-user-check"/></svg>人工门<span class="np-k">human</span></div>
+            </div>
+
+            <div class="batch-preview">
+              <span class="bpk">批次预览</span>
+              <span class="batch-chip done">#14 done</span>
+              <span class="batch-chip split">#15 split</span>
+              <span class="batch-chip done">#16 done</span>
+              <span class="batch-chip gated">#17 gated</span>
+              <span class="batch-chip run">#18 run</span>
+              <span class="batch-chip planned">+38</span>
+            </div>
+
+            <div class="zoom-ctrl">
+              <button title="缩小" aria-label="缩小"><svg><use href="#i-zoom-out"/></svg></button>
+              <span class="zv">100%</span>
+              <button title="放大" aria-label="放大"><svg><use href="#i-zoom-in"/></svg></button>
+              <button title="适应画布" aria-label="适应画布"><svg><use href="#i-fit"/></svg></button>
+            </div>
+          </div>
+
+          <div class="panel flow-props">
+            <div class="props-id">
+              <div class="pi-k">节点属性 · 03</div>
+              <div class="pi-n" id="propName">代码转化 <span class="st run" style="height:18px"><span class="dt"></span>batch</span></div>
+              <div class="pi-s" id="propSub">transform-batch · 批次 18/43 · 7 文件/批</div>
+            </div>
+            <div class="tabs" style="padding:6px 11px 0;border-bottom:1px solid var(--line)">
+              <button class="tab active" data-prop-tab="attr">属性</button>
+              <button class="tab" data-prop-tab="io">输入 / 输出</button>
+              <button class="tab" data-prop-tab="runs">运行记录</button>
+            </div>
+            <div class="props-bd" id="propAttr">
+              <div class="form-row">
+                <div class="form-group full">
+                  <div class="label">节点名称</div>
+                  <input class="input" id="propFieldName" value="代码转化">
+                </div>
+                <div class="form-group">
+                  <div class="label">绑定专家</div>
+                  <select class="select"><option>代码转化专家</option><option>修复专家</option><option>质量分析专家</option></select>
+                </div>
+                <div class="form-group">
+                  <div class="label">超时</div>
+                  <div class="inline-fields"><input class="input mono" value="180"><span class="unit">s</span></div>
+                </div>
+              </div>
+              <div class="batch-props" id="batchProps">
+                <div class="bph"><svg><use href="#i-layers"/></svg>批量执行 <span class="n">FR-10 · 43 批</span></div>
+                <div class="form-row">
+                  <div class="form-group full">
+                    <div class="label">批量源 <span class="hint">topo order</span></div>
+                    <select class="select"><option>report:deps.files · 287 文件</option><option>glob: src/**/*.vue</option><option>手动选择文件</option></select>
+                  </div>
+                  <div class="form-group">
+                    <div class="label">批大小</div>
+                    <input class="input mono" value="7">
+                  </div>
+                  <div class="form-group">
+                    <div class="label">并发批次</div>
+                    <select class="select"><option>1 · 波次串行</option><option>2 · 同 wave</option><option>3 · 同 wave</option></select>
+                  </div>
+                  <div class="form-group">
+                    <div class="label">内层循环</div>
+                    <select class="select"><option>serial · 批内拓扑序</option><option>single_file</option></select>
+                  </div>
+                  <div class="form-group">
+                    <div class="label">失败拆分</div>
+                    <div class="stepper"><button aria-label="减少">−</button><span class="sv">2</span><button aria-label="增加">+</button></div>
+                  </div>
+                  <div class="form-group full">
+                    <div class="label">每批质量门 <span class="hint">开</span></div>
+                    <div class="row" style="gap:7px"><span class="switch" role="switch" aria-checked="true" tabindex="0" data-switch></span><span class="mono" style="font-size:9px;color:var(--ink-4)">阈值 85 · 回环 ≤3 · 上下文预算 28,000</span></div>
+                  </div>
+                </div>
+              </div>
+              <div id="gateProps" style="display:none;flex-direction:column;gap:12px">
+                <div class="form-row">
+                  <div class="form-group">
+                    <div class="label">门控阈值</div>
+                    <input class="input mono" value="85">
+                  </div>
+                  <div class="form-group">
+                    <div class="label">回环上限</div>
+                    <div class="stepper"><button aria-label="减少">−</button><span class="sv">3</span><button aria-label="增加">+</button></div>
+                  </div>
+                  <div class="form-group full">
+                    <div class="label">通过条件 <span class="hint">CEL 表达式</span></div>
+                    <input class="input mono" value="score >= 85 && behavior >= 80">
+                  </div>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group full">
+                  <div class="label">挂载技能 <span class="hint">3</span></div>
+                  <div class="node-tags"><span class="tag">Vue3 语法升级</span><span class="tag">Vuex→Pinia</span><span class="tag">AntD 1.x→4.x</span><span class="tag more">+ 挂载</span></div>
+                </div>
+                <div class="form-group full">
+                  <div class="label">失败策略</div>
+                  <select class="select"><option>进入回环（修复专家）</option><option>拆分重跑该批</option><option>失败即中止</option></select>
+                </div>
+              </div>
+              <div class="props-stats">
+                <div><div class="ps-l">平均耗时</div><div class="ps-v">42.6s</div></div>
+                <div><div class="ps-l">批次通过率</div><div class="ps-v">92.0%</div></div>
+                <div><div class="ps-l">拆分次数</div><div class="ps-v">1</div></div>
+                <div><div class="ps-l">最近评分</div><div class="ps-v" style="color:var(--ok)">88</div></div>
+              </div>
+            </div>
+            <div class="props-bd" id="propIO" style="display:none">
+              <div class="label">输入 schema</div>
+              <pre class="code" style="max-height:118px"><span class="ctx">{</span>
+  <span class="str">"file"</span>: <span class="str">"src/views/UserList.vue"</span>,
+  <span class="str">"diff"</span>: <span class="str">"patch.diff"</span>,
+  <span class="str">"signals"</span>: [<span class="str">"ast"</span>,<span class="str">"build"</span>,<span class="str">"types"</span>,<span class="str">"browser"</span>,<span class="str">"behavior"</span>]
+<span class="ctx">}</span></pre>
+              <div class="label" style="margin-top:12px">输出 schema</div>
+              <pre class="code" style="max-height:100px"><span class="ctx">{</span>
+  <span class="str">"score"</span>: 88, <span class="str">"pass"</span>: <span class="kw">true</span>,
+  <span class="str">"reasons"</span>: [...]
+<span class="ctx">}</span></pre>
+              <div class="note" style="margin-top:10px"><svg><use href="#i-info"/></svg><span>输出会写入运行证据链，并作为下游节点的输入契约校验。</span></div>
+            </div>
+            <div class="props-bd" id="propRuns" style="display:none">
+              <div class="kv">
+                <dt>最近运行</dt><dd>17:20:11</dd>
+                <dt>状态</dt><dd style="color:var(--ok)">passed</dd>
+                <dt>耗时</dt><dd>6.4s</dd>
+                <dt>评分</dt><dd>88</dd>
+                <dt>重试</dt><dd>0</dd>
+              </div>
+              <div class="hr" style="margin:12px 0"></div>
+              <div class="timeline" style="padding:0">
+                <div class="tl-row ok"><div class="tl-time">17:20</div><div class="tl-dot"></div><div class="tl-body"><div class="tl-title">UserList.vue 通过门控</div><div class="tl-meta"><span>score 88</span><span class="sep"></span><span>behavior 84</span></div></div></div>
+                <div class="tl-row warn"><div class="tl-time">17:19</div><div class="tl-dot"></div><div class="tl-body"><div class="tl-title">TreeSelect.vue 未通过</div><div class="tl-meta"><span>score 64</span><span class="sep"></span><span>进入回环</span></div></div></div>
+                <div class="tl-row ok"><div class="tl-time">17:12</div><div class="tl-dot"></div><div class="tl-body"><div class="tl-title">UserTable.vue 通过门控</div><div class="tl-meta"><span>score 92</span><span class="sep"></span><span>1 次重试</span></div></div></div>
+              </div>
+            </div>
+            <div class="props-ft">
+              <button class="btn primary sm" style="flex:1" data-action="toast-ok" data-toast="节点已保存 · 质量门控 04">保存节点</button>
+              <button class="btn danger sm" data-action="toast-warn" data-toast="删除需二次确认">删除</button>
+            </div>
+          </div>
+        </div>
+      </section>

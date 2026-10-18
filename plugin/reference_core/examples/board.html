@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vue3 迁移控制面看板</title>
+<style>
+:root {
+  --bg:#f6f7f9; --card:#ffffff; --border:#e5e7eb; --text:#1f2937;
+  --muted:#6b7280; --accent:#6366f1;
+}
+* { box-sizing:border-box; }
+body { margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;
+  background:var(--bg); color:var(--text); padding:24px; }
+h1 { font-size:20px; margin:0 0 4px; }
+.sub { color:var(--muted); font-size:13px; margin-bottom:20px; }
+.card { background:var(--card); border:1px solid var(--border); border-radius:12px;
+  padding:16px 18px; margin-bottom:16px; }
+.card h2 { font-size:16px; margin:0 0 12px; display:flex; align-items:center; gap:10px; }
+.badge { font-size:12px; padding:2px 10px; border-radius:999px; color:#fff; }
+.progress { height:8px; background:#e5e7eb; border-radius:999px; overflow:hidden; margin:8px 0 14px; }
+.progress > div { height:100%; background:var(--accent); border-radius:999px; transition:width .3s; }
+.nodes { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:10px; }
+.node { border:1px solid var(--border); border-radius:8px; padding:10px 12px; }
+.node .name { font-weight:600; font-size:14px; }
+.node .meta { font-size:12px; color:var(--muted); margin-top:2px; }
+.node .bar { display:flex; align-items:center; gap:8px; margin-top:8px; }
+.dot { width:10px; height:10px; border-radius:50%; flex:0 0 auto; }
+.score { margin-left:auto; font-size:12px; font-weight:600; }
+.trace { font-size:12px; color:var(--muted); margin-top:12px; }
+.trace code { background:#f3f4f6; padding:2px 6px; border-radius:4px; margin-right:4px; }
+table { width:100%; border-collapse:collapse; font-size:13px; }
+th,td { text-align:left; padding:8px 10px; border-bottom:1px solid var(--border); }
+th { color:var(--muted); font-weight:600; }
+.tag { font-size:11px; padding:1px 8px; border-radius:999px; background:#eef2ff; color:#4f46e5; }
+.hits { color:var(--muted); }
+.empty { color:var(--muted); }
+</style>
+</head>
+<body>
+<h1>Vue3 迁移控制面看板</h1>
+<div class="sub">工作流进度 · 节点状态 · 质量评分 · 经验库</div>
+
+<div class="card">
+  <h2>Vue2→Vue3 批量迁移 <span style="color:var(--muted);font-weight:400">(mig)</span>
+    <span class="badge" style="background:#3b82f6">进行中</span>
+    <span style="margin-left:auto;font-size:13px;color:var(--muted)">2/6</span>
+  </h2>
+  <div class="progress"><div style="width:33%"></div></div>
+  <div class="nodes">
+  <div class="node">
+    <div class="name">结构分析</div>
+    <div class="meta">结构分析 · 结构分析专家</div>
+    <div class="bar"><span class="dot" style="background:#22c55e"></span>
+      <span style="font-size:12px">已完成</span><span class="score">95分</span></div>
+  </div>
+
+  <div class="node">
+    <div class="name">依赖分析</div>
+    <div class="meta">依赖分析 · 依赖分析专家</div>
+    <div class="bar"><span class="dot" style="background:#22c55e"></span>
+      <span style="font-size:12px">已完成</span><span class="score">90分</span></div>
+  </div>
+
+  <div class="node">
+    <div class="name">代码转化</div>
+    <div class="meta">代码转化 · 代码转化专家</div>
+    <div class="bar"><span class="dot" style="background:#3b82f6"></span>
+      <span style="font-size:12px">运行中</span><span class="score hits">第1次</span></div>
+  </div>
+
+  <div class="node">
+    <div class="name">质量分析</div>
+    <div class="meta">质量分析 · 质量分析专家</div>
+    <div class="bar"><span class="dot" style="background:#9aa4b2"></span>
+      <span style="font-size:12px">未开始</span></div>
+  </div>
+
+  <div class="node">
+    <div class="name">浏览器验证</div>
+    <div class="meta">浏览器验证 · 浏览器验证专家</div>
+    <div class="bar"><span class="dot" style="background:#9aa4b2"></span>
+      <span style="font-size:12px">未开始</span></div>
+  </div>
+
+  <div class="node">
+    <div class="name">修复</div>
+    <div class="meta">修复 · 修复专家</div>
+    <div class="bar"><span class="dot" style="background:#9aa4b2"></span>
+      <span style="font-size:12px">未开始</span></div>
+  </div></div>
+  <div class="trace">执行轨迹：<code>analyze</code> → <code>deps</code> → <code>transform</code></div>
+</div>
+<div class="card">
+  <h2>经验库 <span class="badge" style="background:#8b5cf6">3</span></h2>
+  <table><thead><tr><th>类别</th><th>触发条件</th><th>解法</th><th>命中</th></tr></thead><tbody><tr><td><span class="tag">transform</span></td><td>Vue2 filters 被移除</td><td>改用 computed 属性</td><td class="hits">2 次</td></tr><tr><td><span class="tag">transform</span></td><td>v-model 语义变化</td><td>自定义组件改用 modelValue</td><td class="hits">1 次</td></tr><tr><td><span class="tag">deps</span></td><td>Vuex 依赖缺失</td><td>迁移到 Pinia 并更新 import</td><td class="hits">1 次</td></tr></tbody></table>
+</div>
+</body>
+</html>

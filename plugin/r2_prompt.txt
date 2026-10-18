@@ -1,0 +1,13 @@
+你正在执行 R2 真实迁移 E2E。目标项目已复制到 E:\deepSeek\plugin\r2-work，Run 与批次组已创建。
+
+请直接调用：
+flow_batch_auto(group_id="g-f02b7994bc", max_batches=10, max_seconds=900, apply=true)
+
+如果返回的 JSON 中 done=false，且不是 rate_limited/driver_unavailable/failed，再调用一次同样的 flow_batch_auto（最多 2 次）。
+最后调用 flow_batch_status(group_id="g-f02b7994bc")，并报告：
+1) flow_batch_auto 每次的完整 JSON（ok/done/processed/batches_done/batches_total/events 摘要）；
+2) flow_batch_status 的 done_batches/total_batches/failed；
+3) 用 git diff 或文件读取确认 r2-work 下哪些文件被修改；
+4) 是否有失败批次、错误原文。
+
+不要安装依赖，不要修改 r2-work 之外的文件。不要调用 flow_batch_next/ingest 手动路径（本次只验证自动 driver）。
