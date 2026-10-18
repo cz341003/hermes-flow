@@ -761,7 +761,8 @@ svg.react-flow__connectionline {
 .hf2-rf-wrap{height:420px;border:1px solid #22323d;border-radius:8px;overflow:hidden;background:#0a1015}
 .hf2-rf-wrap .react-flow{background:#0a1015}
 .hf2-rf-wrap .react-flow__controls button{background:#101b22;border-bottom:1px solid #22323d;color:#cfe0e8}
-.hf2-rf-wrap .react-flow__minimap{background:#0c151b}
+.hf2-rf-wrap .react-flow__minimap{background:#0c151b;border:1px solid #22323d;border-radius:6px;bottom:8px;right:8px}
+.hf2-rf-wrap .react-flow__minimap:hover{opacity:1!important}
 .hf2-rf-node{width:150px;min-height:54px;padding:7px 9px;border:1px solid #2f4652;border-radius:7px;background:#101b22;display:flex;flex-direction:column;gap:2px;font-size:10px}
 .hf2-rf-node.hf2-selected{border-color:#8fddd4;box-shadow:0 0 0 1px #8fddd4 inset}
 .hf2-rf-node b{color:#e6edf3;font-size:10.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}

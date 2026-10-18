@@ -161,6 +161,7 @@ import {
     var nodes = nodeState[0], setNodes = nodeState[1], onNodesChange = nodeState[2];
     var edgeState = useEdgesState(initial.edges);
     var edges = edgeState[0], setEdges = edgeState[1], onEdgesChange = edgeState[2];
+    var miniState = hooks.useState(true), showMini = miniState[0], setShowMini = miniState[1];
     var nodeTypes = hooks.useMemo(function () { return { hfNode: FlowNodeCard }; }, []);
 
     hooks.useEffect(function () {
@@ -205,7 +206,8 @@ import {
       h("div", { className: css("dag-toolbar") },
         h("span", { className: css("muted") }, "React Flow：拖拽节点、从右侧端口拉线连接"),
         h("button", { className: css("btn") + " " + css("btn-sm"), onClick: addNode }, "添加节点"),
-        h("button", { className: css("btn") + " " + css("btn-sm") + " " + css("danger"), onClick: deleteSelected, disabled: !props.selectedId }, "删除选中")),
+        h("button", { className: css("btn") + " " + css("btn-sm") + " " + css("danger"), onClick: deleteSelected, disabled: !props.selectedId }, "删除选中"),
+        h("button", { className: css("btn") + " " + css("btn-sm"), onClick: function () { setShowMini(!showMini); } }, showMini ? "隐藏总览" : "显示总览")),
       h("div", { className: css("rf-wrap") },
         h(ReactFlow, {
           nodes: nodes, edges: edges, nodeTypes: nodeTypes,
@@ -226,7 +228,11 @@ import {
         },
           h(Background, { gap: 18, size: 1, color: "#22323d" }),
           h(Controls, null),
-          h(MiniMap, { pannable: true, zoomable: true, nodeColor: "#2f4652", maskColor: "rgba(8,14,18,.7)" }))));
+          showMini ? h(MiniMap, {
+            pannable: true, zoomable: true, nodeColor: "#2f4652",
+            maskColor: "rgba(8,14,18,.7)",
+            style: { width: 118, height: 78, opacity: 0.82 }
+          }) : null)));
   }
 
   function App() {

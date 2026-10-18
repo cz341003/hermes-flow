@@ -4,6 +4,7 @@
 
 ### 工作流编辑体验
 - **集成 React Flow 12**：完整节点画布、端口拉线、Controls/MiniMap，React 19 宿主 shim。
+- **MiniMap 优化**：200×150 → 118×78、右下 8px、半透明；新增「隐藏/显示总览」开关，避免遮挡画布。
 - 修复模板卡选中态（`.hf2-card.hf2-selected`）。
 - 修复「添加节点」无可见反馈：4 列/3 列网格可见位置 + 提示；新模板无 JSON 时回退 definition。
 - 新增「节点与连线（表单编辑，无需 JSON）」：改 name/phase/agent/skill、增删节点、下拉增删/改连线；高级字段仍用 JSON。

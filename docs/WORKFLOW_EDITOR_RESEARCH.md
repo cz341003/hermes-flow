@@ -27,6 +27,7 @@
   - Delete 键 / 工具栏删除选中节点；
   - 添加节点自动放到可见网格；
   - Controls / MiniMap / Background；
+  - **MiniMap 缩小到 118×78**（默认 200×150），右下角 8px，半透明；工具栏「隐藏总览/显示总览」可一键收起；
   - 节点位置写回 `node.meta.x/y`；
   - 连线写回 `edges`；
   - `保存工作流` 持久化。
@@ -39,6 +40,7 @@
 - React Flow 画布：7 节点、7 边、2 个端口/节点；
 - 添加节点：7 → 8；
 - 端口拉线：7 → 8 条边；
+- MiniMap：118×78、可隐藏/显示（实测隐藏后不存在、显示后恢复）；
 - 模板卡选中态：青色边框/背景；
 - console errors：0；
 - Dashboard bundle：约 219 KB（React Flow 增加约 185 KB minified）；
