@@ -2,6 +2,7 @@
 
 > 本目录是一份**完整的需求研究与设计方案交付**：可行性结论、PRD、UI 高保真设计稿、LoopX 调研、Hermes 能力证据、独立 QA 报告。
 > 目标宿主：**Hermes Agent v0.22.2**（`E:\hermes`）　|　落地场景：大型 Vue2 项目 → Vue3 + Pinia + Vue Router 4 + Vite
+> GitHub：https://github.com/cz341003/hermes-flow　|　最新 Release：v0.3.0
 
 ---
 
