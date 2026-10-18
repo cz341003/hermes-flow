@@ -3,15 +3,16 @@
 - 日期：2026-10-18
 - 仓库：`E:\deepSeek`（本地初始化，分支 `main`）
 - Tag：**`v0.2.0`**（annotated）
-- Tag commit：`5a4b77d`（后续文档提交会移动 tag）
+- Tag 指向 commit：`git rev-list -n1 v0.2.0`
 - 发布附件：`releases/0.2.0/`
 
 ## 1. 仓库状态
 
 ```text
 $ git log --oneline
-5a4b77d docs: add v0.2.0 release notes
-b1e0657 release: hermes_flow v0.2.0
+<release commit> fix(package): include cli.py in release zip
+<release commit> fix(package): include dashboard/dist in release zip
+<release commit> release: hermes_flow v0.2.0
 
 $ git status --short
 (clean)
@@ -25,7 +26,7 @@ $ git status --short
 
 | 文件 | 大小 |
 |---|---|
-| `releases/0.2.0/hermes_flow-0.2.0.zip` | 290,199 bytes |
+| `releases/0.2.0/hermes_flow-0.2.0.zip` | 294,930 bytes |
 | `releases/0.2.0/hermes_flow-0.2.0.zip.sha256` | 89 bytes |
 | `releases/0.2.0/RELEASE_NOTES.md` | 2,874 bytes |
 | `releases/0.2.0/hermes_flow-0.2.0-source.zip` | Git tag 源码快照 |
@@ -33,7 +34,7 @@ $ git status --short
 sha256：
 
 ```text
-8382c3299f7770c5cc19c0d45bf39babdf05e10b93f5496dc3f34082129e5094  hermes_flow-0.2.0.zip
+a17a90b9b6a78b09aed97e0fe5322e63c26e413e6a8efcc01c4cb0fb16c2b49e  hermes_flow-0.2.0.zip
 ```
 
 ## 3. 为什么没有 GitHub Release

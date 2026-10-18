@@ -40,9 +40,9 @@ powershell -ExecutionPolicy Bypass -File plugin\hermes_flow\install.ps1 -HermesH
 
 ## Release 附件
 
-- `hermes_flow-0.2.0.zip`（290,199 bytes）
+- `hermes_flow-0.2.0.zip`（294,930 bytes）
 - `hermes_flow-0.2.0.zip.sha256`
-  - `8382c3299f7770c5cc19c0d45bf39babdf05e10b93f5496dc3f34082129e5094`
+  - `a17a90b9b6a78b09aed97e0fe5322e63c26e413e6a8efcc01c4cb0fb16c2b49e`
 
 ## 已知限制
 
