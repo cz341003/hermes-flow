@@ -2,7 +2,7 @@
 
 `hermes_flow` 是 HERMES 的独立插件（`kind: standalone`），把 Vue2 工程迁移到 **Vue3 + Pinia + Vue Router 4 + Vite + ant-design-vue 4** 的过程变成可编排、可观测、可回环、可断点续跑的工程流水线。
 
-- 版本：`0.2.0` · 要求 Hermes `>=0.22` · Python `3.9+`
+- 版本：`0.3.0` · 要求 Hermes `>=0.22` · Python `3.9+`
 - 内置资产：**8 个专家**、**12 个技能**、**2 个工作流模板**
 - 工具：**34 个 `flow_*` 工具**（专家/技能/工作流/Run/批次/自动 driver/质量/恢复/经验/看板）+ `hermes flow` CLI + `pre_llm_call` 钩子
 - 全部内容文件 UTF-8（无 BOM），中文正文
@@ -470,7 +470,7 @@ python scripts\package.py
 python scripts\dashboard_smoke.py
 ```
 
-- 版本：**0.2.0**（`plugin.yaml` / `dashboard/manifest.json` / runtime status 同步）。
+- 版本：**0.3.0**（`plugin.yaml` / `dashboard/manifest.json` / runtime status 同步）。
 - GitHub Actions：仓库根 `.github/workflows/hermes-flow-ci.yml`，Linux 3.11/3.12 + Windows。
 - 测试临时目录通过 `FLOW_TEST_TMP` 覆盖；未设置时用系统 temp，便于 CI。
 - 质量自动挂载：`flow_batch_auto(..., quality=true, browser=true)` 在批次全部完成后跑 build/typecheck/browser + 聚合门，非 pass 则 Run `gated`。

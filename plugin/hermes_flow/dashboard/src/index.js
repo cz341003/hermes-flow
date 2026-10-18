@@ -337,7 +337,7 @@
           h("div", { className: css("logo") }, "HF"),
           h("div", null,
             h("div", { className: css("title") }, "HERMES FLOW"),
-            h("div", { className: css("sub") }, "MIGRATION CONTROL PLANE · v0.2.0"))),
+            h("div", { className: css("sub") }, "MIGRATION CONTROL PLANE · v0.3.0"))),
         h("div", { className: css("head-right") },
           h(Badge, { tone: "ok" }, "在线"),
           h("span", { className: css("muted") }, activeRun ? ("当前 Run " + activeRun.id + " · " + (activeRun.status || "")) : "无活跃 Run"),
@@ -524,7 +524,7 @@
           h("p", { className: css("muted") }, "数据每 5s 轮询；写操作请使用 agent 工具或上方按钮。"))),
 
       h("footer", { className: css("foot") },
-        h("span", null, "HERMES Flow v0.2.0 · Dashboard v2"),
+        h("span", null, "HERMES Flow v0.3.0 · Dashboard v2"),
         h("span", null, "34 tools · " + counts.agents + " experts · " + counts.skills + " skills")));
   }
 

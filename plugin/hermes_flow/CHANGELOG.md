@@ -1,6 +1,6 @@
 # HERMES Flow 变更日志
 
-## Unreleased
+## 0.3.0（2026-10-18）
 
 ### R9 LoopX 后端
 - `FlowRuntime(backend=sqlite|loopx)`；JSONL `LoopXKernel`（`.loopx/domain-state/`）。

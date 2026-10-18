@@ -680,7 +680,7 @@ class FlowRuntime:
     def status(self) -> Dict[str, Any]:
         return {
             "ok": True,
-            "version": "0.2.0",
+            "version": "0.3.0",
             "home": str(DEFAULT_HOME),
             "data_dir": str(self.data_dir),
             "backend": self.backend,

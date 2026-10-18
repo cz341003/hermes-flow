@@ -1,4 +1,4 @@
-# HERMES Flow 实现报告（v0.2.0）
+# HERMES Flow 实现报告（v0.3.0）
 
 > 目标：把 PRD v2.2 的"长周期多智能体迁移控制面"落成可加载、可测试、可安装的 Hermes 插件。
 > 产物：`E:\deepSeek\plugin\hermes_flow`（源码）+ `E:\hermes\plugins\hermes_flow`（已安装）

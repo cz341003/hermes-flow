@@ -16,7 +16,7 @@ from . import cli, tools
 from .runtime import configure, get_runtime
 
 PLUGIN_ROOT = Path(__file__).resolve().parent
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 
 
 def _resolve_data_dir(ctx: Any) -> Path:

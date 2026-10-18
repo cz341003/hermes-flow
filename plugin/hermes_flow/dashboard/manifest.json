@@ -3,7 +3,7 @@
   "label": "HERMES Flow",
   "description": "多智能体迁移控制面 — 专家注册表、工作流模板与批次运行看板（/flow）",
   "icon": "Activity",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "tab": {
     "path": "/flow",
     "position": "after:skills"

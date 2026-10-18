@@ -452,7 +452,7 @@ def drivers() -> Dict[str, Any]:
 def settings() -> Dict[str, Any]:
     rt = _rt()
     return {
-        "version": "0.2.0", "data_dir": str(rt.data_dir), "plugin_root": str(rt.plugin_root),
+        "version": "0.3.0", "data_dir": str(rt.data_dir), "plugin_root": str(rt.plugin_root),
         "backend": rt.backend, "backend_info": rt.backend_info(),
         "counts": {"agents": len(rt.registry.list_agents()),
                    "skills": len(rt.registry.list_skills()),

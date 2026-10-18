@@ -1,5 +1,5 @@
 name: hermes_flow
-version: 0.2.0
+version: 0.3.0
 description: "Vue2→Vue3 migration control plane: agent/skill registry, DAG workflows, batch loop (FR-10), quality gates, recovery, experience base and Dashboard."
 author: HERMES Flow
 kind: standalone
