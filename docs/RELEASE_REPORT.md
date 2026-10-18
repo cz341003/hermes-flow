@@ -25,7 +25,7 @@ $ git status --short
 
 | 文件 | 大小 |
 |---|---|
-| `releases/0.2.0/hermes_flow-0.2.0.zip` | 248,148 bytes |
+| `releases/0.2.0/hermes_flow-0.2.0.zip` | 290,199 bytes |
 | `releases/0.2.0/hermes_flow-0.2.0.zip.sha256` | 89 bytes |
 | `releases/0.2.0/RELEASE_NOTES.md` | 2,874 bytes |
 | `releases/0.2.0/hermes_flow-0.2.0-source.zip` | Git tag 源码快照 |
@@ -33,7 +33,7 @@ $ git status --short
 sha256：
 
 ```text
-6f2c8bc0ce175b772316ff54ba4265d5c4ef2bbee7630dad87941f91ccf34cc6  hermes_flow-0.2.0.zip
+8382c3299f7770c5cc19c0d45bf39babdf05e10b93f5496dc3f34082129e5094  hermes_flow-0.2.0.zip
 ```
 
 ## 3. 为什么没有 GitHub Release

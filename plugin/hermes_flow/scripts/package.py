@@ -14,10 +14,11 @@ OUT = ROOT / "dist" / f"hermes_flow-{VERSION}.zip"
 INCLUDE = ["plugin.yaml", "__init__.py", "tools.py", "runtime.py", "README.md",
            "CHANGELOG.md", "install.ps1", "flow_core", "agents", "skills", "workflows",
            "dashboard", "tests", "scripts"]
-IGNORE = ("__pycache__", ".pyc", ".tmp", "dist", ".pytest_cache")
+IGNORE = ("__pycache__", ".pyc", ".tmp", ".pytest_cache")
 
 
 def iter_files():
+    top_dist = (ROOT / "dist").resolve()
     for name in INCLUDE:
         p = ROOT / name
         if p.is_file():
@@ -29,6 +30,13 @@ def iter_files():
                 s = str(f)
                 if any(x in s for x in IGNORE):
                     continue
+                if f.suffix in (".zip", ".sha256"):
+                    continue
+                try:
+                    f.resolve().relative_to(top_dist)
+                    continue
+                except ValueError:
+                    pass
                 yield f
 
 

@@ -2,7 +2,7 @@
 
 - 日期：2026-10-18
 - 版本：**0.2.0**
-- 产物：`plugin/hermes_flow/dist/hermes_flow-0.2.0.zip`（248,148 bytes）+ `.sha256`
+- 产物：`plugin/hermes_flow/dist/hermes_flow-0.2.0.zip`（290,199 bytes）+ `.sha256`
 
 ## 1. 测试可移植（CI 前置）
 
@@ -51,8 +51,8 @@
 | 本地 CI（compileall + tests + legacy + smoke） | ✅ |
 | 新单测 | 75/75 |
 | legacy | 123/123 |
-| package zip | 248,148 bytes |
-| sha256 | `6f2c8bc0ce175b772316ff54ba4265d5c4ef2bbee7630dad87941f91ccf34cc6` |
+| package zip | 290,199 bytes |
+| sha256 | `8382c3299f7770c5cc19c0d45bf39babdf05e10b93f5496dc3f34082129e5094` |
 | Dashboard 静态冒烟 | ✅ v0.2.0、bundle 21,516 bytes |
 | doctor | 34 tools / 1 hook |
 
