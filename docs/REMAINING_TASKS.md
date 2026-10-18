@@ -2,7 +2,7 @@
 
 - 对照基线：[PRD v2.2](PRD.md) FR-1..FR-10、§16 验收标准、B1–B17
 - 当前实现：[plugin/hermes_flow](../plugin/hermes_flow/README.md) + [实现报告](IMPLEMENTATION_REPORT.md)
-- 结论：**核心功能全部闭环（真实迁移、driver、质量门、审计、Dashboard、记忆、100 批压测、并行、kill/restart）；剩余为 1000 文件真实 LLM 预算验证与工程化（CI/pack/LoopX）**。
+- 结论：**全部计划项（R2–R10 + R9 LoopX + DAG 拖拽 + 异步质量）已完成；唯一未执行的是 1000 文件真实 LLM 预算跑批与新版本发布**。
 
 ---
 
@@ -64,25 +64,27 @@ R4 已完成：基线快照 + 每批 apply 后审计 + 越界回滚 + `FLOW_BATC
 | R8 ✅ | 压测/故障注入 | 1000 文件规划、100 批/10 故障、时间预算；报告 `docs/R8_REPORT.md` | **调度上界达标** |
 | R8b ✅ | 真实并行 + kill/restart | 6 文件 3 批真实并行 79s 全 pass；kill 后 attempt=2 恢复 2/2 批/8 文件；报告 `docs/R8B_REPORT.md` | **已完成** |
 | R8c | 1000 文件真实 LLM | 按采样粗估 3.5–4h wall；token 成本需 provider 账单 | 预算项 |
+| R9 ✅ | LoopX 后端 | `backend=sqlite/loopx`、JSONL `LoopXKernel`、CLI `--backend`/doctor/backend --set、降级 sqlite；报告 `docs/R9_UX_REPORT.md` | **已完成** |
+| UX ✅ | DAG 拖拽 + 异步质量 | 画布拖拽/增删节点/meta 保存；`QualityJobManager` + `/quality/jobs` + UI 轮询；报告 `docs/R9_UX_REPORT.md` | **已完成** |
 
 ### P2 — 可选/工程化（约 4–6 人日）
 
 | 编号 | 任务 | 内容 | 估时 |
 |---|---|---|---|
-| R9 | LoopX 后端 | `--backend loopx`、CLI 桥接、doctor/降级 | 2–3d |
 | R10 ✅ | 测试/发布 | 测试可移植、GitHub Actions、`ci_local.ps1`、`package.py`（0.2.0 zip+sha256）、质量自动挂 driver（可选） | **已完成** |
+| R11 | 发布 0.3.0 | R9/DAG/异步质量超出 v0.2.0 Release 内容 | 0.5d |
 
 ---
 
 ## 4. 依赖与建议
 
-**依赖**：无阻塞；R7/R8/R8b/R10 已完成。
+**依赖**：无阻塞；R2–R10 + R9/UX 已完成。
 
 **最近 1–2 周建议只做两件事**：
 1. **1000 文件真实 LLM 迁移**（预算执行，约 3.5–4h wall）。
-2. **R9 LoopX**（可选，P2）或发布 Git tag/Release。
+2. **发布 v0.3.0**（包含 R9/DAG/异步质量），再按需联调真实 `loopx` CLI。
 
-已可对外说："真实 20 文件迁移 + 自动批次驱动 + 真实构建/浏览器门控 + 100 批调度压测 + 同 wave 并行 + kill/restart 恢复 + Dashboard/记忆闭环"闭环。
+已可对外说："真实 20 文件迁移 + 自动批次驱动 + 真实构建/浏览器门控 + 100 批调度压测 + 同 wave 并行 + kill/restart + Dashboard/记忆/LoopX/DAG 编辑/异步质量"闭环。
 
 ---
 
@@ -114,6 +116,7 @@ R4 已完成：基线快照 + 每批 apply 后审计 + 越界回滚 + `FLOW_BATC
 - **R7：同 wave 并行 ≤3、worktree 隔离、稳定提交；0.552s→0.235s；真实 6 文件 3 批 79s**
 - **R8b：真实 6 文件并行 3/3；kill/restart attempt=2 恢复 2/2 批、8/8 文件**
 - **R10：测试可移植、GitHub Actions、本地 CI、0.2.0 zip+sha256、质量自动挂 driver**
+- **R9：LoopX JSONL 后端 + CLI doctor/backend 切换/降级；DAG 拖拽编辑；异步质量 job**
 - 五信号评分与分层门函数、异常分类/退避/checkpoint
 - 经验库、HTML 看板、Dashboard v2 7 Tab、安装与启用、`hermes plugins doctor` 通过
-- 75 个新单测 + 123 个前序回归 + mock E2E + 2 文件真实子代理 E2E
+- 84 个新单测 + 123 个前序回归 + mock E2E + 2 文件真实子代理 E2E

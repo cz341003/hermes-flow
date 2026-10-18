@@ -23,8 +23,10 @@ if _PKG not in sys.modules:
     sys.modules[_PKG] = pkg
 
 from hermes_flow_runtime_pkg.runtime import get_runtime  # noqa: E402
+from hermes_flow_runtime_pkg.flow_core.quality.jobs import QualityJobManager  # noqa: E402
 
 router = APIRouter()
+_QUALITY_JOBS = QualityJobManager()
 
 
 def _rt():
@@ -289,6 +291,7 @@ class QualityBody(BaseModel):
     browser: bool = False
     timeout: int = 300
     routes: List[str] = []
+    background: bool = True
 
 
 class GateBody(BaseModel):
@@ -384,13 +387,30 @@ def quality_evidence(limit: int = 20) -> Dict[str, Any]:
 
 @router.post("/quality/collect")
 def quality_collect(body: QualityBody) -> Dict[str, Any]:
+    kwargs = dict(project_root=body.project_root, build=body.build,
+                  typecheck=body.typecheck, tests=body.tests,
+                  browser=body.browser, timeout=body.timeout,
+                  routes=body.routes or None)
+    if body.background:
+        job = _QUALITY_JOBS.submit(_rt().quality_collect, kind="quality", **kwargs)
+        return {"ok": True, "async": True, "job_id": job["id"], "status": job["status"]}
     try:
-        return _rt().quality_collect(project_root=body.project_root, build=body.build,
-                                     typecheck=body.typecheck, tests=body.tests,
-                                     browser=body.browser, timeout=body.timeout,
-                                     routes=body.routes or None)
+        return _rt().quality_collect(**kwargs)
     except Exception as exc:  # noqa: BLE001
         raise HTTPException(400, str(exc)) from exc
+
+
+@router.get("/quality/jobs")
+def quality_jobs(limit: int = 20) -> Dict[str, Any]:
+    return {"ok": True, "jobs": _QUALITY_JOBS.list(limit=limit)}
+
+
+@router.get("/quality/jobs/{job_id}")
+def quality_job(job_id: str) -> Dict[str, Any]:
+    job = _QUALITY_JOBS.get(job_id)
+    if job is None:
+        raise HTTPException(404, f"quality job not found: {job_id}")
+    return {"ok": True, **job}
 
 
 @router.get("/audit")
@@ -433,6 +453,7 @@ def settings() -> Dict[str, Any]:
     rt = _rt()
     return {
         "version": "0.2.0", "data_dir": str(rt.data_dir), "plugin_root": str(rt.plugin_root),
+        "backend": rt.backend, "backend_info": rt.backend_info(),
         "counts": {"agents": len(rt.registry.list_agents()),
                    "skills": len(rt.registry.list_skills()),
                    "workflows": len(rt.registry.list_workflows()),

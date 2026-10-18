@@ -1,5 +1,19 @@
 # HERMES Flow 变更日志
 
+## Unreleased
+
+### R9 LoopX 后端
+- `FlowRuntime(backend=sqlite|loopx)`；JSONL `LoopXKernel`（`.loopx/domain-state/`）。
+- `hermes flow --backend loopx doctor`、`flow doctor`、`flow backend --set`。
+- 未知 backend 自动降级 sqlite；真实 `loopx` CLI 通过 `LoopXBridge` 可选桥接。
+
+### 体验
+- DAG 拖拽编辑：绝对定位节点 + SVG 连线 + 添加/删除节点，位置保存到 `node.meta.x/y`。
+- 异步质量任务：`QualityJobManager`、`/quality/collect` 默认返回 job、`/quality/jobs` 轮询；Dashboard 后台采集中状态。
+
+### 测试
+- 新增 LoopX（5）、DAG 编辑（2）、异步 job（2）单测；全量 84/84。
+
 ## 0.2.0（2026-10-18）
 
 ### 核心

@@ -120,7 +120,8 @@ def _slash_flow(raw_args: str = "") -> str:
 
 
 def register(ctx: Any) -> None:
-    rt = configure(plugin_root=PLUGIN_ROOT, data_dir=_resolve_data_dir(ctx))
+    rt = configure(plugin_root=PLUGIN_ROOT, data_dir=_resolve_data_dir(ctx),
+                   backend=os.environ.get("HERMES_FLOW_BACKEND"))
     if hasattr(ctx, "subagent_lifecycle"):
         rt.set_lifecycle(ctx.subagent_lifecycle)
     tools.register_tools(ctx)

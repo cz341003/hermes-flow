@@ -38,6 +38,18 @@
     });
   }
 
+  function layoutPositions(def) {
+    var pos = {};
+    var nodes = (def && def.nodes) || [];
+    nodes.forEach(function (n, i) {
+      var meta = n.meta || {};
+      var x = typeof meta.x === "number" ? meta.x : 16 + (i % 4) * 190;
+      var y = typeof meta.y === "number" ? meta.y : 14 + Math.floor(i / 4) * 86;
+      pos[n.id] = { x: x, y: y };
+    });
+    return pos;
+  }
+
   function Badge(props) {
     var tone = props.tone || "idle";
     return h("span", { className: css("badge") + " " + css("badge-" + tone) }, props.children);
@@ -99,9 +111,12 @@
     var skillState = useState(null), skill = skillState[0], setSkill = skillState[1];
     var wfState = useState(null), wfDetail = wfState[0], setWfDetail = wfState[1];
     var wfJsonState = useState(""), wfJson = wfJsonState[0], setWfJson = wfJsonState[1];
+    var wfPosState = useState({}), wfPos = wfPosState[0], setWfPos = wfPosState[1];
+    var wfSelState = useState(null), wfSel = wfSelState[0], setWfSel = wfSelState[1];
     var wfMsgState = useState(""), wfMsg = wfMsgState[0], setWfMsg = wfMsgState[1];
     var eventsState = useState([]), events = eventsState[0], setEvents = eventsState[1];
     var qualityResultState = useState(null), qualityResult = qualityResultState[0], setQualityResult = qualityResultState[1];
+    var qJobState = useState(null), qJob = qJobState[0], setQJob = qJobState[1];
     var qProjectState = useState(""), qProject = qProjectState[0], setQProject = qProjectState[1];
     var qBrowserState = useState(true), qBrowser = qBrowserState[0], setQBrowser = qBrowserState[1];
     var memRowsState = useState([]), memRows = memRowsState[0], setMemRows = memRowsState[1];
@@ -186,8 +201,51 @@
       api("/workflows/" + encodeURIComponent(id)).then(function (w) {
         setWfDetail(w);
         setWfJson(w && w.definition ? JSON.stringify(w.definition, null, 2) : "");
+        setWfPos(layoutPositions(w && w.definition));
+        setWfSel(null);
         setWfMsg("");
       }).catch(function (e) { setError(e.message); });
+    }
+    function updateWfDef(mutator) {
+      var def;
+      try { def = JSON.parse(wfJson); } catch (e) { setWfMsg("JSON 无效: " + e.message); return; }
+      mutator(def);
+      setWfJson(JSON.stringify(def, null, 2));
+      setWfPos(layoutPositions(def));
+    }
+    function addWfNode() {
+      updateWfDef(function (def) {
+        def.nodes = def.nodes || [];
+        var i = 1, ids = {};
+        (def.nodes || []).forEach(function (n) { ids[n.id] = 1; });
+        while (ids["node-" + i]) i++;
+        def.nodes.push({ id: "node-" + i, name: "新节点 " + i, phase: "transform",
+                         agent: "code-transformer", meta: { x: 20, y: 20 + def.nodes.length * 70 } });
+      });
+      setWfMsg("已添加节点（记得保存）");
+    }
+    function deleteWfNode() {
+      if (!wfSel) return;
+      updateWfDef(function (def) {
+        def.nodes = (def.nodes || []).filter(function (n) { return n.id !== wfSel; });
+        def.edges = (def.edges || []).filter(function (e) { return e.source !== wfSel && e.target !== wfSel; });
+      });
+      setWfSel(null);
+      setWfMsg("已删除节点（记得保存）");
+    }
+    function dropWfNode(e) {
+      e.preventDefault();
+      var nid = e.dataTransfer.getData("text/plain");
+      if (!nid) return;
+      var rect = e.currentTarget.getBoundingClientRect();
+      var x = Math.max(4, Math.round(e.clientX - rect.left - 70));
+      var y = Math.max(4, Math.round(e.clientY - rect.top - 24));
+      setWfPos(Object.assign({}, wfPos, (function () { var p = {}; p[nid] = { x: x, y: y }; return p; })()));
+      updateWfDef(function (def) {
+        (def.nodes || []).forEach(function (n) {
+          if (n.id === nid) n.meta = Object.assign({}, n.meta || {}, { x: x, y: y });
+        });
+      });
     }
     function saveWorkflow() {
       var definition;
@@ -227,11 +285,14 @@
     }
     function collectQuality() {
       if (!qProject.trim()) { setError("请填写 project_root"); return; }
-      setBusy("quality"); setError(""); setQualityResult(null);
+      setBusy("quality"); setError(""); setQualityResult(null); setQJob(null);
       api("/quality/collect", { method: "POST", body: JSON.stringify({
-        project_root: qProject, build: true, typecheck: true, browser: !!qBrowser, timeout: 300
-      }) }).then(function (d) { setQualityResult(d); return refresh(); })
-        .catch(function (e) { setError(e.message); }).then(function () { setBusy(""); });
+        project_root: qProject, build: true, typecheck: true, browser: !!qBrowser,
+        timeout: 300, background: true
+      }) }).then(function (d) {
+        if (d && d.job_id) { setQJob(d.job_id); return; }
+        setQualityResult(d); setBusy("");
+      }).catch(function (e) { setError(e.message); setBusy(""); });
     }
     function searchMemory() {
       api("/memory/experiences?limit=50" + (memQuery ? "&query=" + encodeURIComponent(memQuery) : ""))
@@ -249,7 +310,26 @@
     var counts = { agents: data.agents.length, skills: data.skills.length, workflows: data.workflows.length, runs: data.runs.length };
     var activeRun = run || data.runs.filter(function (r) { return ["running", "paused", "gated"].indexOf(r.status) >= 0; })[0];
     var activeStats = data.agentStatus.filter(function (a) { return a.active && a.active.length; });
+    useEffect(function () {
+      if (!qJob) return undefined;
+      var active = true;
+      var timer = setInterval(function () {
+        api("/quality/jobs/" + encodeURIComponent(qJob)).then(function (j) {
+          if (!active) return;
+          if (j.status === "done") {
+            setQualityResult(j.result || {});
+            setQJob(null); setBusy(""); refresh();
+          } else if (j.status === "error") {
+            setError(j.error || "质量任务失败"); setQJob(null); setBusy("");
+          }
+        }).catch(function (e) { if (active) { setError(e.message); setQJob(null); setBusy(""); } });
+      }, 1500);
+      return function () { active = false; clearInterval(timer); };
+    }, [qJob]);
+
     var qRoutes = (qualityResult && qualityResult.browser && qualityResult.browser.routes) || [];
+    var wfDef = null;
+    try { wfDef = wfJson ? JSON.parse(wfJson) : null; } catch (e) { wfDef = null; }
 
     return h("div", { className: css("root") },
       h("header", { className: css("head") },
@@ -309,14 +389,31 @@
               h("b", null, w.name), h("div", { className: css("muted") }, w.id + " · v" + (w.version || "-")),
               h("p", null, w.description || ""));
           }))),
-        h(Panel, { title: wfDetail ? wfDetail.name : "工作流详情", sub: "只读 DAG / 创建 Run",
+        h(Panel, { title: wfDetail ? wfDetail.name : "工作流详情", sub: "拖拽 DAG / 编辑 / 创建 Run",
           right: h("button", { className: css("btn"), onClick: function () { setTab("runs"); } }, "去运行页") },
           wfDetail && wfDetail.definition ? h("div", null,
-            h("div", { className: css("dag") }, (wfDetail.definition.nodes || []).map(function (n) {
-              return h("div", { className: css("node"), key: n.id }, h("b", null, n.name || n.id), h("span", null, n.type || ""), h("em", null, n.agent || ""));
-            })),
+            h("div", { className: css("dag-toolbar") },
+              h("span", { className: css("muted") }, "拖拽节点调整布局；图保存在节点 meta.x/y"),
+              h("button", { className: css("btn") + " " + css("btn-sm"), onClick: addWfNode }, "添加节点"),
+              h("button", { className: css("btn") + " " + css("btn-sm") + " " + css("danger"), onClick: deleteWfNode, disabled: !wfSel }, "删除选中")),
+            h("div", { className: css("dag-canvas"), onDragOver: function (e) { e.preventDefault(); }, onDrop: dropWfNode },
+              h("svg", { className: css("dag-lines"), width: "100%", height: "100%" },
+                ((wfDef && wfDef.edges) || []).map(function (e) {
+                  var a = wfPos[e.source] || { x: 16, y: 14 }, b = wfPos[e.target] || { x: 16, y: 14 };
+                  return h("line", { key: e.source + ">" + e.target, x1: a.x + 70, y1: a.y + 26, x2: b.x + 70, y2: b.y + 26, stroke: "#3d5a66", strokeWidth: 1.5 });
+                })),
+              ((wfDef && wfDef.nodes) || []).map(function (n) {
+                var p = wfPos[n.id] || { x: 16, y: 14 };
+                return h("div", {
+                  key: n.id, draggable: true,
+                  className: css("dag-node") + (wfSel === n.id ? " " + css("selected") : ""),
+                  style: { left: p.x + "px", top: p.y + "px" },
+                  onDragStart: function (e) { e.dataTransfer.setData("text/plain", n.id); setWfSel(n.id); },
+                  onClick: function () { setWfSel(n.id); }
+                }, h("b", null, n.name || n.id), h("span", null, n.phase || n.type || ""), h("em", null, n.agent || ""));
+              })),
             h("div", { className: css("edges") }, h("b", null, "Edges: "),
-              (wfDetail.definition.edges || []).map(function (e) { return h("span", { key: e.source + e.target }, e.source + " → " + e.target + "  "); })),
+              ((wfDef && wfDef.edges) || []).map(function (e) { return h("span", { key: e.source + e.target }, e.source + " → " + e.target + "  "); })),
             h("details", { className: css("editor") },
               h("summary", null, "编辑 JSON（DAG DSL）"),
               h("textarea", { rows: 10, value: wfJson, onChange: function (e) { setWfJson(e.target.value); } }),
@@ -387,7 +484,7 @@
           h("div", { className: css("form") },
             h("input", { value: qProject, placeholder: "project_root（有 dist 的 Vite 项目）", onChange: function (e) { setQProject(e.target.value); } }),
             h("label", { className: css("check") }, h("input", { type: "checkbox", checked: qBrowser, onChange: function (e) { setQBrowser(e.target.checked); } }), " 浏览器路由验证"),
-            h("button", { className: css("btn") + " " + css("primary"), onClick: collectQuality, disabled: busy === "quality" }, busy === "quality" ? "采集中…（build+browser）" : "运行质量采集")),
+            h("button", { className: css("btn") + " " + css("primary"), onClick: collectQuality, disabled: busy === "quality" }, busy === "quality" ? "后台采集中…" : "运行质量采集")),
           qualityResult ? h("div", null,
             h("div", { className: css("kv") }, h("span", null, "build: " + ((qualityResult.build || {}).ok ? "✅" : "❌")),
               h("span", null, "browser: " + ((qualityResult.browser || {}).ok ? "✅" : (qualityResult.browser && qualityResult.browser.ran ? "❌" : "跳过"))),

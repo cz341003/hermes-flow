@@ -13,6 +13,7 @@ import uuid
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
+from .flow_core.adapters import LoopXBridge, LoopXKernel, create_kernel
 from .flow_core.batch import BatchPolicy, BatchQueue, BatchStore, FileItem, plan_batches
 from .flow_core.batch.driver import BatchAutoDriver
 from .flow_core.batch.queue import plan_to_summary
@@ -23,6 +24,7 @@ from .flow_core.quality.batch_gate import aggregate_gate, evaluate_batch
 from .flow_core.registry import Registry
 
 DEFAULT_HOME = Path(os.environ.get("HERMES_HOME") or r"E:\hermes")
+VALID_BACKENDS = ("sqlite", "loopx")
 
 
 def _now() -> int:
@@ -34,17 +36,72 @@ def _safe_id(prefix: str = "run") -> str:
 
 
 class FlowRuntime:
-    def __init__(self, plugin_root: str | Path, data_dir: str | Path):
+    def __init__(self, plugin_root: str | Path, data_dir: str | Path,
+                 backend: Optional[str] = None):
         self.plugin_root = Path(plugin_root).resolve()
         self.data_dir = Path(data_dir).resolve()
         self.data_dir.mkdir(parents=True, exist_ok=True)
+        self.backend, self.backend_error = self._resolve_backend(backend)
         self._lock = threading.RLock()
         self._registry: Optional[Registry] = None
-        self._kernel: Optional[Kernel] = None
+        self._kernel: Any = None
         self._experience: Optional[ExperienceBase] = None
         self._batch_store: Optional[BatchStore] = None
         self._queue: Optional[BatchQueue] = None
         self._lifecycle: Any = None
+
+    def _resolve_backend(self, explicit: Optional[str]) -> tuple[str, str]:
+        requested = (explicit or os.environ.get("HERMES_FLOW_BACKEND") or "").strip().lower()
+        cfg = self.data_dir / "backend.json"
+        if not requested and cfg.is_file():
+            try:
+                requested = str(json.loads(cfg.read_text(encoding="utf-8")).get("backend", "")).strip().lower()
+            except Exception:  # noqa: BLE001
+                requested = ""
+        if not requested:
+            return "sqlite", ""
+        if requested in VALID_BACKENDS:
+            return requested, ""
+        return "sqlite", f"unknown backend {requested!r}; fallback to sqlite"
+
+    # ------------------------------------------------------------ backend
+    def backend_info(self) -> Dict[str, Any]:
+        info = {
+            "backend": self.backend,
+            "error": self.backend_error,
+            "loopx_cli": None,
+            "loopx_kernel_root": str(self.data_dir / "loopx"),
+            "kernel_ok": False,
+        }
+        try:
+            import shutil
+            info["loopx_cli"] = shutil.which("loopx")
+        except Exception:  # noqa: BLE001
+            info["loopx_cli"] = None
+        try:
+            k = self.kernel
+            info["kernel_ok"] = k is not None
+            info["kernel_class"] = type(k).__name__
+        except Exception as exc:  # noqa: BLE001
+            info["error"] = f"{info['error']} kernel: {exc}".strip()
+        return info
+
+    def set_backend(self, backend: str, persist: bool = True) -> Dict[str, Any]:
+        backend = (backend or "").strip().lower()
+        if backend not in VALID_BACKENDS:
+            raise ValueError(f"unknown backend {backend!r}; choose sqlite / loopx")
+        if persist:
+            (self.data_dir / "backend.json").write_text(
+                json.dumps({"backend": backend}, ensure_ascii=False), encoding="utf-8")
+        self.backend = backend
+        self.backend_error = ""
+        with self._lock:
+            try:
+                self._kernel.close()
+            except Exception:  # noqa: BLE001
+                pass
+            self._kernel = None
+        return self.backend_info()
 
     # ------------------------------------------------------------ properties
     @property
@@ -55,10 +112,14 @@ class FlowRuntime:
             return self._registry
 
     @property
-    def kernel(self) -> Kernel:
+    def kernel(self) -> Any:
         with self._lock:
             if self._kernel is None:
-                self._kernel = Kernel(str(self.data_dir / "state.db"))
+                if self.backend == "loopx":
+                    self._kernel = create_kernel(
+                        "loopx", root=str(self.data_dir / "loopx"))
+                else:
+                    self._kernel = Kernel(str(self.data_dir / "state.db"))
             return self._kernel
 
     @property
@@ -622,6 +683,9 @@ class FlowRuntime:
             "version": "0.2.0",
             "home": str(DEFAULT_HOME),
             "data_dir": str(self.data_dir),
+            "backend": self.backend,
+            "backend_error": self.backend_error,
+            "backend_info": self.backend_info(),
             "agents": len(self.registry.list_agents()),
             "skills": len(self.registry.list_skills()),
             "workflows": len(self.registry.list_workflows()),
@@ -685,10 +749,11 @@ _runtime: Optional[FlowRuntime] = None
 _runtime_lock = threading.Lock()
 
 
-def configure(*, plugin_root: str | Path, data_dir: str | Path) -> FlowRuntime:
+def configure(*, plugin_root: str | Path, data_dir: str | Path,
+              backend: Optional[str] = None) -> FlowRuntime:
     global _runtime
     with _runtime_lock:
-        _runtime = FlowRuntime(plugin_root, data_dir)
+        _runtime = FlowRuntime(plugin_root, data_dir, backend=backend)
         return _runtime
 
 

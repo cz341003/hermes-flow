@@ -314,7 +314,9 @@ python -m flow_core --backend sqlite goal-create --title "demo"
 | GET | `/agent-status` | 专家运行态（活跃 Run/批次） |
 | GET/POST | `/memory/experiences` | 经验搜索 / 新增经验 |
 | GET | `/quality` | 质量证据列表 |
-| POST | `/quality/collect` | 真实 build/typecheck/browser 采集 |
+| POST | `/quality/collect` | 真实 build/typecheck/browser 采集（默认异步 job；`background=false` 同步） |
+| GET | `/quality/jobs` | 异步质量任务列表 |
+| GET | `/quality/jobs/{id}` | 异步质量任务状态/结果 |
 | GET | `/audit` | 越界违规证据 |
 | GET | `/drivers` | driver 锁/活跃状态 |
 | GET | `/settings` | 数据目录、计数、阈值、driver 限制 |
@@ -384,6 +386,11 @@ python -m unittest tests.test_parallel -v
 
 # 8) 真实进程 kill/restart 演练（会起子进程；约 10s）
 python tests/kill_restart_drill.py
+
+# 9) LoopX 后端 / DAG 编辑 / 异步质量
+python -m unittest tests.test_loopx_backend -v
+python -m unittest tests.test_dag_edit -v
+python -m unittest tests.test_quality_jobs -v
 ```
 
 内容文件自检（JSON）：
@@ -453,7 +460,7 @@ rm "$HERMES_HOME/plugins/hermes_flow"          # 符号链接
 ## 15. CI / 打包 / 版本
 
 ```powershell
-# 本地 CI（compile + Dashboard 静态冒烟 + 75 单测 + 123 legacy + smoke）
+# 本地 CI（compile + Dashboard 静态冒烟 + 84 单测 + 123 legacy + smoke）
 powershell -ExecutionPolicy Bypass -File scripts\ci_local.ps1
 
 # 发布包（输出 dist/hermes_flow-<version>.zip + .sha256）
@@ -467,3 +474,21 @@ python scripts\dashboard_smoke.py
 - GitHub Actions：仓库根 `.github/workflows/hermes-flow-ci.yml`，Linux 3.11/3.12 + Windows。
 - 测试临时目录通过 `FLOW_TEST_TMP` 覆盖；未设置时用系统 temp，便于 CI。
 - 质量自动挂载：`flow_batch_auto(..., quality=true, browser=true)` 在批次全部完成后跑 build/typecheck/browser + 聚合门，非 pass 则 Run `gated`。
+
+---
+
+## 16. LoopX / DAG / 异步质量
+
+```powershell
+# 查看/切换状态内核
+hermes flow doctor
+hermes flow --backend loopx doctor
+hermes flow backend --set loopx
+hermes flow backend --set sqlite
+```
+
+- `backend=loopx` 使用 JSONL `LoopXKernel`（`.loopx/domain-state/`），不依赖 `loopx` wheel；真实 CLI 通过 `LoopXBridge` 可选桥接。
+- 未知 backend 自动降级 sqlite，并返回 `backend_error`。
+- Dashboard 工作流页支持节点拖拽布局、添加/删除节点，位置保存在 `node.meta.x/y`；边仍用 JSON 编辑。
+- 质量采集默认异步：`POST /quality/collect` 返回 `job_id`，`GET /quality/jobs/{id}` 轮询；`background=false` 保持同步。
+

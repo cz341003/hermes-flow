@@ -98,7 +98,7 @@ notepad E:\deepSeek\docs\FEASIBILITY.md
 - 源码：[plugin/hermes_flow](plugin/hermes_flow)　|　实现报告：[docs/IMPLEMENTATION_REPORT.md](docs/IMPLEMENTATION_REPORT.md)　|　插件说明：[plugin/README.md](plugin/hermes_flow/README.md)
 - 已安装：`E:\hermes\plugins\hermes_flow`（复制模式；`config.yaml` 已启用 `hermes_flow`，备份 `config.yaml.bak-hermes_flow-20261018`）
 - 规模：**34 个 `flow_*` 工具**、8 专家、12 技能、2 工作流模板、**Dashboard v2（7 Tab）**、`hermes flow` CLI、`pre_llm_call` hook
-- 验证：新单测 **75/75**、前序回归 **123/123**、E2E **20 文件 10 批全部 applied**、工具层 E2E **5/5 批**、287 文件 demo **67/67 批**、`hermes plugins doctor` 通过
+- 验证：新单测 **84/84**、前序回归 **123/123**、E2E **20 文件 10 批全部 applied**、工具层 E2E **5/5 批**、287 文件 demo **67/67 批**、`hermes plugins doctor` 通过
 - **R1 自动 driver 已完成**：`flow_batch_auto` 通过 `ctx.subagent_lifecycle` 启动真实子代理；2 文件 live E2E：36.9s、2/2 done、score 97.6、`done=true`，工作区改写为 `<script setup>`
 - **R2 真实 20 文件迁移已完成**：sample-app → `plugin/r2-work`，**8/8 批、20/20 applied、全部 pass（97.0–97.6）**；19 个文件改写为 Vue3 + Pinia + Router4 + Vite，报告 [docs/R2_REPORT.md](docs/R2_REPORT.md)
 - **R3 真实质量门已完成**：flow_quality_collect 抓出缺失 vite.config.js；补后 vite build 通过（3180 modules、8.92s），Chrome CDP 验证 4/4 路由、聚合门 **pass 97.22**；报告 [docs/R3_REPORT.md](docs/R3_REPORT.md)
@@ -110,7 +110,8 @@ notepad E:\deepSeek\docs\FEASIBILITY.md
 - **R7 同 wave 并行已完成**：`concurrency=1..3`，每批独立 worktree，apply/audit 按 seq 稳定提交；3 批 0.552s→0.235s、max_active=3；报告 [docs/R7_REPORT.md](docs/R7_REPORT.md)
 - **R8b 真实并行/崩溃恢复已完成**：真实 6 文件 3 批并行 79s 全 pass；kill worker 后租约/锁过期，新进程 attempt=2 恢复 2/2 批、8/8 文件；报告 [docs/R8B_REPORT.md](docs/R8B_REPORT.md)
 - **R10 工程化已完成**：测试可移植（`FLOW_TEST_TMP`）、GitHub Actions（Linux/Windows）、`ci_local.ps1`、`package.py` 打包 **0.2.0 zip + sha256**、质量自动挂 driver（`quality=true`）；报告 [docs/R10_REPORT.md](docs/R10_REPORT.md)
-- 待办：1000 文件真实 LLM 预算验证、R9 LoopX（P2）、DAG 拖拽编辑/异步质量任务；详细清单见 [docs/REMAINING_TASKS.md](docs/REMAINING_TASKS.md)
+- **R9 LoopX + 体验项已完成**：`flow --backend loopx` / JSONL LoopXKernel / doctor / 降级；DAG 拖拽编辑；异步质量 job（`/quality/jobs`）；报告 [docs/R9_UX_REPORT.md](docs/R9_UX_REPORT.md)
+- 待办：1000 文件真实 LLM 预算验证；发布 v0.3.0（R9/DAG/异步质量超出 v0.2.0 Release）；真实 loopx CLI 联调（可选）；详细清单见 [docs/REMAINING_TASKS.md](docs/REMAINING_TASKS.md)
 
 
 ---

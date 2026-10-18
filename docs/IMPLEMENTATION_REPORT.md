@@ -23,6 +23,9 @@
 | **R7 同 wave 并行** | ✅ | `concurrency=1..3`；同 wave 多批并发、每批独立 worktree、apply/audit 按 seq 串行；3 批 0.552s→0.235s、max_active=3、stable_order=true；**真实 6 文件 3 批 79s 全 pass**；报告 `docs/R7_REPORT.md` |
 | **R8b 真实进程/并行** | ✅ | 真实 6 文件并行 3/3 done、6/6 applied；kill worker 后租约/锁过期，新进程 attempt=2 恢复 2/2 批、8/8 文件；修复线程池 contextvar 丢失 bug；报告 `docs/R8B_REPORT.md` |
 | **R10 工程化** | ✅ | 测试可移植（`FLOW_TEST_TMP`）、GitHub Actions（Linux/Windows）、`scripts/ci_local.ps1`、`scripts/package.py` 打包 0.2.0 + sha256、质量自动挂 driver（`quality=true`）；报告 `docs/R10_REPORT.md` |
+| **R9 LoopX** | ✅ | `backend=sqlite|loopx`、JSONL `LoopXKernel`、`flow --backend`/`doctor`/`backend --set`、未知后端降级 sqlite；报告 `docs/R9_UX_REPORT.md` |
+| **DAG 拖拽编辑** | ✅ | 绝对定位节点 + SVG 连线 + 添加/删除 + meta.x/y 保存；CDP 7→8 节点、拖拽生效、console 0 |
+| **异步质量任务** | ✅ | `QualityJobManager` + `/quality/jobs`；实测 job 29.22s、build/browser 4/4 pass；UI 后台轮询 |
 | Dashboard | ✅（R5） | **7 Tab v2**：专家/技能/工作流/运行批次/质量/记忆/设置；React SDK 源码 + 19KB IIFE；真实 API；Chrome CDP 7/7 Tab 渲染、0 console error |
 | **R5 Dashboard** | ✅（主体） | 专家运行态、技能正文、工作流只读 DAG、Run 节点/批次/文件、质量采集、记忆搜索/新增、设置/driver/audit；报告 `docs/R5_REPORT.md` |
 | **R5b Dashboard 收尾** | ✅ | 持久化事件流 + cursor 断线重放、人工门批准/驳回、节点级重跑、工作流 JSON 编辑；报告 `docs/R5B_REPORT.md` |
@@ -77,7 +80,7 @@ E:\deepSeek\plugin\hermes_flow\
 | 验证 | 命令 | 结果 |
 |---|---|---|
 | 插件注册 | `hermes plugins doctor hermes_flow --ci` | ✅ manifest/import/register 通过；34 tools + 1 hook |
-| 新单测 | `python -m unittest discover -s tests -q` | ✅ **75/75** |
+| 新单测 | `python -m unittest discover -s tests -q` | ✅ **84/84** |
 | 前序回归 | `python -m unittest discover -s tests\legacy -q` | ✅ **123/123** |
 | 自动 driver 单测 | `python -m unittest tests.test_driver tests.test_runtime_driver -v` | ✅ 9/9：成功 apply、截断拆批、非法 JSON 纠正、429 requeue、超时、单例锁、runtime 端到端 |
 | 端到端（mock） | `python tests/e2e_demo.py` | ✅ sample-app 20 文件 → 10 批/6 wave，10/10 done、20/20 applied、聚合门 97.6，`done=True`；重复 apply 幂等 |
@@ -139,8 +142,10 @@ hermes flow demo --files 287
 | 记忆不自动召回注入 | 经验库需显式调用 | **R6 已完成**：每 turn 召回注入 + 批次自动沉淀 |
 | Dashboard 可视化编辑 | 已支持 JSON 编辑 + 只读 DAG；拖拽式 DAG 编辑未做 | 后续体验优化 |
 | 质量采集为显式调用 | 尚未在 driver 聚合时点自动执行 | 工程化接入 |
-| LoopX 未接 | 仅保留 adapter | **R9**（P2） |
+| LoopX 未接 | **R9 已接 JSONL LoopXKernel + CLI/doctor/降级** | 真实 loopx CLI wheel 未安装；桥接保留 |
 | 条件 / 人工门 | DSL 已声明，执行器未求值 | 后续里程碑 |
+| 质量任务同步 | **已改异步 job + UI 轮询** | job 为内存态，重启丢失（证据文件保留） |
+| DAG 编辑 | **已支持拖拽布局/增删节点/meta 保存**；边仍用 JSON 编辑 | 后续端口连线 |
 | Windows shell | 子代理需 Git Bash | 已写 `HERMES_GIT_BASH_PATH`；换机需配置 |
 | 测试无 CI | **R10 已加 GitHub Actions + 本地 ci_local.ps1** | 已解决 |
 | 打包/版本 | **0.2.0 zip + sha256** | 发布需 Git tag/Release |
@@ -150,9 +155,9 @@ hermes flow demo --files 287
 ## 7. 下一步建议
 
 1. 1000 文件真实 LLM 迁移（预算项）。
-2. 可视化 DAG 拖拽编辑/异步质量任务（体验）。
-3. R9 LoopX（P2）。
-4. 发布：Git tag + Release（zip 已生成）。
+2. 发布新版本（R9/DAG/异步质量已超出 v0.2.0 Release 内容）。
+3. 真实 `loopx` CLI 安装联调（可选）。
+4. 端口级 DAG 连线、WebSocket 推送（体验）。
 
 ---
 

@@ -10,12 +10,17 @@ from typing import Any, Dict, List
 from .flow_core.batch import BatchPolicy, FileItem, plan_batches
 from .flow_core.engine.scheduler import ExecutionResult
 from .flow_core.orchestrator import WorkflowOrchestrator
-from .runtime import get_runtime
+from .runtime import FlowRuntime, get_runtime
 
 
 def setup(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument("--backend", choices=["sqlite", "loopx"], default=None,
+                        help="State kernel backend (default: config/env, else sqlite)")
     subs = parser.add_subparsers(dest="flow_command")
     subs.add_parser("status", help="Print runtime/registry status as JSON")
+    subs.add_parser("doctor", help="Check backend/kernel/LoopX availability and fallback")
+    p = subs.add_parser("backend", help="Show or set the state kernel backend")
+    p.add_argument("--set", choices=["sqlite", "loopx"], default=None)
     subs.add_parser("agents", help="List registered experts")
     subs.add_parser("skills", help="List skills")
     subs.add_parser("workflows", help="List workflow templates")
@@ -44,7 +49,20 @@ def _print(obj: Any) -> None:
 
 def run(args: argparse.Namespace) -> int:
     rt = get_runtime()
+    backend = getattr(args, "backend", None)
+    if backend and backend != rt.backend:
+        rt = FlowRuntime(rt.plugin_root, rt.data_dir, backend=backend)
     cmd = getattr(args, "flow_command", None)
+    if cmd == "doctor":
+        info = rt.backend_info()
+        _print(info)
+        return 0 if info.get("kernel_ok") and not info.get("error") else 1
+    if cmd == "backend":
+        if getattr(args, "set", None):
+            _print(rt.set_backend(args.set))
+        else:
+            _print(rt.backend_info())
+        return 0
     if cmd == "status":
         _print(rt.status())
         return 0
@@ -96,7 +114,8 @@ def run(args: argparse.Namespace) -> int:
             Path(args.out).write_text(
                 json.dumps(result.to_dict(), ensure_ascii=False, indent=2), encoding="utf-8")
         return 0 if result.done else 1
-    print("用法: hermes flow {status|agents|skills|workflows|demo|plan-batch|run|verify|board}")
+    print("用法: hermes flow [--backend sqlite|loopx] "
+          "{status|doctor|backend|agents|skills|workflows|demo|plan-batch|run|verify|board}")
     return 2
 
 
