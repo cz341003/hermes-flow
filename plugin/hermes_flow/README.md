@@ -498,7 +498,8 @@ hermes flow backend --set sqlite
 
 - **专家** Tab → 「＋ 新增专家」：名称、role（≥20字）、description、skills（逗号分隔）、model。
 - **技能** Tab → 「＋ 新增技能」：名称、description、phases、tags、正文；正文必须含 `Procedure` / `Pitfalls` / `Verification`。
-- **工作流** Tab：先选模板 → 「＋ 新建工作流（复制当前模板）」→ 拖拽/增删节点/JSON 编辑 → 保存。
+- **工作流** Tab：先选模板 → 「＋ 新建工作流（复制当前模板）」→ React Flow 拖拽/端口连线/增删节点 → 保存；高级字段用 JSON。
 - 文件位置：`agents/<id>.json`、`skills/<id>/SKILL.md`、`workflows/<id>.json`（`plugin-data/hermes_flow/`）。
 - 完整步骤与 DSL 示例见仓库 `docs/USAGE_CUSTOMIZE.md`。
+- Dashboard 前端构建：`cd dashboard && npm install && npm run build`（React Flow 依赖，React 由宿主注入，详见 `dashboard/README.md`）。
 

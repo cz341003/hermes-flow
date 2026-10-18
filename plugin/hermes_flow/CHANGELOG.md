@@ -3,10 +3,12 @@
 ## Unreleased
 
 ### 工作流编辑体验
+- **集成 React Flow 12**：完整节点画布、端口拉线、Controls/MiniMap，React 19 宿主 shim。
 - 修复模板卡选中态（`.hf2-card.hf2-selected`）。
-- 修复「添加节点」无可见反馈：新节点改为 4 列网格可见位置，并显示提示；新模板无 JSON 时回退到 current definition。
+- 修复「添加节点」无可见反馈：4 列/3 列网格可见位置 + 提示；新模板无 JSON 时回退 definition。
 - 新增「节点与连线（表单编辑，无需 JSON）」：改 name/phase/agent/skill、增删节点、下拉增删/改连线；高级字段仍用 JSON。
 - 调研文档：`docs/WORKFLOW_EDITOR_RESEARCH.md`（React Flow / Vue Flow / Rete / n8n / Windmill）。
+- 构建：`dashboard/npm install && npm run build`；React 由宿主注入，bundle 约 219KB。
 
 ### WebUI 自定义入口
 - 专家 Tab：新增专家表单（name/role/description/skills/model）。

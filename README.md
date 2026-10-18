@@ -113,7 +113,7 @@ notepad E:\deepSeek\docs\FEASIBILITY.md
 - **R10 工程化已完成**：测试可移植（`FLOW_TEST_TMP`）、GitHub Actions（Linux/Windows）、`ci_local.ps1`、`package.py` 打包 **0.2.0 zip + sha256**、质量自动挂 driver（`quality=true`）；报告 [docs/R10_REPORT.md](docs/R10_REPORT.md)
 - **R9 LoopX + 体验项已完成**：`flow --backend loopx` / JSONL LoopXKernel / doctor / 降级；DAG 拖拽编辑；异步质量 job（`/quality/jobs`）；报告 [docs/R9_UX_REPORT.md](docs/R9_UX_REPORT.md)
 - **WebUI 自定义入口已补齐**：专家/技能可直接新增，工作流可复制模板后拖拽/表单/JSON 编辑；步骤见 [docs/USAGE_CUSTOMIZE.md](docs/USAGE_CUSTOMIZE.md)
-- **工作流编辑体验**：修复模板选中态与「添加节点」无反馈；新增节点/连线表单编辑，无需 JSON 也能改流程；调研见 [docs/WORKFLOW_EDITOR_RESEARCH.md](docs/WORKFLOW_EDITOR_RESEARCH.md)
+- **工作流编辑体验**：React Flow 完整可视化连线（拖拽/端口连线/MiniMap），保留表单+JSON 编辑；修复模板选中态与「添加节点」；调研见 [docs/WORKFLOW_EDITOR_RESEARCH.md](docs/WORKFLOW_EDITOR_RESEARCH.md)
 - 待办：1000 文件真实 LLM 预算验证；发布 v0.3.0（R9/DAG/异步质量超出 v0.2.0 Release）；真实 loopx CLI 联调（可选）；详细清单见 [docs/REMAINING_TASKS.md](docs/REMAINING_TASKS.md)
 
 

@@ -14,7 +14,7 @@ OUT = ROOT / "dist" / f"hermes_flow-{VERSION}.zip"
 INCLUDE = ["plugin.yaml", "__init__.py", "cli.py", "tools.py", "runtime.py", "README.md",
            "CHANGELOG.md", "install.ps1", "install.sh", "flow_core", "agents", "skills",
            "workflows", "dashboard", "tests", "scripts"]
-IGNORE = ("__pycache__", ".pyc", ".tmp", ".pytest_cache")
+IGNORE = ("__pycache__", ".pyc", ".tmp", ".pytest_cache", "node_modules")
 
 
 def iter_files():

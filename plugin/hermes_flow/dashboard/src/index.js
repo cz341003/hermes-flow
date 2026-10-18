@@ -1,3 +1,8 @@
+import {
+  ReactFlow, Background, Controls, MiniMap, Handle, Position, MarkerType,
+  addEdge, useNodesState, useEdgesState
+} from "@xyflow/react";
+
 /* HERMES Flow Dashboard v2 — expert / skills / workflows / runs / quality / memory / settings.
  * React is provided by the host SDK; this bundle ships no React.
  */
@@ -43,8 +48,8 @@
     var nodes = (def && def.nodes) || [];
     nodes.forEach(function (n, i) {
       var meta = n.meta || {};
-      var x = typeof meta.x === "number" ? meta.x : 16 + (i % 4) * 190;
-      var y = typeof meta.y === "number" ? meta.y : 14 + Math.floor(i / 4) * 86;
+      var x = typeof meta.x === "number" ? meta.x : 16 + (i % 3) * 190;
+      var y = typeof meta.y === "number" ? meta.y : 14 + Math.floor(i / 3) * 86;
       pos[n.id] = { x: x, y: y };
     });
     return pos;
@@ -95,6 +100,133 @@
     if (!props.error) return null;
     return h("div", { className: css("banner") }, h("b", null, "请求失败："), " " + props.error,
       h("button", { className: css("btn") + " " + css("btn-sm"), onClick: props.onRetry }, "重试"));
+  }
+
+  function FlowNodeCard(props) {
+    var n = (props.data && props.data.node) || {};
+    return h("div", { className: css("rf-node") + (props.selected ? " " + css("selected") : "") },
+      h(Handle, { type: "target", position: Position.Left }),
+      h("b", null, n.name || n.id),
+      h("span", null, n.phase || n.type || ""),
+      h("em", null, n.agent || ""),
+      h(Handle, { type: "source", position: Position.Right }));
+  }
+
+  function flowFromDefinition(def) {
+    var nodes = ((def && def.nodes) || []).map(function (n, i) {
+      var meta = n.meta || {};
+      var x = typeof meta.x === "number" ? meta.x : 16 + (i % 3) * 190;
+      var y = typeof meta.y === "number" ? meta.y : 14 + Math.floor(i / 3) * 86;
+      return {
+        id: n.id, type: "hfNode", position: { x: x, y: y },
+        data: { node: n }
+      };
+    });
+    var edges = ((def && def.edges) || []).map(function (e) {
+      return {
+        id: "e-" + e.source + "-" + e.target, source: e.source, target: e.target,
+        type: "smoothstep", markerEnd: { type: MarkerType.ArrowClosed },
+        style: { stroke: "#3d5a66" }
+      };
+    });
+    return { nodes: nodes, edges: edges };
+  }
+
+  function flowToDefinition(base, nodes, edges) {
+    var copy = JSON.parse(JSON.stringify(base || {}));
+    var byId = {};
+    (copy.nodes || []).forEach(function (n) { byId[n.id] = n; });
+    copy.nodes = (nodes || []).map(function (rn) {
+      var src = byId[rn.id] || (rn.data && rn.data.node) || {};
+      var n = Object.assign({}, src);
+      n.id = rn.id;
+      n.name = (rn.data && rn.data.node && rn.data.node.name) || src.name || rn.id;
+      n.phase = (rn.data && rn.data.node && rn.data.node.phase) || src.phase || "transform";
+      n.agent = (rn.data && rn.data.node && rn.data.node.agent) || src.agent || "";
+      n.type = (rn.data && rn.data.node && rn.data.node.type) || src.type || "agent_task";
+      if (rn.data && rn.data.node && rn.data.node.skill) n.skill = rn.data.node.skill;
+      n.meta = Object.assign({}, n.meta || {}, {
+        x: Math.round(rn.position.x), y: Math.round(rn.position.y)
+      });
+      return n;
+    });
+    copy.edges = (edges || []).map(function (e) { return { source: e.source, target: e.target }; });
+    return copy;
+  }
+
+  function WorkflowFlow(props) {
+    var definition = props.definition || { nodes: [], edges: [] };
+    var initial = flowFromDefinition(definition);
+    var nodeState = useNodesState(initial.nodes);
+    var nodes = nodeState[0], setNodes = nodeState[1], onNodesChange = nodeState[2];
+    var edgeState = useEdgesState(initial.edges);
+    var edges = edgeState[0], setEdges = edgeState[1], onEdgesChange = edgeState[2];
+    var nodeTypes = hooks.useMemo(function () { return { hfNode: FlowNodeCard }; }, []);
+
+    hooks.useEffect(function () {
+      var f = flowFromDefinition(definition);
+      setNodes(f.nodes);
+      setEdges(f.edges);
+    }, [props.definitionKey || definition]);
+
+    function commit(ns, es, selected) {
+      setNodes(ns || nodes);
+      setEdges(es || edges);
+      if (props.onChange) props.onChange(flowToDefinition(definition, ns || nodes, es || edges));
+      if (selected && props.onSelect) props.onSelect(selected);
+    }
+    function addNode() {
+      var i = 1, ids = {};
+      nodes.forEach(function (n) { ids[n.id] = 1; });
+      while (ids["node-" + i]) i++;
+      var idx = nodes.length;
+      var node = {
+        id: "node-" + i, type: "hfNode",
+        position: { x: 16 + (idx % 3) * 190, y: 14 + Math.floor(idx / 3) * 86 },
+        data: { node: { id: "node-" + i, name: "新节点 " + i, phase: "transform", agent: "code-transformer", type: "agent_task" } }
+      };
+      commit(nodes.concat([node]), edges, node.id);
+    }
+    function deleteSelected() {
+      if (!props.selectedId) return;
+      var ns = nodes.filter(function (n) { return n.id !== props.selectedId; });
+      var es = edges.filter(function (e) { return e.source !== props.selectedId && e.target !== props.selectedId; });
+      commit(ns, es, null);
+    }
+    function onConnect(params) {
+      if (!params.source || !params.target || params.source === params.target) return;
+      var es = addEdge(Object.assign({}, params, {
+        type: "smoothstep", markerEnd: { type: MarkerType.ArrowClosed },
+        style: { stroke: "#3d5a66" }
+      }), edges);
+      commit(nodes, es);
+    }
+    return h(React.Fragment, null,
+      h("div", { className: css("dag-toolbar") },
+        h("span", { className: css("muted") }, "React Flow：拖拽节点、从右侧端口拉线连接"),
+        h("button", { className: css("btn") + " " + css("btn-sm"), onClick: addNode }, "添加节点"),
+        h("button", { className: css("btn") + " " + css("btn-sm") + " " + css("danger"), onClick: deleteSelected, disabled: !props.selectedId }, "删除选中")),
+      h("div", { className: css("rf-wrap") },
+        h(ReactFlow, {
+          nodes: nodes, edges: edges, nodeTypes: nodeTypes,
+          onNodesChange: onNodesChange, onEdgesChange: onEdgesChange,
+          onConnect: onConnect, fitView: true, fitViewOptions: { padding: 0.2, maxZoom: 1.25 }, minZoom: 0.3, maxZoom: 1.8,
+          proOptions: { hideAttribution: true },
+          onNodeClick: function (e, n) { if (props.onSelect) props.onSelect(n.id); },
+          onNodeDragStop: function () { commit(nodes, edges); },
+          onNodesDelete: function (deleted) {
+            var ids = {}; deleted.forEach(function (n) { ids[n.id] = 1; });
+            commit(nodes.filter(function (n) { return !ids[n.id]; }),
+                   edges.filter(function (e) { return !ids[e.source] && !ids[e.target]; }), null);
+          },
+          onEdgesDelete: function (deleted) {
+            var ids = {}; deleted.forEach(function (e) { ids[e.id] = 1; });
+            commit(nodes, edges.filter(function (e) { return !ids[e.id]; }));
+          }
+        },
+          h(Background, { gap: 18, size: 1, color: "#22323d" }),
+          h(Controls, null),
+          h(MiniMap, { pannable: true, zoomable: true, nodeColor: "#2f4652", maskColor: "rgba(8,14,18,.7)" }))));
   }
 
   function App() {
@@ -243,8 +375,8 @@
         created = {
           id: "node-" + i, name: "新节点 " + i, phase: "transform",
           agent: "code-transformer", meta: {
-            x: 16 + (idx % 4) * 190,
-            y: 14 + Math.floor(idx / 4) * 86
+            x: 16 + (idx % 3) * 190,
+            y: 14 + Math.floor(idx / 3) * 86
           }
         };
         def.nodes.push(created);
@@ -537,27 +669,18 @@
         h(Panel, { title: wfDetail ? wfDetail.name : "工作流详情", sub: "拖拽 DAG / 编辑 / 创建 Run",
           right: h("button", { className: css("btn"), onClick: function () { setTab("runs"); } }, "去运行页") },
           wfDetail && wfDetail.definition ? h("div", null,
-            h("div", { className: css("dag-toolbar") },
-              h("span", { className: css("muted") }, "拖拽节点调整布局；图保存在节点 meta.x/y"),
-              h("button", { className: css("btn") + " " + css("btn-sm"), onClick: addWfNode }, "添加节点"),
-              h("button", { className: css("btn") + " " + css("btn-sm") + " " + css("danger"), onClick: deleteWfNode, disabled: !wfSel }, "删除选中"),
-              wfMsg ? h("span", { className: css("muted") }, wfMsg) : null),
-            h("div", { className: css("dag-canvas"), style: { height: dagHeight + "px" }, onDragOver: function (e) { e.preventDefault(); }, onDrop: dropWfNode },
-              h("svg", { className: css("dag-lines"), width: "100%", height: "100%" },
-                ((wfDef && wfDef.edges) || []).map(function (e) {
-                  var a = wfPos[e.source] || { x: 16, y: 14 }, b = wfPos[e.target] || { x: 16, y: 14 };
-                  return h("line", { key: e.source + ">" + e.target, x1: a.x + 70, y1: a.y + 26, x2: b.x + 70, y2: b.y + 26, stroke: "#3d5a66", strokeWidth: 1.5 });
-                })),
-              ((wfDef && wfDef.nodes) || []).map(function (n) {
-                var p = wfPos[n.id] || { x: 16, y: 14 };
-                return h("div", {
-                  key: n.id, draggable: true,
-                  className: css("dag-node") + (wfSel === n.id ? " " + css("selected") : ""),
-                  style: { left: p.x + "px", top: p.y + "px" },
-                  onDragStart: function (e) { e.dataTransfer.setData("text/plain", n.id); setWfSel(n.id); },
-                  onClick: function () { setWfSel(n.id); }
-                }, h("b", null, n.name || n.id), h("span", null, n.phase || n.type || ""), h("em", null, n.agent || ""));
-              })),
+            h(WorkflowFlow, {
+              definition: wfDef || (wfDetail && wfDetail.definition),
+              definitionKey: wfJson,
+              selectedId: wfSel,
+              onSelect: setWfSel,
+              onChange: function (def) {
+                setWfJson(JSON.stringify(def, null, 2));
+                setWfPos(layoutPositions(def));
+                setWfMsg("画布已更新（记得保存）");
+              }
+            }),
+            wfMsg ? h("div", { className: css("form-hint") }, wfMsg) : null,
             h("details", { className: css("editor") },
               h("summary", null, "节点与连线（表单编辑，无需 JSON）"),
               h("div", { className: css("form-hint") },

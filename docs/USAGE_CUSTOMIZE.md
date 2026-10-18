@@ -79,14 +79,14 @@ POST /api/plugins/hermes_flow/skills
 2. 展开「＋ 新建工作流（复制当前模板为起点）」。
 3. 填写新 **id**（如 `my-vue3-flow`）、**名称**、描述 → **创建工作流**。
 4. 新工作流会出现在左侧列表；点击后：
-   - **拖拽节点**调整布局，位置写入 `node.meta.x/y`；
-   - **添加节点** / **删除选中**（新节点自动放在可见网格位置）；
-   - **节点与连线（表单编辑，无需 JSON）**：改名称/phase/agent/skill、增删节点、下拉选择起点/终点增删连线；
+   - **React Flow 画布**：拖拽节点、从右侧端口拉到左侧端口连线；滚轮缩放、MiniMap；
+   - **添加节点** / **删除选中** / Delete 键；
+   - **节点与连线（表单编辑）**：改名称/phase/agent/skill、增删节点、下拉增删连线；
    - **编辑 JSON（DAG DSL）** 修改 `type`、`batch`、`timeout_s` 等高级参数；
-   - **保存工作流** 持久化。
+   - **保存工作流** 持久化（位置写 `meta.x/y`，连线写 `edges`）。
 5. 到 **运行 / 批次** Tab，选择新工作流 → 填 project_root/files → 创建 Run。
 
-![表单化工作流编辑](assets/workflow-form-editor.png)
+![React Flow 可视化连线](assets/reactflow-editor.png)
 
 ![新建工作流](assets/forms-workflows.png)
 

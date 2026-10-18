@@ -1,0 +1,15 @@
+{
+  "name": "hermes-flow-dashboard",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs"
+  },
+  "dependencies": {
+    "@xyflow/react": "12.12.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.10"
+  }
+}
