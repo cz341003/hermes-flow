@@ -494,6 +494,11 @@ import {
         setQualityResult(d); setBusy("");
       }).catch(function (e) { setError(e.message); setBusy(""); });
     }
+    function switchBackend(name) {
+      act("backend", function () {
+        return api("/backend", { method: "POST", body: JSON.stringify({ backend: name }) });
+      });
+    }
     function searchMemory() {
       api("/memory/experiences?limit=50" + (memQuery ? "&query=" + encodeURIComponent(memQuery) : ""))
         .then(function (d) { setMemRows((d && d.experiences) || []); }).catch(function (e) { setError(e.message); });
@@ -579,6 +584,9 @@ import {
     }, [qJob]);
 
     var qRoutes = (qualityResult && qualityResult.browser && qualityResult.browser.routes) || [];
+    var settings = data.settings || {};
+    var backendInfo = settings.backend_info || {};
+    var backend = settings.backend || "sqlite";
     var wfDef = null;
     try { wfDef = wfJson ? JSON.parse(wfJson) : null; } catch (e) { wfDef = null; }
     var wfNodes = (wfDef && wfDef.nodes) || [];
@@ -860,11 +868,26 @@ import {
             h("button", { className: css("btn") + " " + css("primary"), onClick: addMemory, disabled: !!busy }, "保存经验")))) :
 
       h("div", { className: css("grid2") },
-        h(Panel, { title: "设置 / 运行时", sub: "数据目录、阈值、driver 限制" },
-          data.settings ? h("pre", { className: css("pre") }, jsonText(data.settings)) : h(Empty)),
+        h("div", { className: css("stack") },
+          h(Panel, { title: "状态内核 / LoopX", sub: "LoopX 是 backend，不是独立 Tab" },
+            h("div", { className: css("kv") },
+              h("span", null, "backend " + backend),
+              h("span", null, "kernel " + (backendInfo.kernel_class || "-")),
+              h("span", null, "loopx_cli " + (backendInfo.loopx_cli || "未安装")),
+              h("span", null, "kernel_ok " + (backendInfo.kernel_ok ? "true" : "false"))),
+            h("div", { className: css("btn-row") },
+              h("button", { className: css("btn") + (backend === "sqlite" ? " " + css("primary") : ""), onClick: function () { switchBackend("sqlite"); }, disabled: !!busy || backend === "sqlite" }, "使用 SQLite"),
+              h("button", { className: css("btn") + (backend === "loopx" ? " " + css("primary") : ""), onClick: function () { switchBackend("loopx"); }, disabled: !!busy || backend === "loopx" }, "使用 LoopX JSONL"),
+              backendInfo.error ? h("span", { className: css("muted") }, backendInfo.error) : null),
+            h("p", { className: css("muted") },
+              "LoopX 集成在状态内核层：backend=loopx 时用 JSONL LoopXKernel 替代 SQLite Kernel。" +
+              "loopx CLI 未安装时 JSONL 后端仍可用；真实 loopx CLI 通过 LoopXBridge 可选桥接。"),
+            h("pre", { className: css("pre") }, jsonText(backendInfo))),
+          h(Panel, { title: "设置 / 运行时", sub: "数据目录、阈值、driver 限制" },
+            data.settings ? h("pre", { className: css("pre") }, jsonText(data.settings)) : h(Empty))),
         h(Panel, { title: "Dashboard API", sub: "所有页面均走真实数据" },
           h("div", { className: css("links") },
-            ["/status", "/agents", "/skills", "/workflows", "/runs", "/agent-status", "/quality", "/audit", "/drivers", "/settings", "/memory/experiences"].map(function (p) {
+            ["/status", "/agents", "/skills", "/workflows", "/runs", "/agent-status", "/quality", "/audit", "/drivers", "/settings", "/backend", "/memory/experiences"].map(function (p) {
               return h("code", { key: p }, API + p);
             })),
           h("p", { className: css("muted") }, "数据每 5s 轮询；写操作请使用 agent 工具或上方按钮。"))),

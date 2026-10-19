@@ -299,6 +299,10 @@ class GateBody(BaseModel):
     reason: str = ""
 
 
+class BackendBody(BaseModel):
+    backend: str
+
+
 @router.get("/runs/{run_id}/events")
 def run_events(run_id: str, after: int = 0) -> Dict[str, Any]:
     try:
@@ -446,6 +450,19 @@ def drivers() -> Dict[str, Any]:
                       "age": round(time.time() - path.stat().st_mtime, 1),
                       "lock_path": str(path)})
     return {"locks": locks, "count": len(locks)}
+
+
+@router.get("/backend")
+def backend_info() -> Dict[str, Any]:
+    return _rt().backend_info()
+
+
+@router.post("/backend")
+def set_backend(body: BackendBody) -> Dict[str, Any]:
+    try:
+        return _rt().set_backend(body.backend)
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(400, str(exc)) from exc
 
 
 @router.get("/settings")

@@ -17,6 +17,10 @@
 - 工作流 Tab：复制当前模板创建新工作流，再拖拽/增删节点/JSON 编辑/保存。
 - 文档：`docs/USAGE_CUSTOMIZE.md`。
 
+### LoopX / 状态内核
+- Dashboard 设置页新增「状态内核 / LoopX」面板：显示 backend/kernel/loopx_cli/kernel_ok，并支持 SQLite ↔ LoopX JSONL 一键切换。
+- 新增 `GET /backend`、`POST /backend`。
+
 ## 0.3.0（2026-10-18）
 
 ### R9 LoopX 后端

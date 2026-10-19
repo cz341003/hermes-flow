@@ -330,6 +330,28 @@ E:\hermes\plugin-data\hermes_flow\
 
 ## 8. LoopX 后端（可选）
 
+### 集成位置
+
+LoopX 不是独立 Tab，而是**状态内核 backend**：
+
+- `backend=sqlite`：自研 `Kernel`（`state.db`）
+- `backend=loopx`：`LoopXKernel`（JSONL domain-state，`.loopx/domain-state/`）
+- 实现 `should_run / claim / update / refresh_state / spend_slot / checkpoint / experience` 等五原语；
+- 批次队列/Run 快照仍用 SQLite/JSON（`batches.db`、`runs/*.json`）；
+- 真实 `loopx` CLI 通过 `LoopXBridge` 可选桥接；未安装时 JSONL 后端仍可用。
+
+### WebUI
+
+Dashboard → **设置** → **状态内核 / LoopX**：
+
+- 显示 `backend`、`kernel_class`、`loopx_cli`、`kernel_ok`、kernel root；
+- 「使用 SQLite」/「使用 LoopX JSONL」直接切换（POST `/backend`）；
+- 切换后写入 `plugin-data/hermes_flow/backend.json`，重启后仍生效。
+
+![LoopX 设置面板](assets/loopx-settings.png)
+
+### CLI
+
 ```powershell
 hermes flow doctor                     # 当前 backend + kernel
 hermes flow --backend loopx doctor     # 临时使用 LoopX JSONL
@@ -337,9 +359,7 @@ hermes flow backend --set loopx        # 持久化到 backend.json
 hermes flow backend --set sqlite       # 恢复 SQLite
 ```
 
-- `loopx` 为 JSONL `LoopXKernel`（`.loopx/domain-state/`），不需要安装 loopx wheel；
-- 真实 `loopx` CLI 通过 `LoopXBridge` 可选桥接，未安装时给出清晰错误；
-- 未知 backend 自动降级 sqlite，并记录 `backend_error`。
+> `loopx_cli: null` 只表示未安装真实 loopx CLI，不代表 LoopX 后端不可用；JSONL `LoopXKernel` 已验证可用。
 
 ---
 
