@@ -1,0 +1,6 @@
+# dsh-hermes-flow bundle patch: mount the HERMES Flow tool plugin.
+# Install:
+#   dsh plugin --profile web add link:E:\deepSeek\plugin\dsh-hermes-flow
+- insert:
+    - id: hermes-flow
+      name: 'dsh-hermes-flow'

@@ -139,3 +139,51 @@ dsh plugin --profile web add link:E:\path\to\dsh-hermes-flow
 - 建议 DSH 使用独立数据目录：
   `~/.dsh/plugin-data/hermes_flow`；
 - 迁移目标项目同样要 git 分支/备份。
+
+---
+
+## 6. PoC 实现状态（2026-10-19）
+
+已落地 `plugin/dsh-hermes-flow`：
+
+- DSH 原生 `defineTool` 插件 + Python sidecar；
+- 已注册工具：
+  - `hermes_flow_status`
+  - `hermes_flow_agents` / `hermes_flow_skills` / `hermes_flow_workflows`
+  - `hermes_flow_scan_project`
+  - `hermes_flow_run_start`
+  - `hermes_flow_batch_plan` / `hermes_flow_batch_status`
+  - `hermes_flow_quality_collect` / `hermes_flow_quality_gate`
+  - `hermes_flow_backend`
+  - `hermes_flow_experience_search`
+  - `hermes_flow_audit`
+- DSH 宿主工具 schema 已加载（本会话可见 `hermes_flow_*`）。
+- Sidecar RPC 实测：status / workflows / scan_project 正常。
+- 数据目录：`~/.dsh/plugin-data/hermes_flow`。
+
+### 当前安装方式（本机 desktop profile）
+
+本机 `desktop` profile 的 pnpm store 与 DSH 自带 pnpm 不一致，标准 `dsh plugin add` 会报 `ERR_PNPM_UNEXPECTED_STORE`。PoC 用：
+
+1. `npm pack` 生成 tarball；
+2. 解包/复制到 `~/.dsh/profiles/desktop/node_modules/dsh-hermes-flow`；
+3. 在 profile `cordis.patch.yml` 追加：
+   ```yaml
+   - insert:
+       - id: hermes-flow
+         name: dsh-hermes-flow
+   ```
+4. 重启 DeepSeek Harness。
+
+其他机器若 pnpm store 正常，优先标准安装：
+
+```powershell
+dsh plugin --profile desktop add file:E:\deepSeek\plugin\dsh-hermes-flow\dsh-hermes-flow-0.1.0.tgz
+```
+
+### 尚未实现
+
+- `hermes_flow_batch_auto`：需要把 `SubagentLifecycleLauncher` 换成 DSH subagent 适配，
+  或过渡为 `hermes chat --oneshot` 子进程；当前批次真实转换仍由 Hermes 执行。
+- DSH 内 Dashboard/7 Tab（需要 `dsh.client` UI 插件）。
+- DSH 侧 `pre_llm_call` 记忆注入（需要 DSH hook）。

@@ -24,6 +24,7 @@ plugin/sample-app/dist/
 
 # 依赖
 **/node_modules/
+*.tgz
 **/.vite/
 **/.cache/
 
