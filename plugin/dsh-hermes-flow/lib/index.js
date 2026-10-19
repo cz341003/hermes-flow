@@ -6,13 +6,18 @@ import { dirname, resolve } from "node:path";
 import { homedir } from "node:os";
 
 export const name = "hermes-flow";
-export const inject = ["tools"];
+export const inject = ["tools", "subagents"];
 
 class Sidecar {
   constructor() {
     this.child = null;
     this.seq = 0;
     this.pending = new Map();
+    this.launchHandler = null;
+  }
+
+  setLaunchHandler(fn) {
+    this.launchHandler = fn;
   }
 
   ensure() {
@@ -44,6 +49,21 @@ class Sidecar {
     createInterface({ input: this.child.stdout }).on("line", (line) => {
       let msg;
       try { msg = JSON.parse(line); } catch { return; }
+      if (msg.method === "__launch__") {
+        const respond = (payload) => {
+          try { this.child.stdin.write(JSON.stringify({ id: msg.id, ...payload }) + "\n"); }
+          catch (e) { console.error("[hermes-flow] launch response failed", e); }
+        };
+        if (!this.launchHandler) {
+          respond({ ok: false, error: "DSH subagent launcher not configured" });
+          return;
+        }
+        Promise.resolve()
+          .then(() => this.launchHandler(msg.params || {}))
+          .then((result) => respond({ ok: true, result }))
+          .catch((e) => respond({ ok: false, error: String(e && e.message ? e.message : e) }));
+        return;
+      }
       const p = this.pending.get(msg.id);
       if (!p) return;
       this.pending.delete(msg.id);
@@ -87,6 +107,74 @@ function makeTool(sidecar, name, description, parameters, method, timeoutMs) {
 
 export function apply(ctx) {
   const sidecar = new Sidecar();
+  let active = null;
+
+  function textOf(blocks) {
+    return (blocks || [])
+      .filter((b) => b && b.type === "text" && typeof b.text === "string")
+      .map((b) => b.text)
+      .join("");
+  }
+
+  sidecar.setLaunchHandler(async (params) => {
+    if (!active) throw new Error("DSH launcher: no active parent agent");
+    const names = ctx.subagents.list();
+    if (!names.length) throw new Error("DSH launcher: no subagent provider registered");
+    const provider = names.includes("spawn") ? "spawn" : names[0];
+    const prompt = `${params.goal || ""}\n\n${params.context || ""}`;
+    const run = await ctx.subagents.start(provider, {
+      label: `hermes-flow batch ${params.correlation_id || ""}`.slice(0, 80),
+      prompt: [{ type: "text", text: prompt }],
+      parent: active.parent,
+      signal: active.signal,
+    });
+    try {
+      const result = await run.result;
+      if (result.stopReason !== "completed") {
+        return {
+          terminal_state: "FAILED",
+          error_message: result.diagnostic || `subagent stop: ${result.stopReason}`,
+          child_id: run.id,
+        };
+      }
+      const summary = textOf(result.output);
+      if (!summary.trim()) {
+        return { terminal_state: "FAILED", error_message: "subagent produced empty output", child_id: run.id };
+      }
+      return { terminal_state: "SUCCEEDED", summary, child_id: run.id };
+    } finally {
+      await run.dispose();
+    }
+  });
+
+  const batchAuto = defineTool({
+    name: "hermes_flow_batch_auto",
+    description: "用 DSH 子代理自动推进 HERMES Flow 批次：claim → 子代理转换 → ingest/apply → 审计 → 下一批。",
+    parameters: {
+      group_id: { type: "string", required: true, description: "批次组 id" },
+      max_batches: { type: "number", description: "本次最多推进批数，默认 1" },
+      max_seconds: { type: "number", description: "时间预算秒，默认 240，硬上限 360" },
+      apply: { type: "boolean", description: "是否写回项目，默认 true" },
+      audit: { type: "boolean", description: "写入边界审计，默认 true" },
+      concurrency: { type: "number", description: "同 wave 并行 1–3，默认 1" },
+    },
+    output: {
+      schema: { type: "string" },
+      render: (_args, value) => [{ type: "text", text: String(value) }],
+    },
+    async execute(args, exec) {
+      if (!exec.agent) throw new Error("hermes_flow_batch_auto requires a calling agent");
+      if (active) throw new Error("another hermes_flow_batch_auto is running in this session");
+      active = { parent: exec.agent, signal: exec.signal };
+      try {
+        const result = await sidecar.call("batch_auto", args, 390_000);
+        return JSON.stringify(result, null, 2);
+      } finally {
+        active = null;
+      }
+    },
+  });
+
   const tools = [
     makeTool(sidecar, "hermes_flow_status", "HERMES Flow 运行时状态、Run、数据目录。", {}, "status"),
     makeTool(sidecar, "hermes_flow_agents", "列出 HERMES Flow 专家。", {}, "agents"),
@@ -113,6 +201,7 @@ export function apply(ctx) {
       }, "batch_plan"),
     makeTool(sidecar, "hermes_flow_batch_status", "查看批次组状态。",
       { group_id: { type: "string", required: true } }, "batch_status"),
+    batchAuto,
     makeTool(sidecar, "hermes_flow_quality_collect",
       "真实 build/typecheck/Chrome 路由质量采集；可能耗时 10–60s。",
       {

@@ -153,6 +153,7 @@ dsh plugin --profile web add link:E:\path\to\dsh-hermes-flow
   - `hermes_flow_scan_project`
   - `hermes_flow_run_start`
   - `hermes_flow_batch_plan` / `hermes_flow_batch_status`
+  - **`hermes_flow_batch_auto`**
   - `hermes_flow_quality_collect` / `hermes_flow_quality_gate`
   - `hermes_flow_backend`
   - `hermes_flow_experience_search`
@@ -160,6 +161,28 @@ dsh plugin --profile web add link:E:\path\to\dsh-hermes-flow
 - DSH 宿主工具 schema 已加载（本会话可见 `hermes_flow_*`）。
 - Sidecar RPC 实测：status / workflows / scan_project 正常。
 - 数据目录：`~/.dsh/plugin-data/hermes_flow`。
+
+### DSH subagent launcher
+
+`hermes_flow_batch_auto` 已接 DSH `ctx.subagents`：
+
+```text
+DSH tool execute(exec.agent)
+  → Python sidecar BatchAutoDriver
+      → claim batch
+      → stdio "__launch__" 请求
+          → DSH ctx.subagents.start("spawn", { parent: exec.agent, prompt, signal })
+          → await run.result / dispose
+      → 子代理写 staging
+      → ingest/apply/audit
+      → complete/fail/split/repair
+```
+
+- 协议级测试通过：`tests/test_launcher_protocol.py` 用 fake DSH launch 回调驱动真实
+  `BatchAutoDriver`，完成 1 批、staging→apply、文件变 v3。
+- 当前限制：launcher 单并发（`concurrency` 串行化）；只用 `spawn` provider；
+  尚未跑真实项目（按约定只做 launcher/接口验证）。
+
 
 ### 当前安装方式（本机 desktop profile）
 
@@ -178,12 +201,12 @@ dsh plugin --profile web add link:E:\path\to\dsh-hermes-flow
 其他机器若 pnpm store 正常，优先标准安装：
 
 ```powershell
-dsh plugin --profile desktop add file:E:\deepSeek\plugin\dsh-hermes-flow\dsh-hermes-flow-0.1.0.tgz
+dsh plugin --profile desktop add file:E:\deepSeek\plugin\dsh-hermes-flow\dsh-hermes-flow-0.2.0.tgz
 ```
 
 ### 尚未实现
 
-- `hermes_flow_batch_auto`：需要把 `SubagentLifecycleLauncher` 换成 DSH subagent 适配，
-  或过渡为 `hermes chat --oneshot` 子进程；当前批次真实转换仍由 Hermes 执行。
 - DSH 内 Dashboard/7 Tab（需要 `dsh.client` UI 插件）。
 - DSH 侧 `pre_llm_call` 记忆注入（需要 DSH hook）。
+- continuable/background 子代理与多并发 launcher。
+- 真实项目迁移验证（下一步由用户评估后再跑）。

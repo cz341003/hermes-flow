@@ -1,6 +1,7 @@
 import json
 import os
 import sys
+import threading
 from pathlib import Path
 
 ROOT = Path(os.environ.get("HERMES_FLOW_PLUGIN_ROOT", r"E:\deepSeek\plugin\hermes_flow"))
@@ -9,10 +10,90 @@ DATA = Path(os.environ.get("HERMES_FLOW_DATA_DIR")
 sys.path.insert(0, str(ROOT.parent))
 
 from hermes_flow.runtime import FlowRuntime  # noqa: E402
+from hermes_flow.flow_core.batch.driver import BatchAutoDriver  # noqa: E402
 
 rt = FlowRuntime(ROOT, DATA)
 EXCLUDE = {"node_modules", "dist", "coverage", ".git", ".vite", "build"}
 EXTS = {".vue", ".js", ".ts", ".jsx", ".tsx", ".less", ".scss", ".css", ".json"}
+
+
+class DshLauncher:
+    """把 driver 的 launch/wait/result 通过 stdio 反向委托给 Node/DSH subagent。"""
+    def __init__(self):
+        self._seq = 0
+        self._handle = {}
+        self._lock = threading.Lock()
+
+    def launch(self, *, goal, context, metadata, correlation_id):
+        with self._lock:
+            self._seq += 1
+            rid = f"launch-{self._seq}"
+            req = {"id": rid, "method": "__launch__", "params": {
+                "goal": goal, "context": context, "metadata": metadata,
+                "correlation_id": correlation_id,
+            }}
+            sys.stdout.write(json.dumps(req, ensure_ascii=False) + "\n")
+            sys.stdout.flush()
+            while True:
+                line = sys.stdin.readline()
+                if not line:
+                    raise RuntimeError("DSH launcher: sidecar stdin closed")
+                line = line.strip()
+                if not line:
+                    continue
+                msg = json.loads(line)
+                if str(msg.get("id")) != rid:
+                    # 非本请求的响应：当前协议只允许单并发 batch_auto
+                    continue
+                if not msg.get("ok"):
+                    raise RuntimeError(msg.get("error") or "DSH subagent launch failed")
+                result = msg.get("result") or {}
+                handle = {"_rid": rid, "_summary": result.get("summary"),
+                          "_state": result.get("terminal_state") or "SUCCEEDED",
+                          "child_id": result.get("child_id", "")}
+                self._handle[rid] = handle
+                return handle
+
+    def wait(self, handle, *, timeout):
+        return {"completed": True, "timed_out": False, "state": "SUCCEEDED"}
+
+    def result(self, handle):
+        return {"terminal_state": handle.get("_state") or "SUCCEEDED",
+                "summary": handle.get("_summary"),
+                "error_message": handle.get("error_message") or "",
+                "error_classification": ""}
+
+    def cancel(self, handle, *, reason):
+        return False
+
+
+def _find_run_for_group(group_id: str):
+    for run in rt.list_runs(limit=500):
+        if group_id in (run.get("batch_groups") or {}).values():
+            return run
+    return None
+
+
+def batch_auto(params: dict):
+    group_id = str(params["group_id"])
+    run = _find_run_for_group(group_id)
+    project_root = str(params.get("project_root") or (run or {}).get("project_root") or "")
+    driver = BatchAutoDriver(
+        rt.queue, DshLauncher(),
+        staging_base=rt.data_dir / "staging",
+        project_root=project_root,
+        lock_dir=rt.data_dir / "driver-locks",
+        audit=bool(params.get("audit", True)),
+        audit_dir=rt.data_dir / "audit",
+        concurrency=int(params["concurrency"]) if params.get("concurrency") else None,
+        worktree_base=rt.data_dir / "worktrees",
+    )
+    return driver.drive(
+        group_id,
+        max_batches=int(params.get("max_batches", 1) or 1),
+        max_seconds=float(params.get("max_seconds", 240) or 240),
+        apply=bool(params.get("apply", True)),
+    ).to_dict()
 
 
 def scan_project(root: str):
@@ -54,6 +135,8 @@ def dispatch(method: str, params: dict):
                              policy=params.get("policy") or None)
     if method == "batch_status":
         return rt.batch_status(str(params["group_id"]))
+    if method == "batch_auto":
+        return batch_auto(params)
     if method == "batch_items":
         return rt.batch_items(str(params["batch_id"]))
     if method == "quality_collect":
