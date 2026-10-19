@@ -1,12 +1,42 @@
 import { defineTool } from "@deepseek-ai/dsh-tools";
-import { spawn } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
 import { createInterface } from "node:readline";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
 import { homedir } from "node:os";
+import { existsSync, readdirSync } from "node:fs";
 
 export const name = "hermes-flow";
 export const inject = ["tools", "subagents"];
+
+let resolvedPython = null;
+
+function findPython() {
+  if (resolvedPython) return resolvedPython;
+  const candidates = [];
+  if (process.env.HERMES_FLOW_PYTHON) candidates.push(process.env.HERMES_FLOW_PYTHON);
+  for (const base of ["E:\\hermes\\tools", "E:\\hermes\\installs"]) {
+    try {
+      if (!existsSync(base)) continue;
+      for (const entry of readdirSync(base, { withFileTypes: true })) {
+        if (!entry.isDirectory()) continue;
+        const exe = resolve(base, entry.name, "python.exe");
+        if (existsSync(exe)) candidates.push(exe);
+      }
+    } catch { /* ignore */ }
+  }
+  candidates.push("python", "py");
+  for (const cmd of candidates) {
+    try {
+      const probe = spawnSync(cmd, ["--version"], { timeout: 4000, windowsHide: true });
+      if (probe.status === 0) {
+        resolvedPython = cmd;
+        return cmd;
+      }
+    } catch { /* try next */ }
+  }
+  throw new Error("HERMES Flow: Python 3.9+ not found; set HERMES_FLOW_PYTHON");
+}
 
 class Sidecar {
   constructor() {
@@ -24,7 +54,7 @@ class Sidecar {
     if (this.child && !this.child.killed) return;
     const here = dirname(fileURLToPath(import.meta.url));
     const script = resolve(here, "../sidecar/rpc.py");
-    const python = process.env.HERMES_FLOW_PYTHON || "python";
+    const python = findPython();
     const pluginRoot = process.env.HERMES_FLOW_PLUGIN_ROOT || "E:\\deepSeek\\plugin\\hermes_flow";
     const dataDir = process.env.HERMES_FLOW_DATA_DIR || resolve(homedir(), ".dsh", "plugin-data", "hermes_flow");
     this.child = spawn(python, [script], {
@@ -86,6 +116,13 @@ class Sidecar {
       });
       this.child.stdin.write(JSON.stringify({ id, method, params }) + "\n");
     });
+  }
+
+  close() {
+    try {
+      if (this.child && !this.child.killed) this.child.kill();
+    } catch { /* ignore */ }
+    this.child = null;
   }
 }
 
@@ -223,4 +260,7 @@ export function apply(ctx) {
     makeTool(sidecar, "hermes_flow_audit", "查看最近越界审计证据。", {}, "audit"),
   ];
   for (const tool of tools) ctx.tools.register(tool);
+  try {
+    ctx.on("dispose", () => sidecar.close());
+  } catch { /* older host without effect events */ }
 }

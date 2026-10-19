@@ -180,6 +180,10 @@ DSH tool execute(exec.agent)
 
 - 协议级测试通过：`tests/test_launcher_protocol.py` 用 fake DSH launch 回调驱动真实
   `BatchAutoDriver`，完成 1 批、staging→apply、文件变 v3。
+- Node 侧 launcher 也已用 mock `ctx.subagents` 验证：`hermes_flow_batch_auto` 返回
+  `done=true`；DSH 真实子代理尚未跑真实项目。
+- Python 自动探测顺序：`HERMES_FLOW_PYTHON` → `E:\hermes\tools\python-*\python.exe` →
+  `python`/`py`。
 - 当前限制：launcher 单并发（`concurrency` 串行化）；只用 `spawn` provider；
   尚未跑真实项目（按约定只做 launcher/接口验证）。
 

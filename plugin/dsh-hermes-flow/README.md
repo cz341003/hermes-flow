@@ -35,6 +35,8 @@ DSH tool execute(exec.agent)
 - 子代理结果必须是批次 JSON（`files:[{path,status}]`）；
 - 当前 launcher **单并发**：同一 sidecar 只允许一个 `batch_auto`，`concurrency` 会被串行化；
 - 子代理通过 DSH 的 spawn provider 运行；未注册 provider 时工具会明确报错。
+- Python 自动探测：`HERMES_FLOW_PYTHON` → `E:\hermes\tools\python-*\python.exe` → `python`/`py`；
+  找不到时工具会提示设置 `HERMES_FLOW_PYTHON`。
 
 ## 安装
 
